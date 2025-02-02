@@ -1,5 +1,6 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, GuildMember } from 'discord.js';
 import { Command } from '../types/Command';
+import chalk from 'chalk';
 
 const pingCommand: Command = {
   data: new SlashCommandBuilder()
@@ -16,6 +17,8 @@ const pingCommand: Command = {
     }
     const member = interaction.member as GuildMember;
     const userName = member.displayName || interaction.user.username;
+    
+
     if (interaction.user.id !== ownerId) {
       await interaction.reply({
         content:'https://media.tenor.com/suSxl49GmxsAAAAM/sonic-sonic-exe.gif',
@@ -25,20 +28,20 @@ const pingCommand: Command = {
         content: '🚫 You must be the server owner to use this command!',
         flags: 64, // Ephemeral flag
       });
-      console.log(`[ INFO ]
-User: ${userName}
-Username: ${interaction.user.username}
-Command: /ping
-Message: Attempted to execute!\n`)
+      console.log(chalk.underline(`[ INFO ]`) + '\n'
+      + chalk.yellow(`User: ${userName}`) + '\n'
+      + chalk.yellow(`Username: ${interaction.user.username}`) + '\n'
+      + chalk.magenta(`Command: /ping`) + '\n'
+      + chalk.cyan(`Message: Attempted to execute!\n`));
       return;
     }
 
     await interaction.reply('https://media.tenor.com/vn3L0I7IjR4AAAAM/uma-uma-musume.gif');
-    console.log(`[ INFO ]
-User: ${userName}
-Username: ${interaction.user.username}
-Command: /ping
-Message: Successfully executed\n`)
+    console.log(chalk.underline(`[ INFO ]`) + '\n'
+    + chalk.yellow(`User: ${userName}`) + '\n'
+    + chalk.yellow(`Username: ${interaction.user.username}`) + '\n'
+    + chalk.magenta(`Command: /ping`) + '\n'
+    + chalk.cyan(`Message: Attempted to execute!\n`));
   },
 };
 
