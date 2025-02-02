@@ -1,6 +1,5 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, GuildMember } from 'discord.js';
 import { Command } from '../types/Command';
-import chalk from 'chalk';
 
 const pingCommand: Command = {
   data: new SlashCommandBuilder()
