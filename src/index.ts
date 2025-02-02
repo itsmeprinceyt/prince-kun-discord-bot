@@ -7,9 +7,8 @@ import deployCommands from "./deployCommands";
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 client.on("ready", async (c) => {
-    console.log(`${c.user.username} is online`);
+    console.log(`[ ${c.user.username} ] 💚 IS ONLINE !`);
     await deployCommands();
-    console.log("Slash commands registered.");
 });
 
 client.on("interactionCreate", async (interaction) => {
@@ -23,7 +22,7 @@ client.on("interactionCreate", async (interaction) => {
     } catch (error) {
         console.error(error);
         await interaction.reply({
-            content: "There was an error executing this command!",
+            content: "[ ERROR ] There was an error executing this command!",
             ephemeral: true,
         });
     }
