@@ -25,6 +25,7 @@ const pingCommand: Command = {
     }
 
     await interaction.reply('https://media.tenor.com/vn3L0I7IjR4AAAAM/uma-uma-musume.gif');
+    console.log(`[ INFO ] Command: /ping successfully ran!`)
   },
 };
 
