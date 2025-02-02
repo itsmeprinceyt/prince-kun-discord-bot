@@ -1,12 +1,32 @@
 import "dotenv/config";
-import { Client } from "discord.js";
+import { Client, GatewayIntentBits } from "discord.js";
 
-const client = new Client({
-    intents: [],
-})
+import commands from "./commandHandler";
+import deployCommands from "./deployCommands";
 
-client.on('ready',(c)=>{
-    console.log(`${c.user.username} is online`)
-})
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-client.login(process.env.DISCORD_BOT_TOKEN)
+client.on("ready", async (c) => {
+    console.log(`${c.user.username} is online`);
+    await deployCommands();
+    console.log("Slash commands registered.");
+});
+
+client.on("interactionCreate", async (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+
+    const command = commands.get(interaction.commandName);
+    if (!command) return;
+
+    try {
+        await command.execute(interaction);
+    } catch (error) {
+        console.error(error);
+        await interaction.reply({
+            content: "There was an error executing this command!",
+            ephemeral: true,
+        });
+    }
+});
+
+client.login(process.env.DISCORD_BOT_TOKEN);
