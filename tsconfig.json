@@ -1,13 +1,16 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "CommonJS",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "outDir": "./dist",
-    "rootDir": "./src"
+      "target": "ES2022",
+      "module": "CommonJS",
+      "moduleResolution": "Node",
+      "strict": true,
+      "noImplicitAny": true,
+      "declaration": false,
+      "skipLibCheck": true,
+      "strictNullChecks": true,
+      "resolveJsonModule": true,
+      "outDir": "dist"
   },
-  "include": ["src/**/*"],
+  "include": ["src"],
   "exclude": ["node_modules"]
 }
