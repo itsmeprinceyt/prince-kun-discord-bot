@@ -6,17 +6,17 @@ export default {
         const embed = new EmbedBuilder()
             .setColor(0xc200ff) // Purple color
             .setAuthor({
-                name: "ItsMe Prince",
+                name: "Subscribe to my YouTube Channel",
                 iconURL:
                     "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
             })
-            .setTitle("Subscribe to my YouTube Channel Now!")
+            .setTitle("ItsMe Prince")
             .setDescription(
                 `Hello, I'm Prince! I love diving into PC games and sharing my adventures with you. My channel features a mix of content: exciting gaming sessions, IRL drawing streams, and fun coding projects. Sometimes, I also chat about various topics that pique my interest. If you enjoy what you see,  then make sure to subscribe 🌟🌻 
                 
                 A friendly reminder: I upload content based on my mood.
                 
-                [Click Here To Visit](https://www.youtube.com/channel/UC9UQVp8grhcVatbMcf0sa5w)`
+                [Click Here To Visit | Subscribe](https://www.youtube.com/channel/UC9UQVp8grhcVatbMcf0sa5w)`
             )
             .setImage(
                 "https://media.discordapp.net/attachments/1336322293437038602/1336324620617252874/image.png"

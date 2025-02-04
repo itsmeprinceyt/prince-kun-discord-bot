@@ -18,8 +18,18 @@ const client = new Client({
 
 client.on("ready", async (c) => {
     await deployCommands();
-    console.log(chalk.green(`[ ${c.user.username} ] 💚 IS ONLINE !`));
+    c.user.setPresence({
+        status: "dnd",
+        activities: [
+            {
+                name: "over y'all souls. 🥸",
+                type: 3,
+            },
+        ],
+    });
+    console.log(chalk.green(`[ ${c.user.username} ] 💚 IS ONLINE (DND Mode) !`));
 });
+
 
 client.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
@@ -40,10 +50,7 @@ client.on("interactionCreate", async (interaction) => {
 
 client.on("messageCreate", async (message) => {
     if (message.author.bot) return;
-
     const content = message.content.toLowerCase();
-    
-    // Find a matching command by looping through all commands
     const command = [...msgCommands.values()].find(cmd => cmd.triggers.includes(content));
 
     if (command) {
