@@ -1,0 +1,8 @@
+when making a command check:
+
+1. who can call that command 
+- only owner
+- members
+- only a certain role + owner ?
+
+2. If that command is runnable in dm or not

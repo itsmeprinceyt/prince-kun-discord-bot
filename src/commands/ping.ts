@@ -37,11 +37,12 @@ const pingCommand: Command = {
     }
 
     await interaction.reply('https://media.tenor.com/vn3L0I7IjR4AAAAM/uma-uma-musume.gif');
+    await interaction.followUp('Pong!');
     console.log(chalk.underline(`[ INFO ]`) + '\n'
     + chalk.yellow(`User: ${userName}`) + '\n'
     + chalk.yellow(`Username: ${interaction.user.username}`) + '\n'
     + chalk.magenta(`Command: /ping`) + '\n'
-    + chalk.cyan(`Message: Attempted to execute!\n`));
+    + chalk.cyan(`Message: Command executed successfully!\n`));
   },
 };
 
