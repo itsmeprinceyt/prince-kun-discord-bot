@@ -70,7 +70,7 @@ client.on("messageCreate", async (message) => {
 
         try {
             await command.execute(message);
-            console.log(chalk.green(`[ SUCCESS ] Message Command Executed: ${content}`));
+            console.log(chalk.green(`[ SUCCESS ] Message Command Executed: ${content}\n`));
         } catch (error) {
             console.error(chalk.red(`[ ERROR ] Failed to execute ${content}:`), error);
             await message.reply("⚠️ Error executing command!");
