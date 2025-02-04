@@ -41,24 +41,27 @@ client.on("interactionCreate", async (interaction) => {
 client.on("messageCreate", async (message) => {
     if (message.author.bot) return;
 
-    const content = message.content.toLowerCase().trim();
-    const command = msgCommands.get(content);
-    const location = message.guild ? `Server: ${message.guild.name}` : "DM";
+    const content = message.content.toLowerCase();
+    
+    // Find a matching command by looping through all commands
+    const command = [...msgCommands.values()].find(cmd => cmd.triggers.includes(content));
 
     if (command) {
         console.log(chalk.underline(`[ INFO ]`) + '\n'
-            + chalk.yellow(`User: ${message.author.username}`) + '\n'
+            + chalk.yellow(`User: ${message.member?.displayName || message.author.username}`) + '\n'
+            + chalk.yellow(`Username: ${message.author.username}`) + '\n'
             + chalk.magenta(`Message Command: ${content}`) + '\n'
-            + chalk.cyan(`Location: ${location}`)
+            + chalk.cyan(`Location: ${message.guild ? `Server: ${message.guild.name}` : "DM"}`)
         );
 
         try {
             await command.execute(message);
-            console.log(chalk.green(`[ SUCCESS ] Message Command Executed!`));
+            console.log(chalk.green(`[ SUCCESS ] Message Command Executed: ${content}`));
         } catch (error) {
             console.error(chalk.red(`[ ERROR ] Failed to execute ${content}:`), error);
             await message.reply("⚠️ Error executing command!");
         }
     }
 });
+
 client.login(process.env.DISCORD_BOT_TOKEN);

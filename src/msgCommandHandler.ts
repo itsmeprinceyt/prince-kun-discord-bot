@@ -9,19 +9,21 @@ const commandFiles = readdirSync(join(__dirname, "msgCommands")).filter(
 );
 
 for (const file of commandFiles) {
-    // Console Logs
-    const CommandsLoad = `[ INFO ] All Message Commands are loaded and are ready to be invoked. `;
-    const CommandsLoadError = `[ ERROR ] Message command ${file} is missing "trigger" or "execute"!`;
-    /* ====================================== */
     const commandModule = require(`./msgCommands/${file}`);
     const command = commandModule.default;
 
-    if (command && command.trigger) {
-        msgCommands.set(command.trigger, command);
-        console.log(`[ INFO ] Registering Message commands. | Commands: ${msgCommands.size}`);
+    if (command && command.triggers) {
+        if (Array.isArray(command.triggers)) {
+            for (const trigger of command.triggers) {
+                msgCommands.set(trigger, command);
+            }
+        } else {
+            console.warn(`[ ERROR ] Message command ${file} "triggers" must be an array!`);
+        }
     } else {
-        console.warn(CommandsLoadError);
+        console.warn(`[ ERROR ] Message command ${file} is missing "triggers" or "execute"!`);
     }
 }
 
+console.log(`[ INFO ] Registered ${msgCommands.size} message commands.`);
 export default msgCommands;
