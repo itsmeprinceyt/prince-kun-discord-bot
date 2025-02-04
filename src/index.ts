@@ -2,9 +2,16 @@ import "dotenv/config";
 import { Client, GatewayIntentBits } from "discord.js";
 
 import commands from "./commandHandler";
+import msgCommands from "./msgCommandHandler";
 import deployCommands from "./deployCommands";
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent 
+    ]
+});
 
 client.on("ready", async (c) => {
     console.log(`[ ${c.user.username} ] 💚 IS ONLINE !`);
@@ -25,6 +32,22 @@ client.on("interactionCreate", async (interaction) => {
             content: "[ ERROR ] There was an error executing this command!",
             ephemeral: true,
         });
+    }
+});
+
+client.on("messageCreate", async (message) => {
+    if (message.author.bot) return;
+
+    const content = message.content.toLowerCase();
+    const command = msgCommands.get(content);
+    
+    if (command) {
+        try {
+            await command.execute(message);
+        } catch (error) {
+            console.error(error);
+            await message.reply("⚠️ Error executing command!");
+        }
     }
 });
 
