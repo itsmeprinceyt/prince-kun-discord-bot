@@ -13,7 +13,7 @@ const client = new Client({
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.DirectMessages
     ],
-    partials: [Partials.Channel], // ✅ Needed to read DMs properly
+    partials: [Partials.Channel],
 });
 
 client.on("ready", async (c) => {
@@ -39,11 +39,11 @@ client.on("interactionCreate", async (interaction) => {
 });
 
 client.on("messageCreate", async (message) => {
-    if (message.author.bot) return; // Ignore bot messages
+    if (message.author.bot) return;
 
     const content = message.content.toLowerCase().trim();
     const command = msgCommands.get(content);
-    const location = message.guild ? `Server: ${message.guild.name}` : "DM"; // Detect DM or Server
+    const location = message.guild ? `Server: ${message.guild.name}` : "DM";
 
     if (command) {
         console.log(chalk.underline(`[ INFO ]`) + '\n'

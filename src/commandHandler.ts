@@ -7,18 +7,14 @@ const commandFiles = readdirSync(join(__dirname, "commands")).filter((file) =>
   file.endsWith(".ts")
 );
 for (const file of commandFiles) {
-  // Console Logs
-  const CommandsLoad = `[ INFO ] Commands are being loaded into the script. `;
-  const CommandsLoadError = `[ ERROR ] Command at ${file} is missing "data" or "execute"!`;
-  /* ====================================== */
   const commandModule = require(`./commands/${file}`);
   const command: Command = commandModule.default;
 
   if (command && command.data) {
     commands.set(command.data.name, command);
-    console.log(CommandsLoad);
+    console.log(`[ INFO ] Commands are being loaded into the script. `);
   } else {
-    console.warn(CommandsLoadError);
+    console.warn(`[ ERROR ] Command at ${file} is missing "data" or "execute"!`);
   }
 }
 
