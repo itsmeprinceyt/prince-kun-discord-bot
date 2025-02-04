@@ -50,6 +50,13 @@ client.on("interactionCreate", async (interaction) => {
 
 client.on("messageCreate", async (message) => {
     if (message.author.bot) return;
+    if (client.user && message.mentions.has(client.user.id) && !message.mentions.everyone) {
+        message.channel.send("## 🥸**POK U BICH**🖕").then((msg) => {
+            setTimeout(() => msg.delete().catch(() => {}), 2000);
+        });
+        return;
+    }
+
     const content = message.content.toLowerCase();
     const command = [...msgCommands.values()].find(cmd => cmd.triggers.includes(content));
 
