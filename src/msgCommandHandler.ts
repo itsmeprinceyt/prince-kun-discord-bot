@@ -25,5 +25,5 @@ for (const file of commandFiles) {
     }
 }
 
-console.log(`[ INFO ] Registered ${msgCommands.size} message commands.`);
+console.log(`[ INFO ] Registering Message commands. | Commands: ${msgCommands.size}`);
 export default msgCommands;
