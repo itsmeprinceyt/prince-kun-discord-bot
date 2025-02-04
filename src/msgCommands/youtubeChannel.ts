@@ -1,8 +1,33 @@
-import { Message } from "discord.js";
+import { Message, EmbedBuilder } from "discord.js";
 
 export default {
-    trigger: ".?youtube",
+    triggers: [".?youtube", ".?yt"],
     async execute(message: Message) {
-        await message.reply("📺 Check out my YouTube channel: https://www.youtube.com/@itsmeprinceyt");
-    }
+        const embed = new EmbedBuilder()
+            .setColor(0xc200ff) // Purple color
+            .setAuthor({
+                name: "ItsMe Prince",
+                iconURL:
+                    "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            })
+            .setTitle("Subscribe to my YouTube Channel Now!")
+            .setDescription(
+                `Hello, I'm Prince! I love diving into PC games and sharing my adventures with you. My channel features a mix of content: exciting gaming sessions, IRL drawing streams, and fun coding projects. Sometimes, I also chat about various topics that pique my interest. If you enjoy what you see,  then make sure to subscribe 🌟🌻 
+                
+                A friendly reminder: I upload content based on my mood.
+                
+                [Click Here To Visit](https://www.youtube.com/channel/UC9UQVp8grhcVatbMcf0sa5w)`
+            )
+            .setImage(
+                "https://media.discordapp.net/attachments/1336322293437038602/1336324620617252874/image.png"
+            )
+            .setFooter({
+                text: new Date().toLocaleTimeString("en-GB", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                }),
+            });
+
+        await message.reply({ embeds: [embed] });
+    },
 };
