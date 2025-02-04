@@ -4,7 +4,7 @@ export default {
     triggers: [".?youtube", ".?yt"],
     async execute(message: Message) {
         const embed = new EmbedBuilder()
-            .setColor(0xc200ff) // Purple color
+            .setColor(0xc200ff)
             .setAuthor({
                 name: "Subscribe to my YouTube Channel",
                 iconURL:

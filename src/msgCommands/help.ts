@@ -21,10 +21,7 @@ export default {
             });
 
         try {
-            // Send the embed to the user's DMs
             await message.author.send({ embeds: [embed] });
-
-            // If the command was used in a server, reply in the channel
             if (message.guild) {
                 await message.reply({
                     content: "📩 I've sent you a DM with all the available commands!",
