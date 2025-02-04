@@ -17,12 +17,11 @@ async function deployCommands() {
     }
     const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN as string);
     try {
-        console.log(`[ INFO ] Registering slash commands. | Commands: ${commands.length}`);
+        console.log(`[ INFO ] Registering Slash commands. | Commands: ${commands.length}`);
         await rest.put(
             Routes.applicationCommands(process.env.CLIENT_ID as string),
             { body: commands }
         );
-        console.log('[ INFO ] ✅ Successfully registered application commands in Discord.');
     } catch (error) {
         console.error(`[ ERROR ] Registering command failed: ${error}`);
     }
