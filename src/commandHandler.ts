@@ -8,7 +8,7 @@ const commandFiles = readdirSync(join(__dirname, "commands")).filter((file) =>
 );
 for (const file of commandFiles) {
   // Console Logs
-  const CommandsLoad = `[ INFO ] All Commands are loaded and are ready to be invoked. `;
+  const CommandsLoad = `[ INFO ] Commands are being loaded into the script. `;
   const CommandsLoadError = `[ ERROR ] Command at ${file} is missing "data" or "execute"!`;
   /* ====================================== */
   const commandModule = require(`./commands/${file}`);
