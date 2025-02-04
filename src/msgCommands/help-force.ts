@@ -2,7 +2,7 @@ import { Message, EmbedBuilder } from "discord.js";
 import { HelpDescription } from "../utility/help-commands";
 
 export default {
-    triggers: [".?help"],
+    triggers: [".?help-force"],
     async execute(message: Message) {
         const embed = new EmbedBuilder()
             .setColor(0xc200ff)
@@ -19,24 +19,18 @@ export default {
                     minute: "2-digit",
                 }),
             });
-
-        try {
-            // Send the embed to the user's DMs
-            await message.author.send({ embeds: [embed] });
-
-            // If the command was used in a server, reply in the channel
-            if (message.guild) {
-                await message.reply({
-                    content: "📩 I've sent you a DM with all the available commands!",
-                });
-            }
-        } catch (error) {
-            console.error("Failed to send DM:", error);
-            if (message.guild) {
-                await message.reply({
-                    content: "⚠️ I couldn't send you a DM! Please check your privacy settings.",
-                });
-            }
+        if (!message.guild) {
+            await message.reply({ embeds: [embed] });
+            return;
         }
+        if (message.author.id !== message.guild.ownerId) {
+            await message
+                .reply("⛔ You must be the server owner to use this command!")
+                .then((msg) => {
+                    setTimeout(() => msg.delete().catch(() => { }), 5000);
+                });
+            return;
+        }
+        await message.reply({ embeds: [embed] });
     },
 };
