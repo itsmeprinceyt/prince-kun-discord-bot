@@ -22,10 +22,11 @@ export default {
                 "https://media.discordapp.net/attachments/1336322293437038602/1336324620617252874/image.png"
             )
             .setFooter({
-                text: new Date().toLocaleTimeString("en-GB", {
+                text: `${message.author.username} | ${new Date().toLocaleTimeString("en-GB", {
                     hour: "2-digit",
                     minute: "2-digit",
-                }),
+                })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
+                iconURL: message.author.displayAvatarURL(),
             });
 
         await message.reply({ embeds: [embed] });

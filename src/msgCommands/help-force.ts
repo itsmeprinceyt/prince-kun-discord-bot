@@ -14,10 +14,11 @@ export default {
             .setTitle("All available commands!")
             .setDescription(HelpDescription)
             .setFooter({
-                text: new Date().toLocaleTimeString("en-GB", {
+                text: `${message.author.username} | ${new Date().toLocaleTimeString("en-GB", {
                     hour: "2-digit",
                     minute: "2-digit",
-                }),
+                })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
+                iconURL: message.author.displayAvatarURL(),
             });
         if (!message.guild) {
             await message.reply({ embeds: [embed] });
