@@ -51,7 +51,7 @@ const pingCommand: Command = {
       });
       await interaction.followUp({
         content: "🚫 You must be the server owner to use this command!",
-        flags: 64, // Ephemeral flag
+        flags: 64,
       });
 
       console.log(
