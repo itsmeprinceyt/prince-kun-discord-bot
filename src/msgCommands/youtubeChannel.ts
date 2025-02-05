@@ -19,7 +19,7 @@ export default {
                 [Click Here To Subscribe or Visit !!](https://www.youtube.com/channel/UC9UQVp8grhcVatbMcf0sa5w)`
             )
             .setImage(
-                "https://media.discordapp.net/attachments/1336322293437038602/1336324620617252874/image.png"
+                "https://media.discordapp.net/attachments/1336322293437038602/1336708959737745520/YouTubeChannel.png"
             )
             .setFooter({
                 text: `${message.author.username} | ${new Date().toLocaleTimeString("en-GB", {
