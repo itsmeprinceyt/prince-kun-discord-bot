@@ -6,7 +6,7 @@ export default {
         const embed = new EmbedBuilder()
             .setColor(0xc200ff)
             .setAuthor({
-                name: "Subscribe to my YouTube Channel",
+                name: "Prince-Kun • Subscribe to my YouTube Channel",
                 iconURL:
                     "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
             })

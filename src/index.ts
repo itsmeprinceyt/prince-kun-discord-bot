@@ -1,10 +1,17 @@
 import "dotenv/config";
-import chalk from 'chalk';
-import { Client, GatewayIntentBits, Partials } from "discord.js";
+import chalk from "chalk";
+import {
+    Client,
+    GatewayIntentBits,
+    Partials,
+    ModalSubmitInteraction,
+    Events
+} from "discord.js";
 
 import commands from "./commandHandler";
 import msgCommands from "./msgCommandHandler";
 import deployCommands from "./deployCommands";
+import { handleModalSubmit } from "./commands/bot-updates";
 
 const client = new Client({
     intents: [
@@ -30,21 +37,22 @@ client.on("ready", async (c) => {
     console.log(chalk.green(`[ ${c.user.username} ] 💚 IS ONLINE (DND Mode) !`));
 });
 
-
 client.on("interactionCreate", async (interaction) => {
-    if (!interaction.isChatInputCommand()) return;
+    if (interaction.isChatInputCommand()) {
+        const command = commands.get(interaction.commandName);
+        if (!command) return;
 
-    const command = commands.get(interaction.commandName);
-    if (!command) return;
-
-    try {
-        await command.execute(interaction);
-    } catch (error) {
-        console.error(error);
-        await interaction.reply({
-            content: "[ ERROR ] There was an error executing this command!",
-            ephemeral: true,
-        });
+        try {
+            await command.execute(interaction);
+        } catch (error) {
+            console.error(error);
+            await interaction.reply({
+                content: "[ ERROR ] There was an error executing this command!",
+                ephemeral: true,
+            });
+        }
+    } else if (interaction.isModalSubmit()) {
+        await handleModalSubmit(interaction as ModalSubmitInteraction);
     }
 });
 
@@ -61,11 +69,16 @@ client.on("messageCreate", async (message) => {
     const command = [...msgCommands.values()].find(cmd => cmd.triggers.includes(content));
 
     if (command) {
-        console.log(chalk.underline(`[ INFO ]`) + '\n'
-            + chalk.yellow(`User: ${message.member?.displayName || message.author.username}`) + '\n'
-            + chalk.yellow(`Username: ${message.author.username}`) + '\n'
-            + chalk.magenta(`Message Command: ${content}`) + '\n'
-            + chalk.cyan(`Location: ${message.guild ? `Server: ${message.guild.name}` : "DM"}`)
+        console.log(
+            chalk.underline(`[ INFO ]`) +
+            "\n" +
+            chalk.yellow(`User: ${message.member?.displayName || message.author.username}`) +
+            "\n" +
+            chalk.yellow(`Username: ${message.author.username}`) +
+            "\n" +
+            chalk.magenta(`Message Command: ${content}`) +
+            "\n" +
+            chalk.cyan(`Location: ${message.guild ? `Server: ${message.guild.name}` : "DM"}`)
         );
 
         try {
