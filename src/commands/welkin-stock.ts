@@ -67,7 +67,7 @@ const WelkinStock: Command = {
                 `\`\`\`PRICE: ${price}\`\`\``)
             .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171003356221461/Blessing_of_the_Welkin.png")
             .setFooter({
-                text: `Prices as of: ${new Date().toLocaleTimeString("en-GB", {
+                text: `Price as of: ${new Date().toLocaleTimeString("en-GB", {
                     hour: "2-digit",
                     minute: "2-digit",
                 })} ${new Date().getHours() >= 12 ? "PM" : "AM"} | Prices may fluctuate at anytime 👈`,
