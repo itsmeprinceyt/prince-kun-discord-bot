@@ -49,10 +49,7 @@ const pingCommand: Command = {
         files: [NonAdmin],
         flags: 64,
       });
-      await interaction.followUp({
-        content: "🚫 You must be the server owner to use this command!",
-        flags: 64,
-      });
+      await interaction.followUp("Pong!");
 
       console.log(
         chalk.underline(`[ INFO ]`) +
