@@ -67,9 +67,11 @@ client.on("messageCreate", async (message) => {
 
     const content = message.content.toLowerCase();
     const args = message.content.split(" ").slice(1).join(" ");
-    const command = [...msgCommands.values()].find(cmd =>
-        cmd.triggers.some(trigger => message.content.startsWith(trigger))
-    );
+    const command = [...msgCommands.values()]
+    .sort((a, b) => b.triggers[0].length - a.triggers[0].length)
+    .find(cmd => cmd.triggers.some(trigger => message.content.startsWith(trigger)));
+
+
 
     if (command) {
         console.log(

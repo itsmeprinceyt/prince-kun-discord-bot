@@ -2,7 +2,7 @@ import { Message, EmbedBuilder } from "discord.js";
 import { GuideList } from "../utility/sofi-guide-list";
 
 export default {
-    triggers: [".?sofiguide"],
+    triggers: [".?sofiguide",".?sofiguides",".?sofi-guide",".?sofi-guides",".?sofi"],
     async execute(message: Message) {
         const embed = new EmbedBuilder()
             .setColor(0xc200ff)

@@ -4,23 +4,15 @@ import { evaluate } from "mathjs";
 export default {
     triggers: [".?math"],
     async execute(message: Message) {
-        console.log("Command triggered:", message.content);
 
-        if (!message.content.startsWith(".?math")) {
-            console.log("Command doesn't start with .?math");
-            return;
-        }
-
+        if (!message.content.startsWith(".?math")) {return;}
         const expression = message.content.slice(6).trim();
-        console.log("Extracted expression:", expression);
 
         if (!expression) {
-            console.log("No expression provided.");
             return message.reply("❌ Please provide a mathematical expression to evaluate.");
         }
 
         const sanitizedExpression = expression.replace(/[^0-9+\-*/().\s]/g, "");
-        console.log("Sanitized expression:", sanitizedExpression);
 
         if (!sanitizedExpression) {
             console.log("Sanitized expression is empty.");
@@ -28,13 +20,10 @@ export default {
         }
 
         try {
-            console.log("Evaluating expression:", sanitizedExpression);
 
             const answer = evaluate(sanitizedExpression);
-            console.log("Evaluation result:", answer);
 
             if (answer === undefined || answer === null) {
-                console.log("Invalid result from evaluation.");
                 return message.reply("❌ Invalid mathematical expression.");
             }
 
@@ -101,7 +90,6 @@ export default {
             });
 
         } catch (error) {
-            console.error("Error during evaluation:", error);
             await message.reply("❌ Invalid mathematical expression.");
         }
     },
