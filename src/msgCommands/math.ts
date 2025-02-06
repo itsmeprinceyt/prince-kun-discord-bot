@@ -34,16 +34,17 @@ export default {
                 iconURL:
                     "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
             })
-            .setTitle("Math Expression")
+            .setTitle(`Result: ${answer.toFixed(2)}`)
+            /*.setTitle("Math Expression")
             .setDescription(
                 `
                 **Your Input:** ${sanitizedExpression}
-                **Result:** ${answer}
+                **Result: ${answer}** 
                 `
             )
             .setImage(
                 "https://media.discordapp.net/attachments/1336322293437038602/1337078599219675167/Math.png"
-            )
+            )*/
             .setFooter({
                 text: `${message.author.username} | ${new Date().toLocaleTimeString("en-GB", {
                     hour: "2-digit",
