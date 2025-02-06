@@ -11,9 +11,7 @@ export default {
                     "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
             })
             .setTitle("Artwork Credit")
-            .setDescription(
-                `A huge thank you to (🤡) for creating this amazing artwork for the ItsMe Prince bot! If you're looking for fantastic artwork commissions, be sure to reach out to them!`
-            )
+            .setDescription(`A huge thank you to (🤡) for creating this amazing artwork for the ItsMe Prince bot! If you're looking for fantastic artwork commissions, be sure to reach out to them!`)
             .setFooter({
                 text: `${message.author.username} | ${new Date().toLocaleTimeString("en-GB", {
                     hour: "2-digit",

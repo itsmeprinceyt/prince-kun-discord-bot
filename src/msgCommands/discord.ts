@@ -14,10 +14,9 @@ export default {
             })
             .setTitle("ItsMe Prince Official Discord Server")
             .setDescription(
-                `You can join my Official Discord Server! 🌟🌻
-                
-                **Shareable Link:** ${inviteLink}
-                [Click Here To Join!](https://discord.gg/HgXNs4p5cx)`
+                `You can join my Official Discord Server! 🌟🌻\n\n`+
+                `**Shareable Link:** ${inviteLink}\n`+
+                `[Click Here To Join!](https://discord.gg/HgXNs4p5cx)`
             )
             .setImage(
                 "https://media.discordapp.net/attachments/1336322293437038602/1337038357565276160/Discord.png"

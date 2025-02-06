@@ -8,10 +8,11 @@ export const SPECS = `
 \`SSD(II)       \` - Patriot 1TB SATA SSD
 \`Cabinet       \` - Ant Esports ICE-200TG
 
-\`Microphone    \` - Fifine A6t Gaming Microphone with Broom Arm
 \`Monitor(I)    \` - MSI G255F
-\`Keyboard      \` - Zook RGB Wired Keyboard
 \`Monitor(II)   \` - Samsung S19B150
+\`Webcam        \` - Kreo Owl Full HD 1080P 60 FPS
+\`Microphone    \` - Fifine A6t Gaming Microphone with Broom Arm
+\`Keyboard      \` - Zook RGB Wired Keyboard
 \`Mouse         \` - Kreo Chimera Mouse Wired
 \`Mousepad      \` - Kreo Igneous Mouse Pad
 

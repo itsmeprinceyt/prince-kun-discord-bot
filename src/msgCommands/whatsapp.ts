@@ -13,11 +13,9 @@ export default {
                     "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
             })
             .setTitle("Broadcast Channel")
-            .setDescription(
-                `Find all the channel updates right from your Whatsapp App! Join my Broadcast channel from the link below or message me on my WhatsApp number and say "Hi!"
-                
-                **WhatsApp Number:** \`${phoneNumber}\`
-                [Click here to join my WhatsApp Broadcast Channel!](https://www.whatsapp.com/channel/0029Va5MEeX2UPBIHUMyQY2z)`
+            .setDescription(`Find all the channel updates right from your Whatsapp App! Join my Broadcast channel from the link below or message me on my WhatsApp number and say "Hi!"\n\n` +
+                `**WhatsApp Number:** \`${phoneNumber}\`\n` +
+                `[Click here to join my WhatsApp Broadcast Channel!](https://www.whatsapp.com/channel/0029Va5MEeX2UPBIHUMyQY2z)`
             )
             .setImage(
                 "https://media.discordapp.net/attachments/1336322293437038602/1337051063504867398/Whatsapp.png"
@@ -60,7 +58,7 @@ export default {
         });
 
         collector.on("end", () => {
-            sentMessage.edit({ components: [] }).catch(() => {});
+            sentMessage.edit({ components: [] }).catch(() => { });
         });
     },
 };

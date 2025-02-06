@@ -18,7 +18,7 @@ export default {
             wuwa: "900584281",
             bgmi: "5651014966",
             zzz: "1302186027",
-            genshin: "889406482", 
+            genshin: "889406482",
         };
 
         const embed = new EmbedBuilder()
@@ -28,12 +28,12 @@ export default {
                 iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
             })
             .setTitle("Here you can all my UIDs")
-            .setDescription(`
-\`Genshin UID:  \` - ${UIDs.genshin} [Server: ASIA]
-\`HSR UID:      \` - ${UIDs.hsr} [Server: ASIA]
-\`Wuwa UID:     \` - ${UIDs.wuwa} [Server: SEA]
-\`BGMI UID:     \` - ${UIDs.bgmi}
-\`ZZZ UID:      \` - ${UIDs.zzz} [Server: ASIA]`)
+            .setDescription(
+                `\`Genshin UID:  \` - ${UIDs.genshin} [Server: ASIA]\n` +
+                `\`HSR UID:      \` - ${UIDs.hsr} [Server: ASIA]\n` +
+                `\`Wuwa UID:     \` - ${UIDs.wuwa} [Server: SEA]\n` +
+                `\`BGMI UID:     \` - ${UIDs.bgmi}\n` +
+                `\`ZZZ UID:      \` - ${UIDs.zzz} [Server: ASIA]`)
             .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337083370819162184/Game_User_Id.png")
             .setFooter({
                 text: `${message.author.username} | ${new Date().toLocaleTimeString("en-GB", {
@@ -45,7 +45,7 @@ export default {
 
         const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
             new ButtonBuilder().setCustomId("copy_genshin").setLabel("Copy Genshin UID").setStyle(ButtonStyle.Secondary).setEmoji("📋"),
-            new ButtonBuilder().setCustomId("copy_hsr").setLabel("Copy HSR UID").setStyle(ButtonStyle.Secondary) .setEmoji("📋"),
+            new ButtonBuilder().setCustomId("copy_hsr").setLabel("Copy HSR UID").setStyle(ButtonStyle.Secondary).setEmoji("📋"),
             new ButtonBuilder().setCustomId("copy_wuwa").setLabel("Copy Wuwa UID").setStyle(ButtonStyle.Secondary).setEmoji("📋"),
             new ButtonBuilder().setCustomId("copy_bgmi").setLabel("Copy BGMI UID").setStyle(ButtonStyle.Secondary).setEmoji("📋"),
             new ButtonBuilder().setCustomId("copy_zzz").setLabel("Copy ZZZ UID").setStyle(ButtonStyle.Secondary).setEmoji("📋")
@@ -58,7 +58,7 @@ export default {
             const game = interaction.customId.split("_")[1] as keyof typeof UIDs;
             if (interaction.user.id !== message.author.id) {
                 return interaction.reply(
-                    { 
+                    {
                         content: "❌ Only the command sender can use this button!",
                         flags: 64
                     });
@@ -79,7 +79,7 @@ export default {
         });
 
         collector.on("end", () => {
-            sentMessage.edit({ components: [] }).catch(() => {});
+            sentMessage.edit({ components: [] }).catch(() => { });
         });
     },
 };

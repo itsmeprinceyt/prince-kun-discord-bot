@@ -2,7 +2,7 @@ import { Message, EmbedBuilder } from "discord.js";
 import { SPECS } from "../utility/pc-specs";
 
 export default {
-    triggers: [".?pcspecs", ".?specs",".?specifications"],
+    triggers: [".?pcspecs", ".?specs",".?specifications",".?pc",".?pppc"],
     async execute(message: Message) {
         const embed = new EmbedBuilder()
             .setColor(0xc200ff)

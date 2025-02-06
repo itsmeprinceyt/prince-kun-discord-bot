@@ -18,20 +18,15 @@ export default {
                     "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
             })
             .setTitle("Support me through UPI")
-            .setDescription(
-`
-As a streamer and developer, I am committed to delivering high-quality content for my audience to enjoy 
-and creating cool projects for everyone to use. All donations will be reinvested to improve my overall quality of life, allowing me to provide better streams and coding projects.
-
-I sincerely appreciate anyone who chooses to support me financially. Thank you for your generosity!
-
-💳 **UPI ID**
+            .setDescription(`As a streamer and developer, I am committed to delivering high-quality content for my audience to enjoy 
+and creating cool projects for everyone to use. All donations will be reinvested to improve my overall quality of life, allowing me to provide better streams and coding projects.\n\n`+
+                `I sincerely appreciate anyone who chooses to support me financially. Thank you for your generosity!\n\n` +
+                `💳 **UPI ID**
 1. \`itsmeprinceyt@sliceaxis\`
 2. \`itsme.prince@axl\`
 3. \`itsmeprincekotak@yespop\`
-4. \`itsmeprinceyt@slice\`
-
-**Use the button below to copy the corresponding UPI address.**`
+4. \`itsmeprinceyt@slice\`\n\n` +
+                `**Use the button below to copy the corresponding UPI address.**`
             )
             .setImage(
                 "https://media.discordapp.net/attachments/1336322293437038602/1337036315648331817/UPI.png"
@@ -72,7 +67,7 @@ I sincerely appreciate anyone who chooses to support me financially. Thank you f
         });
 
         collector.on("end", () => {
-            sentMessage.edit({ components: [] }).catch(() => {});
+            sentMessage.edit({ components: [] }).catch(() => { });
         });
     },
 };
