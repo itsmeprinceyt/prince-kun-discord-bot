@@ -67,7 +67,7 @@ const serverUpdatesCommand: Command = {
         }
 
         const modal = new ModalBuilder()
-            .setCustomId("serverUpdatesModal")  // Unique custom ID
+            .setCustomId("serverUpdatesModal") 
             .setTitle("Server Update Message");
 
         const messageInput = new TextInputBuilder()
