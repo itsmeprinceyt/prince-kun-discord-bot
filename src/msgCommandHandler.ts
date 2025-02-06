@@ -2,7 +2,12 @@ import { Collection } from "discord.js";
 import { readdirSync } from "fs";
 import { join } from "path";
 
-const msgCommands = new Collection<string, any>();
+interface MessageCommand {
+    triggers: string[];
+    execute: (message: any, args: string) => Promise<void>;
+}
+
+const msgCommands = new Collection<string, MessageCommand>();
 
 const commandFiles = readdirSync(join(__dirname, "msgCommands")).filter(
     (file) => file.endsWith(".ts") || file.endsWith(".js")
@@ -10,15 +15,11 @@ const commandFiles = readdirSync(join(__dirname, "msgCommands")).filter(
 
 for (const file of commandFiles) {
     const commandModule = require(`./msgCommands/${file}`);
-    const command = commandModule.default;
+    const command: MessageCommand = commandModule.default;
 
-    if (command && command.triggers) {
-        if (Array.isArray(command.triggers)) {
-            for (const trigger of command.triggers) {
-                msgCommands.set(trigger, command);
-            }
-        } else {
-            console.warn(`[ ERROR ] Message command ${file} "triggers" must be an array!`);
+    if (command && Array.isArray(command.triggers)) {
+        for (const trigger of command.triggers) {
+            msgCommands.set(trigger, command);
         }
     } else {
         console.warn(`[ ERROR ] Message command ${file} is missing "triggers" or "execute"!`);

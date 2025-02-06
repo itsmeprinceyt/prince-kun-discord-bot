@@ -1,25 +1,23 @@
 import { Message, EmbedBuilder } from "discord.js";
 
 export default {
-    triggers: [".?youtube", ".?yt"],
+    triggers: [".?youtubeclips", ".?ytclips",".?clips"],
     async execute(message: Message) {
         const embed = new EmbedBuilder()
             .setColor(0xc200ff)
             .setAuthor({
-                name: "Prince-Kun • Subscribe to my YouTube Channel",
+                name: "Prince-Kun • YouTube Clips/Highlights",
                 iconURL:
                     "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
             })
-            .setTitle("ItsMe Prince")
+            .setTitle("ItsMe Prince • Clips/Highlights")
             .setDescription(
-                `Hello, I'm Prince! I love diving into PC games and sharing my adventures with you. My channel features a mix of content: exciting gaming sessions, IRL drawing streams, and fun coding projects. Sometimes, I also chat about various topics that pique my interest. If you enjoy what you see,  then make sure to subscribe 🌟🌻 
+                `Find all the amazing community-made clips or stream highlights right here!🌟🌻 
                 
-                A friendly reminder: I upload content based on my mood.
-                
-                [Click Here To Subscribe or Visit !](https://www.youtube.com/channel/UC9UQVp8grhcVatbMcf0sa5w)`
+                [Check out my Clips/Highlights !](https://www.youtube.com/watch?v=U9CD1tFw1mg&list=PLiFooJ43_R5R2usnfqq4D1JkG2Bz1A8VB&index=1)`
             )
             .setImage(
-                "https://media.discordapp.net/attachments/1336322293437038602/1336708959737745520/YouTubeChannel.png"
+                "https://media.discordapp.net/attachments/1336322293437038602/1337031725762482278/YouTubeClips.png"
             )
             .setFooter({
                 text: `${message.author.username} | ${new Date().toLocaleTimeString("en-GB", {

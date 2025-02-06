@@ -60,13 +60,16 @@ client.on("messageCreate", async (message) => {
     if (message.author.bot) return;
     if (client.user && message.mentions.has(client.user.id) && !message.mentions.everyone) {
         message.channel.send("## 🥸**POK U BICH**🖕").then((msg) => {
-            setTimeout(() => msg.delete().catch(() => {}), 2000);
+            setTimeout(() => msg.delete().catch(() => { }), 2000);
         });
         return;
     }
 
     const content = message.content.toLowerCase();
-    const command = [...msgCommands.values()].find(cmd => cmd.triggers.includes(content));
+    const args = message.content.split(" ").slice(1).join(" ");
+    const command = [...msgCommands.values()].find(cmd =>
+        cmd.triggers.some(trigger => message.content.startsWith(trigger))
+    );
 
     if (command) {
         console.log(
@@ -80,9 +83,8 @@ client.on("messageCreate", async (message) => {
             "\n" +
             chalk.cyan(`Location: ${message.guild ? `Server: ${message.guild.name}` : "DM"}`)
         );
-
         try {
-            await command.execute(message);
+            await command.execute(message, args); // Pass args to the command
             console.log(chalk.green(`[ SUCCESS ] Message Command Executed: ${content}\n`));
         } catch (error) {
             console.error(chalk.red(`[ ERROR ] Failed to execute ${content}:`), error);

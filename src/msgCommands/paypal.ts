@@ -1,25 +1,25 @@
 import { Message, EmbedBuilder } from "discord.js";
 
 export default {
-    triggers: [".?youtube", ".?yt"],
+    triggers: [".?paypal"],
     async execute(message: Message) {
         const embed = new EmbedBuilder()
             .setColor(0xc200ff)
             .setAuthor({
-                name: "Prince-Kun • Subscribe to my YouTube Channel",
+                name: "Prince-Kun • PayPal",
                 iconURL:
                     "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
             })
-            .setTitle("ItsMe Prince")
+            .setTitle("Support Me on Paypal")
             .setDescription(
-                `Hello, I'm Prince! I love diving into PC games and sharing my adventures with you. My channel features a mix of content: exciting gaming sessions, IRL drawing streams, and fun coding projects. Sometimes, I also chat about various topics that pique my interest. If you enjoy what you see,  then make sure to subscribe 🌟🌻 
+                `As a streamer and developer, I am committed to delivering high-quality content for my audience to enjoy and creating cool projects for everyone to use. All donations will be reinvested to improve my overall quality of life, allowing me to provide better streams and coding projects.
+
+I sincerely appreciate anyone who chooses to support me financially. Thank you for your generosity! 😊
                 
-                A friendly reminder: I upload content based on my mood.
-                
-                [Click Here To Subscribe or Visit !](https://www.youtube.com/channel/UC9UQVp8grhcVatbMcf0sa5w)`
+                [Click here to support me on PayPal !](https://paypal.me/itsmeprinceyt)`
             )
             .setImage(
-                "https://media.discordapp.net/attachments/1336322293437038602/1336708959737745520/YouTubeChannel.png"
+                "https://media.discordapp.net/attachments/1336322293437038602/1337032557258342463/PayPal.png"
             )
             .setFooter({
                 text: `${message.author.username} | ${new Date().toLocaleTimeString("en-GB", {
