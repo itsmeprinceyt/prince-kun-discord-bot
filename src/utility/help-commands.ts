@@ -20,7 +20,8 @@ export const HelpDescription = `**🚀 Message Commands!**\n` +
     `> **📌 \`.?whatsapp    \`** • Sends Whatsapp Number & Broadcast Channel link\n` +
     `> **📌 \`.?x           \`** • Sends X profile\n` +
     `> **📌 \`.?youtube     \`** • Sends YouTube channel link\n` +
-    `> **📌 \`.?clips       \`** • Sends Clips/Highlight link\n\n` +
+    `> **📌 \`.?clips       \`** • Sends Clips/Highlight link\n` +
+    `> **📌 \`.?life        \`** • Wakes you up from reality!\n\n` +
 
     `**🚀 Slash Commands!**\n` +
     `> **📌 \`/ping         \`** • Replies with Pong (admin only)\n` +

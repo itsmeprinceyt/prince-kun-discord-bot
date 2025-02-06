@@ -16,7 +16,7 @@ export default {
 
 I sincerely appreciate anyone who chooses to support me financially. Thank you for your generosity! 😊
                 
-                [Click here to support me on Ko-Fi !](https://ko-fi.com/itsmeprinceyt)`
+[Click here to support me on Ko-Fi !](https://ko-fi.com/itsmeprinceyt)`
             )
             .setImage(
                 "https://media.discordapp.net/attachments/1336322293437038602/1337027679886774272/KoFi.png"
