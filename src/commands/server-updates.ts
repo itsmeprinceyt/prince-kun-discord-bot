@@ -29,7 +29,7 @@ const serverUpdatesCommand: Command = {
         if (isDM) {
             await interaction.reply({
                 content: "This is a Server-Only Command! 🖕",
-                ephemeral: true,
+                flags: 64,
             });
             console.log(
                 chalk.underline(`[ INFO ]`) +
@@ -49,7 +49,7 @@ const serverUpdatesCommand: Command = {
         if (interaction.user.id !== ownerId) {
             await interaction.reply({
                 content: "🚫 Only the server owner can use this command!",
-                ephemeral: true,
+                flags: 64,
             });
 
             console.log(
@@ -111,7 +111,7 @@ export async function handleServerModalSubmit(interaction: ModalSubmitInteractio
 
     await interaction.reply({
         content: "✅ Server update message sent!",
-        ephemeral: true,
+        flags: 64,
     });
 
     console.log(
