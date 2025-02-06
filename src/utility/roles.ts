@@ -1,0 +1,6 @@
+export const Roles = [
+    { name: "ChangesPing", roleId: "1124706806531371135" },
+    { name: "GenshinPing", roleId: "969188588870852628"},
+    { name: "HSRPing", roleId: "1124817467257139270"},
+    { name: "WuwaPing", roleId: "1242892684226592920"},
+];

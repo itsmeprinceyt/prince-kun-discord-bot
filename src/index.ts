@@ -11,7 +11,13 @@ import {
 import commands from "./commandHandler";
 import msgCommands from "./msgCommandHandler";
 import deployCommands from "./deployCommands";
-import { handleModalSubmit } from "./commands/bot-updates";
+import { handleModalSubmit as handleBotModalSubmit } from "./commands/bot-updates";
+import { handleServerModalSubmit } from "./commands/server-updates";
+
+const modalHandlers = new Map<string, (interaction: ModalSubmitInteraction) => Promise<void>>([
+    ["botUpdatesModal", handleBotModalSubmit],
+    ["serverUpdatesModal", handleServerModalSubmit],
+]);
 
 const client = new Client({
     intents: [
@@ -52,7 +58,12 @@ client.on("interactionCreate", async (interaction) => {
             });
         }
     } else if (interaction.isModalSubmit()) {
-        await handleModalSubmit(interaction as ModalSubmitInteraction);
+        const handler = modalHandlers.get(interaction.customId);
+        if (handler) {
+            await handler(interaction as ModalSubmitInteraction);
+        } else {
+            console.warn(`[ WARNING ] No handler found for modal: ${interaction.customId}`);
+        }
     }
 });
 
