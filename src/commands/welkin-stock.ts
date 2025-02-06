@@ -1,6 +1,8 @@
 import { Roles } from "../utility/roles";
+import { RolesPerms } from "../utility/rolePerms";
 const StockUpdate = Roles[5].roleId;
 const MarketUpdate = Roles[4].roleId;
+const ShopManager = RolesPerms[1].roleId;
 
 import {
     SlashCommandBuilder,
@@ -33,18 +35,26 @@ const WelkinStock: Command = {
             });
             return;
         }
+        
+        const member = interaction.member as GuildMember;
+        const userName = member?.displayName || interaction.user.username;
+        const userRoles = member.roles.cache.map(role => role.id);
 
         const ownerId = interaction.guild!.ownerId;
-        if (interaction.user.id !== ownerId) {
+        const hasRequiredRole = userRoles.includes(ShopManager);
+
+        if (interaction.user.id !== ownerId && !hasRequiredRole) {
             await interaction.reply({
-                content: "🚫 Only the server owner can use this command!",
+                content: "🚫 Only the server owner or users with the required role can use this command!",
                 flags: 64,
             });
 
             console.log(
                 chalk.underline(`[ INFO ]`) +
                 "\n" +
-                chalk.yellow(`User: ${interaction.user.username}`) +
+                chalk.yellow(`User: ${userName}`) +
+                "\n" +
+                chalk.yellow(`Username: ${interaction.user.username}`) +
                 "\n" +
                 chalk.magenta(`Command: /welkin-stock`) +
                 "\n" +
@@ -87,8 +97,6 @@ const WelkinStock: Command = {
 
 
         const channel = interaction.channel as TextChannel;
-        const member = interaction.member as GuildMember;
-        const userName = member?.displayName || interaction.user.username;
 
         await channel.send({
             content: `<@&${MarketUpdate}> <@&${StockUpdate}>`,
