@@ -2,7 +2,7 @@ import { Message, EmbedBuilder } from "discord.js";
 import { HelpDescriptionAdmin } from "../utility/help-command-admin";
 
 export default {
-    triggers: [".?help-admin"],
+    triggers: [".?help-admin",".?admin"],
     async execute(message: Message) {
         const embed = new EmbedBuilder()
             .setColor(0xc200ff)
@@ -11,7 +11,7 @@ export default {
                 iconURL:
                     "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
             })
-            .setTitle("Here are all the available commands which you can use!")
+            .setTitle("All Admin Commands !")
             .setDescription(HelpDescriptionAdmin)
             .setImage(
                 "https://media.discordapp.net/attachments/1336322293437038602/1336708310904340572/Help.png"
