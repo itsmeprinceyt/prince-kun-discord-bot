@@ -39,8 +39,8 @@ const pingCommand: Command = {
 
     const member = interaction.member as GuildMember;
     const userName = member.displayName || interaction.user.username;
-    const gifPath = path.join(__dirname, "../../public/GIF/sonic-sonic-exe.gif");
-    const gifPath2 = path.join(__dirname, "../../public/GIF/mambo.gif");
+    const gifPath = path.join(__dirname, "../public/GIF/sonic-sonic-exe.gif");
+    const gifPath2 = path.join(__dirname, "../public/GIF/mambo.gif");
     const NonAdmin = new AttachmentBuilder(gifPath);
     const Admin = new AttachmentBuilder(gifPath2);
 

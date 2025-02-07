@@ -12,6 +12,6 @@
       "outDir": "dist",
       "esModuleInterop": true
   },
-  "include": ["src"],
+  "include": ["src","src/public"],
   "exclude": ["node_modules"]
 }
