@@ -53,7 +53,7 @@ const GameCode: Command = {
                 .setRequired(true)
         )
         .addStringOption(option =>
-            option.setName("custome_image_url")
+            option.setName("custom_image_url")
                 .setDescription("Enter a custom image URL")
                 .setRequired(false)
         ) as SlashCommandBuilder,
@@ -95,17 +95,22 @@ const GameCode: Command = {
             );
             return;
         }
+        userCache.set(interaction.user.id, {
+            username: interaction.user.username,
+            avatarURL: interaction.user.displayAvatarURL(),
+        });
 
         const userInfo = userCache.get(interaction.user.id);
-        const username = userInfo?.username || "Unknown User";
+        const username = userInfo?.username || interaction.user.username;
         const avatarURL = userInfo?.avatarURL || interaction.user.displayAvatarURL();
+
 
         const game = interaction.options.getString("game", true);
         const redemptionCode = interaction.options.getString("redemption_code", true);
         const codeTitle = interaction.options.getString("code_title", true);
         const useDefaultImage = interaction.options.getBoolean("usedefaultimage", true);
-        const customImageUrl = interaction.options.getString("custom_image_url") || "";
-        const sanitizedImageUrl = customImageUrl.replace(/\?.*$/, "");
+        const customImageUrl = interaction.options.getString("custom_image_url")?.trim() || null;
+        const sanitizedImageUrl = customImageUrl ? customImageUrl.replace(/\?.*$/, "") : null;
 
         let imageUrl = "";
 
@@ -115,7 +120,7 @@ const GameCode: Command = {
             imageUrl = DefaultImageHSR;
         } else if (game === "wuwa" && useDefaultImage) {
             imageUrl = DefaultImageWuwa;
-        } else if (customImageUrl) {
+        } else if (!useDefaultImage && sanitizedImageUrl) {
             imageUrl = sanitizedImageUrl;
         } else {
             await interaction.reply({
@@ -127,7 +132,7 @@ const GameCode: Command = {
 
         /*=================================================== GENSHIN IMPACT*/
         const genshinPing = new EmbedBuilder()
-            .setColor(0x00ff00)
+            .setColor(0x006eff)
             .setAuthor({
                 name: "Prince-Kun • Genshin Impact",
                 iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
@@ -147,7 +152,7 @@ const GameCode: Command = {
             });
         /*=================================================== EXPRESS PASS*/
         const hsrPing = new EmbedBuilder()
-            .setColor(0x00ff00)
+            .setColor(0x006eff)
             .setAuthor({
                 name: "Prince-Kun • Honkai Star Rail",
                 iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
@@ -168,7 +173,7 @@ const GameCode: Command = {
 
         /*=================================================== LUNITE SUBSCRIPTION*/
         const wuwaPing = new EmbedBuilder()
-            .setColor(0x00ff00)
+            .setColor(0x006eff)
             .setAuthor({
                 name: "Prince-Kun • Wuthering Waves",
                 iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
@@ -188,41 +193,40 @@ const GameCode: Command = {
             });
 
         const embedsMap: Record<string, EmbedBuilder[]> = {
-            "GenshinPrimogems": [genshinPing],
-            "HSRJades": [hsrPing],
-            "WuWaAstrites": [wuwaPing],
+            "genshin": [genshinPing],
+            "hsr": [hsrPing],
+            "wuwa": [wuwaPing],
         };
+
         const gameEmojis: Record<string, string> = {
-            "GenshinPrimogems": "<:Primogem:977169624187695104>", // Replace with actual emoji ID
-            "HSRJades": "<:jade:1131210828704645175>", // HSR custom emoji
-            "WuWaAstrites": "<:astrite:1337342930448551987>", // WuWa custom emoji
+            "genshin": "<:Primogem:977169624187695104>",
+            "hsr": "<:jade:1131210828704645175>",
+            "wuwa": "<:astrite:1337342930448551987>",
         };
         const gameRoles: Record<string, string> = {
             "genshin": GenshinPing,
             "hsr": HSRPing,
             "wuwa": WuwaPing,
         };
-        
-        const roleToPing = gameRoles[game] || ""; // Fallback to empty string if no match
 
-        
+        const roleToPing = gameRoles[game] || "";
+
+
         const embedsToSend = embedsMap[game];
 
         const channel = interaction.channel as TextChannel;
         if (embedsToSend) {
             const sentMessage = await channel.send({
-                content: roleToPing ? `<@&${roleToPing}>` : "", // Ping only if role exists
+                content: roleToPing ? `<@&${roleToPing}>` : "",
                 embeds: embedsToSend,
             });
-            
 
-            // Extract the emoji ID for reaction
             const emojiToReact = gameEmojis[game];
             if (emojiToReact) {
                 const emojiMatch = emojiToReact.match(/<:\w+:(\d+)>/);
                 if (emojiMatch) {
                     const emojiId = emojiMatch[1];
-                    await sentMessage.react(emojiId); // React with the custom emoji ID
+                    await sentMessage.react(emojiId);
                 }
             }
             await interaction.reply({
