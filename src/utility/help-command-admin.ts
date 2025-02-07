@@ -3,6 +3,8 @@ export const HelpDescriptionAdmin = `**🚀 Message Commands!**\n` +
 
     `**🚀 Slash Commands!**\n` +
     `> **📌 \`/bot-updates                  \`** \n` +
+    `> **📌 \`/game-code                    \`** \n` +
+    `> **📌 \`/game-livestream-codes        \`** \n` +
     `> **📌 \`/server-updates               \`** \n` +
     `> **📌 \`/game-items-stock             \`** \n` +
     `> **📌 \`/game-items-no-stock          \`** \n`+

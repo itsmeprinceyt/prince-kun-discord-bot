@@ -22,10 +22,10 @@ import { Command } from "../types/Command";
 
 const userCache = new Map<string, { username: string; avatarURL: string }>();
 
-const GameCode: Command = {
+const GameLivestreamCode: Command = {
     data: new SlashCommandBuilder()
-        .setName("game-code")
-        .setDescription("Sends an embed about a game's redemption code.")
+        .setName("game-livestream-codes")
+        .setDescription("Sends an embed about a game's special livestream redemption codes.")
         .addStringOption((option) =>
             option.setName("game")
                 .setDescription("Select game")
@@ -37,13 +37,23 @@ const GameCode: Command = {
                 )
         )
         .addStringOption(option =>
-            option.setName("redemption_code")
-                .setDescription("Enter the redemption code")
+            option.setName("redemption_code_1")
+                .setDescription("Enter the first redemption code")
+                .setRequired(true)
+        )
+        .addStringOption(option =>
+            option.setName("redemption_code_2")
+                .setDescription("Enter the second redemption code")
+                .setRequired(true)
+        )
+        .addStringOption(option =>
+            option.setName("redemption_code_3")
+                .setDescription("Enter the third redemption code")
                 .setRequired(true)
         )
         .addStringOption(option =>
             option.setName("code_title")
-                .setDescription("Enter the title for this code/what are the rewards?")
+                .setDescription("Enter the title for these codes?")
                 .setRequired(true)
         )
         .addBooleanOption(option =>
@@ -86,7 +96,7 @@ const GameCode: Command = {
                 "\n" +
                 chalk.yellow(`Username: ${interaction.user.username}`) +
                 "\n" +
-                chalk.magenta(`Command: /game-code`) +
+                chalk.magenta(`Command: /game-livestream-codes`) +
                 "\n" +
                 chalk.cyan(`Location: ${location}`) +
                 "\n" +
@@ -105,7 +115,9 @@ const GameCode: Command = {
 
 
         const game = interaction.options.getString("game", true);
-        const redemptionCode = interaction.options.getString("redemption_code", true);
+        const redemptionCode1 = interaction.options.getString("redemption_code_1", true);
+        const redemptionCode2 = interaction.options.getString("redemption_code_2", true);
+        const redemptionCode3 = interaction.options.getString("redemption_code_3", true);
         const codeTitle = interaction.options.getString("code_title", true);
         const useDefaultImage = interaction.options.getBoolean("usedefaultimage", true);
         const customImageUrl = interaction.options.getString("custom_image_url")?.trim() || null;
@@ -138,7 +150,9 @@ const GameCode: Command = {
             })
             .setTitle(`${codeTitle}`)
             .setDescription(
-                `Code: [${redemptionCode}](https://genshin.hoyoverse.com/en/gift?code=${redemptionCode})\n\n` +
+                `Code: [${redemptionCode1}](https://genshin.hoyoverse.com/en/gift?code=${redemptionCode1})\n` +
+                `Code: [${redemptionCode2}](https://genshin.hoyoverse.com/en/gift?code=${redemptionCode2})\n` +
+                `Code: [${redemptionCode3}](https://genshin.hoyoverse.com/en/gift?code=${redemptionCode3})\n\n` +
                 `Click on the code above or redeem through the website below:\n https://genshin.hoyoverse.com/en/gift`
             )
             .setImage(imageUrl)
@@ -158,7 +172,9 @@ const GameCode: Command = {
             })
             .setTitle(`${codeTitle}`)
             .setDescription(
-                `Code: [${redemptionCode}](https://hsr.hoyoverse.com/gift?code=${redemptionCode})\n\n` +
+                `Code: [${redemptionCode1}](https://genshin.hoyoverse.com/en/gift?code=${redemptionCode1})\n` +
+                `Code: [${redemptionCode2}](https://genshin.hoyoverse.com/en/gift?code=${redemptionCode2})\n` +
+                `Code: [${redemptionCode3}](https://genshin.hoyoverse.com/en/gift?code=${redemptionCode3})\n\n` +
                 `Click on the code above or redeem through the website below:\n https://hsr.hoyoverse.com/gift`
             )
             .setImage(imageUrl)
@@ -179,7 +195,9 @@ const GameCode: Command = {
             })
             .setTitle(`${codeTitle}`)
             .setDescription(
-                `Code: ${redemptionCode}\n\n` +
+                `Code: ${redemptionCode1}\n` +
+                `Code: ${redemptionCode2}\n` +
+                `Code: ${redemptionCode3}\n\n` +
                 `There is no official website to redeem codes, you need to log-into your game to be able to redeem the code!`
             )
             .setImage(imageUrl)
@@ -239,14 +257,14 @@ const GameCode: Command = {
                 "\n" +
                 chalk.yellow(`Username: ${interaction.user.username}`) +
                 "\n" +
-                chalk.magenta(`Command: /game-code`) +
+                chalk.magenta(`Command: /game-livestream-codes`) +
                 "\n" +
                 chalk.cyan(`Location: ${location}`) +
                 "\n" +
-                chalk.green(`Message: Command executed successfully! : Game:"${game}", Code: ${redemptionCode} sent!\n`)
+                chalk.green(`Message: Command executed successfully! : Game:"${game}", Code: ${redemptionCode1} | ${redemptionCode2} | ${redemptionCode3} sent!\n`)
             );
         }
     }
 }
 
-export default GameCode;
+export default GameLivestreamCode;
