@@ -4,8 +4,8 @@ export const HelpDescriptionAdmin = `**🚀 Message Commands!**\n` +
     `**🚀 Slash Commands!**\n` +
     `> **📌 \`/bot-updates                  \`** \n` +
     `> **📌 \`/server-updates               \`** \n` +
-    `> **📌 \`/welkin-stock                 \`** \n` +
-    `> **📌 \`/welkin-no-stock              \`** \n`+
+    `> **📌 \`/game-items-stock             \`** \n` +
+    `> **📌 \`/game-items-no-stock          \`** \n`+
     `> **📌 \`/set-code-poster-role         \`** \n`+
     `> **📌 \`/set-shop-manager-role        \`** \n`+
     `> **📌 \`/remove-code-poster-role      \`** \n`+

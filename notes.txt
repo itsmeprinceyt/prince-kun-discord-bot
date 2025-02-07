@@ -6,3 +6,90 @@ when making a command check:
 - only a certain role + owner ?
 
 2. If that command is runnable in dm or not
+
+import { 
+    SlashCommandBuilder, 
+    ChatInputCommandInteraction, 
+    EmbedBuilder, 
+    Attachment, 
+    GuildMember 
+} from "discord.js";
+import { Command } from "../types/Command";
+
+// Predefined default image URL
+const DEFAULT_IMAGE_URL = "https://example.com/default-image.png";
+
+// Replace with your actual Code Poster role ID
+const CODE_POSTER_ROLE_ID = "YOUR_CODE_POSTER_ROLE_ID";
+
+const uploadImage: Command = {
+    data: new SlashCommandBuilder()
+        .setName("upload-image")
+        .setDescription("Uploads an image and displays it in an embed.")
+        .addAttachmentOption(option =>
+            option.setName("image")
+                .setDescription("Upload an image to display in the embed.")
+                .setRequired(false) // Optional image
+        )
+        .addBooleanOption(option =>
+            option.setName("usedefaultimage")
+                .setDescription("Use the default image instead?")
+                .setRequired(true) // Mandatory yes/no choice
+        ),
+
+    async execute(interaction: ChatInputCommandInteraction) {
+        // Ensure the command is used in a server (not in DMs)
+        if (!interaction.guild) {
+            await interaction.reply({
+                content: "❌ This command can only be used in a server!",
+                ephemeral: true,
+            });
+            return;
+        }
+
+        const executor = interaction.member as GuildMember;
+        const ownerId = interaction.guild.ownerId;
+
+        // Check if user is the Server Owner OR has the "Code Poster" role
+        if (executor.id !== ownerId && !executor.roles.cache.has(CODE_POSTER_ROLE_ID)) {
+            await interaction.reply({
+                content: "🚫 You don't have permission to use this command!",
+                ephemeral: true, // Message only visible to the user
+            });
+            return;
+        }
+
+        // Get options from the command
+        const attachment = interaction.options.getAttachment("image") as Attachment;
+        const useDefaultImage = interaction.options.getBoolean("usedefaultimage", true);
+
+        let imageUrl = "";
+
+        if (attachment && attachment.contentType?.startsWith("image/")) {
+            // If user uploaded an image, use it
+            imageUrl = attachment.url;
+        } else if (useDefaultImage) {
+            // If no image uploaded and user selected "yes" for default image, use predefined image
+            imageUrl = DEFAULT_IMAGE_URL;
+        } else {
+            // If neither an image was uploaded nor "use default" was selected, send an error message
+            await interaction.reply({
+                content: "❌ Please upload an image or select 'Yes' for 'Use Default Image'!",
+                ephemeral: true,
+            });
+            return;
+        }
+
+        // Create an embed with the selected image
+        const embed = new EmbedBuilder()
+            .setTitle("User Uploaded Image")
+            .setColor(0x00ff00)
+            .setImage(imageUrl)
+            .setFooter({ text: `Uploaded by ${interaction.user.username}`, iconURL: interaction.user.displayAvatarURL() });
+
+        // Reply with the embed
+        await interaction.reply({ embeds: [embed] });
+    },
+};
+
+export default uploadImage;
