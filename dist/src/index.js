@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-console.log(`Token: ${process.env.DISCORD_BOT_TOKEN}, Client ID: ${process.env.CLIENT_ID}`);
 const chalk_1 = __importDefault(require("chalk"));
 const discord_js_1 = require("discord.js");
 const commandHandler_1 = __importDefault(require("./commandHandler"));

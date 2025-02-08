@@ -9,7 +9,6 @@ const commandFiles = (0, fs_1.readdirSync)((0, path_1.join)(__dirname, "commands
 for (const file of commandFiles) {
     const commandModule = require(`./commands/${file}`);
     const command = commandModule.default;
-    console.log(`[ DEBUG ] Loading command file: ${file}`);
     if (command && command.data) {
         commands.set(command.data.name, command);
     }
