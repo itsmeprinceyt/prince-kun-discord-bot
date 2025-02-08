@@ -15,6 +15,7 @@ import msgCommands from "./msgCommandHandler";
 import deployCommands from "./deployCommands";
 import { handleModalSubmit as handleBotModalSubmit } from "./commands/bot-updates";
 import { handleServerModalSubmit } from "./commands/server-updates";
+import { initDB } from "./db"; // Import the initDB function
 
 const modalHandlers = new Map<string, (interaction: ModalSubmitInteraction) => Promise<void>>([
     ["botUpdatesModal", handleBotModalSubmit],
@@ -32,111 +33,115 @@ const client = new Client({
     partials: [Partials.Channel],
 });
 
-client.on("ready", async (c) => {
-    await deployCommands();
-    async function updatePresence() {
-        try {
-            let allMembers: string[] = [];
-            for (const [guildId, guild] of client.guilds.cache) {
-                try {
-                    await guild.members.fetch();
-                    const members = guild.members.cache
-                        .filter(member => !member.user.bot)
-                        .map(member => member.displayName);
-                    allMembers = allMembers.concat(members);
-                } catch (error) {
-                    console.error(`[ ERROR ] Could not fetch members from guild: ${guildId}`, error);
+async function startBot() {
+    console.log("[ DATABASE ] Checking database connection...");
+    await initDB();
+
+    client.on("ready", async (c) => {
+        await deployCommands();
+        async function updatePresence() {
+            try {
+                let allMembers: string[] = [];
+                for (const [guildId, guild] of client.guilds.cache) {
+                    try {
+                        await guild.members.fetch();
+                        const members = guild.members.cache
+                            .filter(member => !member.user.bot)
+                            .map(member => member.displayName);
+                        allMembers = allMembers.concat(members);
+                    } catch (error) {
+                        console.error(`[ ERROR ] Could not fetch members from guild: ${guildId}`, error);
+                    }
                 }
+                let presenceText = "y'all souls";
+                if (allMembers.length > 0) {
+                    presenceText = `${allMembers[Math.floor(Math.random() * allMembers.length)]}'s soul`;
+                }
+                
+                c.user.setPresence({
+                    status: "dnd",
+                    activities: [
+                        {
+                            name: `over ${presenceText}. 🥸`,
+                            type: 3,
+                        },
+                    ],
+                });
+            } catch (error) {
+                console.error("[ ERROR ] Failed to update presence:", error);
             }
-            let presenceText = "y'all souls";
-            if (allMembers.length > 0) {
-                presenceText = `${allMembers[Math.floor(Math.random() * allMembers.length)]}'s soul`;
+        }
+
+        updatePresence();
+        setInterval(updatePresence, 15000);
+
+        console.log(chalk.green(`[ ${c.user.username} ] 💚 IS ONLINE (DND Mode) !`));
+    });
+
+    client.on("interactionCreate", async (interaction) => {
+        if (interaction.isChatInputCommand()) {
+            const command = commands.get(interaction.commandName);
+            if (!command) return;
+
+            try {
+                await command.execute(interaction);
+            } catch (error) {
+                console.error(error);
+                await interaction.reply({
+                    content: "[ ERROR ] There was an error executing this command!",
+                    ephemeral: true,
+                });
             }
-            
-            c.user.setPresence({
-                status: "dnd",
-                activities: [
-                    {
-                        name: `over ${presenceText}. 🥸`,
-                        type: 3,
-                    },
-                ],
+        } else if (interaction.isModalSubmit()) {
+            const handler = modalHandlers.get(interaction.customId);
+            if (handler) {
+                await handler(interaction as ModalSubmitInteraction);
+            } else {
+                console.warn(`[ WARNING ] No handler found for modal: ${interaction.customId}`);
+            }
+        }
+    });
+
+    client.on("messageCreate", async (message) => {
+        if (message.author.bot) return;
+        if (client.user && message.mentions.has(client.user.id) && !message.mentions.everyone) {
+            message.channel.send("## 🥸**POK U BICH**🖕").then((msg) => {
+                setTimeout(() => msg.delete().catch(() => { }), 2000);
             });
-        } catch (error) {
-            console.error("[ ERROR ] Failed to update presence:", error);
+            return;
         }
-    }
 
-    // Run immediately & every 15 seconds
-    updatePresence();
-    setInterval(updatePresence, 15000);
+        const content = message.content.toLowerCase();
+        const args = message.content.split(" ").slice(1).join(" ");
+        const command = [...msgCommands.values()]
+            .sort((a, b) => b.triggers[0].length - a.triggers[0].length)
+            .find(cmd => cmd.triggers.some(trigger => message.content.startsWith(trigger)));
 
-    console.log(chalk.green(`[ ${c.user.username} ] 💚 IS ONLINE (DND Mode) !`));
+        if (command) {
+            console.log(
+                chalk.underline(`[ INFO ]`) +
+                "\n" +
+                chalk.yellow(`User: ${message.member?.displayName || message.author.username}`) +
+                "\n" +
+                chalk.yellow(`Username: ${message.author.username}`) +
+                "\n" +
+                chalk.magenta(`Message Command: ${content}`) +
+                "\n" +
+                chalk.cyan(`Location: ${message.guild ? `Server: ${message.guild.name}` : "DM"}`)
+            );
+            try {
+                await command.execute(message, args);
+                console.log(chalk.green(`[ SUCCESS ] Message Command Executed: ${content}\n`));
+            } catch (error) {
+                console.error(chalk.red(`[ ERROR ] Failed to execute ${content}:`), error);
+                await message.reply("⚠️ Error executing command!");
+            }
+        }
+    });
+
+    client.login(process.env.DISCORD_BOT_TOKEN);
+}
+
+startBot().catch(error => {
+    console.error("❌ Failed to start bot:", error);
 });
-
-
-
-client.on("interactionCreate", async (interaction) => {
-    if (interaction.isChatInputCommand()) {
-        const command = commands.get(interaction.commandName);
-        if (!command) return;
-
-        try {
-            await command.execute(interaction);
-        } catch (error) {
-            console.error(error);
-            await interaction.reply({
-                content: "[ ERROR ] There was an error executing this command!",
-                ephemeral: true,
-            });
-        }
-    } else if (interaction.isModalSubmit()) {
-        const handler = modalHandlers.get(interaction.customId);
-        if (handler) {
-            await handler(interaction as ModalSubmitInteraction);
-        } else {
-            console.warn(`[ WARNING ] No handler found for modal: ${interaction.customId}`);
-        }
-    }
-});
-
-client.on("messageCreate", async (message) => {
-    if (message.author.bot) return;
-    if (client.user && message.mentions.has(client.user.id) && !message.mentions.everyone) {
-        message.channel.send("## 🥸**POK U BICH**🖕").then((msg) => {
-            setTimeout(() => msg.delete().catch(() => { }), 2000);
-        });
-        return;
-    }
-
-    const content = message.content.toLowerCase();
-    const args = message.content.split(" ").slice(1).join(" ");
-    const command = [...msgCommands.values()]
-        .sort((a, b) => b.triggers[0].length - a.triggers[0].length)
-        .find(cmd => cmd.triggers.some(trigger => message.content.startsWith(trigger)));
-
-
-
-    if (command) {
-        console.log(
-            chalk.underline(`[ INFO ]`) +
-            "\n" +
-            chalk.yellow(`User: ${message.member?.displayName || message.author.username}`) +
-            "\n" +
-            chalk.yellow(`Username: ${message.author.username}`) +
-            "\n" +
-            chalk.magenta(`Message Command: ${content}`) +
-            "\n" +
-            chalk.cyan(`Location: ${message.guild ? `Server: ${message.guild.name}` : "DM"}`)
-        );
-        try {
-            await command.execute(message, args); // Pass args to the command
-            console.log(chalk.green(`[ SUCCESS ] Message Command Executed: ${content}\n`));
-        } catch (error) {
-            console.error(chalk.red(`[ ERROR ] Failed to execute ${content}:`), error);
-            await message.reply("⚠️ Error executing command!");
-        }
-    }
-});
-
-client.login(process.env.DISCORD_BOT_TOKEN);
