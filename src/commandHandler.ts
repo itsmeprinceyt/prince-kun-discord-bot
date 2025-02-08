@@ -3,14 +3,14 @@ import { readdirSync } from "fs";
 import { join } from "path";
 import { Command } from "./types/Command";
 const commands = new Collection<string, Command>();
-const commandFiles = readdirSync(join(__dirname, "commands")).filter((file) =>
-  file.endsWith(".ts")
+const isDev = process.env.NODE_ENV !== 'production';
+const commandFiles = readdirSync(join(__dirname, "commands")).filter(
+  (file) => file.endsWith(".ts") || file.endsWith(".js")
 );
 
 for (const file of commandFiles) {
   const commandModule = require(`./commands/${file}`);
   const command: Command = commandModule.default;
-  
   if (command && command.data) {
     commands.set(command.data.name, command);
   } else {

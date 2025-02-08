@@ -6,7 +6,10 @@ import { Command } from './types/Command';
 
 async function deployCommands() {
     const commands = [];
-    const commandFiles = readdirSync(join(__dirname, 'commands')).filter(file => file.endsWith('.ts'));
+    const commandFiles = readdirSync(join(__dirname, "commands")).filter(
+        (file) => file.endsWith(".ts") || file.endsWith(".js")
+    );
+
     for (const file of commandFiles) {
         const commandModule = require(`./commands/${file}`);
         const command: Command = commandModule.default;

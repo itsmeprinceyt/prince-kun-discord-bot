@@ -1,10 +1,10 @@
 {
   "name": "prince-kun-discord-bot",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "tsc && node dist/copyAssets.js",
     "start": "node ."
   },
   "keywords": [],

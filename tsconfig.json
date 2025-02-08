@@ -12,6 +12,6 @@
       "outDir": "dist",
       "esModuleInterop": true
   },
-  "include": ["src","src/public"],
+  "include": ["src","src/public", "copyAssets.ts"],
   "exclude": ["node_modules"]
 }
