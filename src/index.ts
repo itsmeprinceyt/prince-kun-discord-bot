@@ -25,6 +25,7 @@ const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildMembers,
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.DirectMessages
     ],
@@ -33,17 +34,47 @@ const client = new Client({
 
 client.on("ready", async (c) => {
     await deployCommands();
-    c.user.setPresence({
-        status: "dnd",
-        activities: [
-            {
-                name: "over y'all souls. 🥸",
-                type: 3,
-            },
-        ],
-    });
+    async function updatePresence() {
+        try {
+            let allMembers: string[] = [];
+            for (const [guildId, guild] of client.guilds.cache) {
+                try {
+                    await guild.members.fetch();
+                    const members = guild.members.cache
+                        .filter(member => !member.user.bot)
+                        .map(member => member.displayName);
+                    allMembers = allMembers.concat(members);
+                } catch (error) {
+                    console.error(`[ ERROR ] Could not fetch members from guild: ${guildId}`, error);
+                }
+            }
+            let presenceText = "y'all souls";
+            if (allMembers.length > 0) {
+                presenceText = `${allMembers[Math.floor(Math.random() * allMembers.length)]}'s soul`;
+            }
+            
+            c.user.setPresence({
+                status: "dnd",
+                activities: [
+                    {
+                        name: `over ${presenceText}. 🥸`,
+                        type: 3,
+                    },
+                ],
+            });
+        } catch (error) {
+            console.error("[ ERROR ] Failed to update presence:", error);
+        }
+    }
+
+    // Run immediately & every 15 seconds
+    updatePresence();
+    setInterval(updatePresence, 15000);
+
     console.log(chalk.green(`[ ${c.user.username} ] 💚 IS ONLINE (DND Mode) !`));
 });
+
+
 
 client.on("interactionCreate", async (interaction) => {
     if (interaction.isChatInputCommand()) {
@@ -81,8 +112,8 @@ client.on("messageCreate", async (message) => {
     const content = message.content.toLowerCase();
     const args = message.content.split(" ").slice(1).join(" ");
     const command = [...msgCommands.values()]
-    .sort((a, b) => b.triggers[0].length - a.triggers[0].length)
-    .find(cmd => cmd.triggers.some(trigger => message.content.startsWith(trigger)));
+        .sort((a, b) => b.triggers[0].length - a.triggers[0].length)
+        .find(cmd => cmd.triggers.some(trigger => message.content.startsWith(trigger)));
 
 
 
