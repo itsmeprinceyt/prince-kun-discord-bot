@@ -17,7 +17,7 @@ exports.HelpDescription = `**🚀 Message Commands!**\n` +
     `> **📌 \`.?math        \`** • Solves Math-related problems\n` +
     `> **📌 \`.?paypal      \`** • Sends PayPal donation Link\n` +
     `> **📌 \`.?pcspecs     \`** • Sends my setup specifications\n` +
-    `> **📌 \`.?sof-guides  \`** • Sends Sofi Guides\n` +
+    `> **📌 \`.?sofi-guides \`** • Sends Sofi Guides\n` +
     `> **📌 \`.?upi         \`** • Sends UPI for donation\n` +
     `> **📌 \`.?whatsapp    \`** • Sends Broadcast link & WA number\n` +
     `> **📌 \`.?x           \`** • Sends X profile\n` +
