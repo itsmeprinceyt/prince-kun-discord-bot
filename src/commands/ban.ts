@@ -24,7 +24,7 @@ const BanCommand: Command = {
         const isDM = !interaction.guild;
         if (isDM) {
             await interaction.reply({
-                content: "This command can only be used in a server!",
+                content: "This is a Server-Only Command! 🖕",
                 flags: 64,
             });
             logger_NoDM_NoAdmin(interaction);
