@@ -63,6 +63,15 @@ async function startBot() {
             }
             catch (error) {
                 console.error("[ ERROR ] Failed to update presence:", error);
+                c.user.setPresence({
+                    status: "dnd",
+                    activities: [
+                        {
+                            name: `over y'all souls. 🥸`,
+                            type: 3,
+                        },
+                    ],
+                });
             }
         }
         updatePresence();

@@ -53,11 +53,12 @@ async function startBot() {
                         console.error(`[ ERROR ] Could not fetch members from guild: ${guildId}`, error);
                     }
                 }
+
                 let presenceText = "y'all souls";
                 if (allMembers.length > 0) {
                     presenceText = `${allMembers[Math.floor(Math.random() * allMembers.length)]}'s soul`;
                 }
-                
+
                 c.user.setPresence({
                     status: "dnd",
                     activities: [
@@ -67,16 +68,27 @@ async function startBot() {
                         },
                     ],
                 });
+
             } catch (error) {
                 console.error("[ ERROR ] Failed to update presence:", error);
+                c.user.setPresence({
+                    status: "dnd",
+                    activities: [
+                        {
+                            name: `over y'all souls. 🥸`,
+                            type: 3,
+                        },
+                    ],
+                });
             }
         }
 
         updatePresence();
         setInterval(updatePresence, 15000);
 
-        console.log(chalk.green(`[ ${c.user.username} ] 💚 IS ONLINE (DND Mode) !`));
+        console.log(chalk.green(`[ ${c.user.username} ] 💚 IS ONLINE (DND Mode) !`))
     });
+
 
     client.on("interactionCreate", async (interaction) => {
         if (interaction.isChatInputCommand()) {
