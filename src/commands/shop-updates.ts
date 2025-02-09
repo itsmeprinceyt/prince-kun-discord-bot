@@ -1,4 +1,5 @@
 import {
+    GuildMember,
     SlashCommandBuilder,
     ChatInputCommandInteraction,
     EmbedBuilder,
@@ -7,7 +8,7 @@ import {
     TextInputStyle,
     ActionRowBuilder,
     ModalSubmitInteraction,
-    TextChannel
+    TextChannel,
 } from "discord.js";
 
 import { Command } from "../types/Command";
@@ -16,17 +17,22 @@ import { logger_command_sent } from "../utility/logger-command-sent";
 import { logger_custom } from "../utility/logger-custom";
 
 import { Roles } from "../utility/roles";
-const changesRoleId = Roles[0].roleId;
+import { RolesPerms } from "../utility/rolePerms";
+const StockUpdate = Roles[5].roleId;
+const MarketUpdate = Roles[4].roleId;
+const ShopManager = RolesPerms[1].roleId;
 
 const userCache = new Map<string, { username: string; avatarURL: string }>();
 
-const serverUpdatesCommand: Command = {
+const ShopUpdateCommand: Command = {
     data: new SlashCommandBuilder()
-        .setName("server-updates")
+        .setName("shop-updates")
         .setDescription("Send an embed message for server updates (admin only)."),
 
     async execute(interaction: ChatInputCommandInteraction) {
         const isDM = !interaction.guild;
+        const location = isDM ? "DM" : `Server: ${interaction.guild?.name}`;
+
         if (isDM) {
             await interaction.reply({
                 content: "This is a Server-Only Command! 🖕",
@@ -37,23 +43,32 @@ const serverUpdatesCommand: Command = {
         }
 
         const ownerId = interaction.guild!.ownerId;
-        if (interaction.user.id !== ownerId) {
+        const member = interaction.member as GuildMember;
+        const userRoles = member.roles.cache.map((role) => role.id);
+        const hasRequiredRole = userRoles.includes(ShopManager);
+
+        if (interaction.user.id !== ownerId && !hasRequiredRole) {
             await interaction.reply({
-                content: "🚫 Only the server owner can use this command!",
+                content: "🚫 Only the server owner or users with the required role can use this command!",
                 flags: 64,
             });
             logger_NoDM_NoAdmin(interaction);
             return;
         }
 
+        userCache.set(interaction.user.id, {
+            username: interaction.user.username,
+            avatarURL: interaction.user.displayAvatarURL(),
+        });
+
         logger_command_sent(interaction);
 
         const modal = new ModalBuilder()
-            .setCustomId("serverUpdatesModal") 
-            .setTitle("Server Update Message");
+            .setCustomId("shopUpdateModal")
+            .setTitle("Shop Update Message");
 
         const messageInput = new TextInputBuilder()
-            .setCustomId("serverUpdateMessage")
+            .setCustomId("shopUpdateMessage")
             .setLabel("Enter the update message:")
             .setStyle(TextInputStyle.Paragraph);
 
@@ -64,25 +79,24 @@ const serverUpdatesCommand: Command = {
     },
 };
 
-export default serverUpdatesCommand;
+export default ShopUpdateCommand;
 
-export async function handleServerModalSubmit(interaction: ModalSubmitInteraction) {
-    if (interaction.customId !== "serverUpdatesModal") return;
+export async function handleShopModalSubmit(
+    interaction: ModalSubmitInteraction
+) {
+    if (interaction.customId !== "shopUpdateModal") return;
 
-    const messageContent = interaction.fields.getTextInputValue("serverUpdateMessage");
+    const messageContent = interaction.fields.getTextInputValue(
+        "shopUpdateMessage"
+    );
     const userInfo = userCache.get(interaction.user.id);
     const username = userInfo?.username || "Unknown User";
     const avatarURL = userInfo?.avatarURL || interaction.user.displayAvatarURL();
 
     const embed = new EmbedBuilder()
-        .setColor(0xffffff)
-        .setAuthor({
-            name: "Prince-Kun • Server Update",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
-        })
-        .setTitle("📢 Latest Server Changes & Improvements!")
+    .setColor(0xff6767)
+        .setTitle("📢 LATEST SHOP UPDATES")
         .setDescription(messageContent)
-        .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337156724628525127/Server_Changes.png")
         .setFooter({
             text: `${username} | ${new Date().toLocaleTimeString("en-GB", {
                 hour: "2-digit",
@@ -93,16 +107,16 @@ export async function handleServerModalSubmit(interaction: ModalSubmitInteractio
         });
 
     await interaction.reply({
-        content: "✅ Server update message sent!",
+        content: "✅ Shop update message sent!",
         flags: 64,
     });
 
-    logger_custom(username,"server-updates modal submit","Server update sent successfully!");
-    
+    logger_custom(username,"shop-updates modal submit","Shop update sent successfully!");
+
     const channel = interaction.channel as TextChannel;
     if (channel) {
         await channel.send({
-            content: `<@&${changesRoleId}>`,
+            content: `<@&${StockUpdate}> <@&${MarketUpdate}>`,
             embeds: [embed],
         });
     }

@@ -1,12 +1,10 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
+const discord_js_1 = require("discord.js");
+const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
+const logger_custom_1 = require("../utility/logger-custom");
 const rolePerms_1 = require("../utility/rolePerms");
 const ShopManager = rolePerms_1.RolesPerms[1].roleId;
-const discord_js_1 = require("discord.js");
-const chalk_1 = __importDefault(require("chalk"));
 const removeShopManagerRole = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("remove-shop-manager-role")
@@ -15,11 +13,13 @@ const removeShopManagerRole = {
         .setDescription("Select the user to remove the Shop Manager role from.")
         .setRequired(true)),
     async execute(interaction) {
-        if (!interaction.guild) {
+        const isDM = !interaction.guild;
+        if (isDM) {
             await interaction.reply({
                 content: "This is a Server-Only Command! 🖕",
                 flags: 64,
             });
+            (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
             return;
         }
         const executor = interaction.member;
@@ -29,6 +29,7 @@ const removeShopManagerRole = {
                 content: "🚫 You don't have permission to use this command!",
                 flags: 64,
             });
+            (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
             return;
         }
         const targetUser = interaction.options.getMember("user");
@@ -60,19 +61,12 @@ const removeShopManagerRole = {
                 content: `✅ Removed the Shop Manager role from -> ${targetUser.displayName}!`,
                 flags: 64,
             });
-            console.log(chalk_1.default.underline(`[ INFO ]`) +
-                "\n" +
-                chalk_1.default.green(`User: ${executor.displayName} -> removed Shop Manager role from -> ${targetUser.displayName}`) +
-                "\n" +
-                chalk_1.default.magenta(`Command: /remove-shop-manager-role`) +
-                "\n" +
-                chalk_1.default.cyan(`Server: ${interaction.guild?.name}`) +
-                "\n" +
-                chalk_1.default.green(`Message: Role successfully removed!\n`));
+            const UserMessage = `${executor.displayName} -> removed Shop Manager role from -> ${targetUser.displayName}`;
+            (0, logger_custom_1.logger_custom)(UserMessage, "/remove-shop-manager-role", "Role successfully removed!");
         }
         catch (error) {
             console.error("Error removing role:", error);
-            await interaction.reply({ content: "❌ An error occurred while removing the role.", ephemeral: true });
+            await interaction.reply({ content: "❌ An error occurred while removing the role.", flags: 64 });
         }
     }
 };

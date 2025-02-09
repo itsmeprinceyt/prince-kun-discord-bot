@@ -1,3 +1,15 @@
+import {
+    SlashCommandBuilder,
+    ChatInputCommandInteraction,
+    EmbedBuilder,
+    TextChannel,
+    GuildMember
+} from "discord.js";
+
+import { Command } from "../types/Command";
+import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/logger-custom";
+
 import { Roles } from "../utility/roles";
 import { RolesPerms } from "../utility/rolePerms";
 const GenshinPing = Roles[1].roleId;
@@ -8,17 +20,6 @@ const CodePoster = RolesPerms[0].roleId;
 const DefaultImageGenshin = "https://media.discordapp.net/attachments/1336322293437038602/1337338720189284352/Primogems.png";
 const DefaultImageHSR = "https://media.discordapp.net/attachments/1336322293437038602/1337338704288677949/Jade.png";
 const DefaultImageWuwa = "https://media.discordapp.net/attachments/1336322293437038602/1337338722097692682/Astrite.png";
-
-import {
-    SlashCommandBuilder,
-    ChatInputCommandInteraction,
-    EmbedBuilder,
-    TextChannel,
-    GuildMember
-} from "discord.js";
-import chalk from "chalk";
-
-import { Command } from "../types/Command";
 
 const userCache = new Map<string, { username: string; avatarURL: string }>();
 
@@ -69,12 +70,12 @@ const GameLivestreamCode: Command = {
 
     async execute(interaction: ChatInputCommandInteraction) {
         const isDM = !interaction.guild;
-        const location = isDM ? "DM" : `Server: ${interaction.guild?.name}`;
         if (isDM) {
             await interaction.reply({
                 content: "This is a Server-Only Command! 🖕",
                 flags: 64,
             });
+            logger_NoDM_NoAdmin(interaction);
             return;
         }
 
@@ -89,19 +90,7 @@ const GameLivestreamCode: Command = {
                 content: "🚫 Only the server owner or users with the required role can use this command!",
                 flags: 64,
             });
-            console.log(
-                chalk.underline(`[ INFO ]`) +
-                "\n" +
-                chalk.yellow(`User: ${userName}`) +
-                "\n" +
-                chalk.yellow(`Username: ${interaction.user.username}`) +
-                "\n" +
-                chalk.magenta(`Command: /game-livestream-codes`) +
-                "\n" +
-                chalk.cyan(`Location: ${location}`) +
-                "\n" +
-                chalk.red(`Message: Unauthorized user attempted to execute!\n`)
-            );
+            logger_NoDM_NoAdmin(interaction);
             return;
         }
         userCache.set(interaction.user.id, {
@@ -160,6 +149,7 @@ const GameLivestreamCode: Command = {
                 text: `${username} | ${new Date().toLocaleTimeString("en-GB", {
                     hour: "2-digit",
                     minute: "2-digit",
+                    timeZone: "Asia/Kolkata",
                 })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
                 iconURL: avatarURL,
             });
@@ -182,6 +172,7 @@ const GameLivestreamCode: Command = {
                 text: `${username} | ${new Date().toLocaleTimeString("en-GB", {
                     hour: "2-digit",
                     minute: "2-digit",
+                    timeZone: "Asia/Kolkata",
                 })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
                 iconURL: avatarURL,
             });
@@ -205,6 +196,7 @@ const GameLivestreamCode: Command = {
                 text: `${username} | ${new Date().toLocaleTimeString("en-GB", {
                     hour: "2-digit",
                     minute: "2-digit",
+                    timeZone: "Asia/Kolkata",
                 })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
                 iconURL: avatarURL,
             });
@@ -227,8 +219,6 @@ const GameLivestreamCode: Command = {
         };
 
         const roleToPing = gameRoles[game] || "";
-
-
         const embedsToSend = embedsMap[game];
 
         const channel = interaction.channel as TextChannel;
@@ -250,19 +240,10 @@ const GameLivestreamCode: Command = {
                 content: "✅ Redemption Code Sent!!",
                 flags: 64,
             });
-            console.log(
-                chalk.underline(`[ INFO ]`) +
-                "\n" +
-                chalk.yellow(`User: ${userName}`) +
-                "\n" +
-                chalk.yellow(`Username: ${interaction.user.username}`) +
-                "\n" +
-                chalk.magenta(`Command: /game-livestream-codes`) +
-                "\n" +
-                chalk.cyan(`Location: ${location}`) +
-                "\n" +
-                chalk.green(`Message: Command executed successfully! : Game:"${game}", Code: ${redemptionCode1} | ${redemptionCode2} | ${redemptionCode3} sent!\n`)
-            );
+
+            const MessageString = `Command executed successfully! : Game:"${game}", Code: "${redemptionCode1}" | "${redemptionCode2}" | "${redemptionCode3}" sent!`;
+            logger_custom(userName, "game-code", MessageString);
+
         }
     }
 }

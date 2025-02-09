@@ -1,14 +1,3 @@
-import { Roles } from "../utility/roles";
-import { RolesPerms } from "../utility/rolePerms";
-const GenshinPing = Roles[1].roleId;
-const HSRPing = Roles[2].roleId;
-const WuwaPing = Roles[3].roleId;
-const CodePoster = RolesPerms[0].roleId;
-
-const DefaultImageGenshin = "https://media.discordapp.net/attachments/1336322293437038602/1337338720189284352/Primogems.png";
-const DefaultImageHSR = "https://media.discordapp.net/attachments/1336322293437038602/1337338704288677949/Jade.png";
-const DefaultImageWuwa = "https://media.discordapp.net/attachments/1336322293437038602/1337338722097692682/Astrite.png";
-
 import {
     SlashCommandBuilder,
     ChatInputCommandInteraction,
@@ -16,9 +5,21 @@ import {
     TextChannel,
     GuildMember
 } from "discord.js";
-import chalk from "chalk";
 
 import { Command } from "../types/Command";
+import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/logger-custom";
+
+import { Roles } from "../utility/roles";
+import { RolesPerms } from "../utility/rolePerms";
+const GenshinPing = Roles[1].roleId;
+const HSRPing = Roles[2].roleId;
+const WuwaPing = Roles[3].roleId;
+const CodePoster = RolesPerms[0].roleId;
+const DefaultImageGenshin = "https://media.discordapp.net/attachments/1336322293437038602/1337338720189284352/Primogems.png";
+const DefaultImageHSR = "https://media.discordapp.net/attachments/1336322293437038602/1337338704288677949/Jade.png";
+const DefaultImageWuwa = "https://media.discordapp.net/attachments/1336322293437038602/1337338722097692682/Astrite.png";
+
 
 const userCache = new Map<string, { username: string; avatarURL: string }>();
 
@@ -65,11 +66,11 @@ const GameCode: Command = {
                 content: "This is a Server-Only Command! 🖕",
                 flags: 64,
             });
+            logger_NoDM_NoAdmin(interaction);
             return;
         }
 
         const member = interaction.member as GuildMember;
-        const userName = member?.displayName || interaction.user.username;
         const userRoles = member.roles.cache.map(role => role.id);
         const ownerId = interaction.guild!.ownerId;
         const hasRequiredRole = userRoles.includes(CodePoster);
@@ -79,19 +80,7 @@ const GameCode: Command = {
                 content: "🚫 Only the server owner or users with the required role can use this command!",
                 flags: 64,
             });
-            console.log(
-                chalk.underline(`[ INFO ]`) +
-                "\n" +
-                chalk.yellow(`User: ${userName}`) +
-                "\n" +
-                chalk.yellow(`Username: ${interaction.user.username}`) +
-                "\n" +
-                chalk.magenta(`Command: /game-code`) +
-                "\n" +
-                chalk.cyan(`Location: ${location}`) +
-                "\n" +
-                chalk.red(`Message: Unauthorized user attempted to execute!\n`)
-            );
+            logger_NoDM_NoAdmin(interaction);
             return;
         }
         userCache.set(interaction.user.id, {
@@ -146,6 +135,7 @@ const GameCode: Command = {
                 text: `${username} | ${new Date().toLocaleTimeString("en-GB", {
                     hour: "2-digit",
                     minute: "2-digit",
+                    timeZone: "Asia/Kolkata",
                 })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
                 iconURL: avatarURL,
             });
@@ -166,6 +156,7 @@ const GameCode: Command = {
                 text: `${username} | ${new Date().toLocaleTimeString("en-GB", {
                     hour: "2-digit",
                     minute: "2-digit",
+                    timeZone: "Asia/Kolkata",
                 })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
                 iconURL: avatarURL,
             });
@@ -187,6 +178,7 @@ const GameCode: Command = {
                 text: `${username} | ${new Date().toLocaleTimeString("en-GB", {
                     hour: "2-digit",
                     minute: "2-digit",
+                    timeZone: "Asia/Kolkata",
                 })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
                 iconURL: avatarURL,
             });
@@ -209,8 +201,6 @@ const GameCode: Command = {
         };
 
         const roleToPing = gameRoles[game] || "";
-
-
         const embedsToSend = embedsMap[game];
 
         const channel = interaction.channel as TextChannel;
@@ -232,19 +222,8 @@ const GameCode: Command = {
                 content: "✅ Redemption Code Sent!!",
                 flags: 64,
             });
-            console.log(
-                chalk.underline(`[ INFO ]`) +
-                "\n" +
-                chalk.yellow(`User: ${userName}`) +
-                "\n" +
-                chalk.yellow(`Username: ${interaction.user.username}`) +
-                "\n" +
-                chalk.magenta(`Command: /game-code`) +
-                "\n" +
-                chalk.cyan(`Location: ${location}`) +
-                "\n" +
-                chalk.green(`Message: Command executed successfully! : Game:"${game}", Code: ${redemptionCode} sent!\n`)
-            );
+            const MessageString = `Command executed successfully! : Game: "${game}", Code: "${redemptionCode}" sent!`;
+            logger_custom(username,"game-code",MessageString);
         }
     }
 }

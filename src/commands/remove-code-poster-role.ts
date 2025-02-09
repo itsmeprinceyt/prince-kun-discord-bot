@@ -1,13 +1,15 @@
-import { RolesPerms } from "../utility/rolePerms";
-const CodePoster = RolesPerms[0].roleId;
-
 import { 
     SlashCommandBuilder, 
     ChatInputCommandInteraction, 
     GuildMember 
 } from "discord.js";
-import chalk from "chalk";
+
 import { Command } from "../types/Command";
+import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/logger-custom";
+
+import { RolesPerms } from "../utility/rolePerms";
+const CodePoster = RolesPerms[0].roleId;
 
 const removeCodePosterRole: Command = {
     data: new SlashCommandBuilder()
@@ -20,11 +22,13 @@ const removeCodePosterRole: Command = {
         ) as SlashCommandBuilder,
 
     async execute(interaction: ChatInputCommandInteraction) {
-        if (!interaction.guild) {
+        const isDM = !interaction.guild;
+        if (isDM) {
             await interaction.reply({
                 content: "This is a Server-Only Command! 🖕",
                 flags: 64,
             });
+            logger_NoDM_NoAdmin(interaction);
             return;
         }
 
@@ -36,6 +40,7 @@ const removeCodePosterRole: Command = {
                 content: "🚫 You don't have permission to use this command!",
                 flags: 64,
             });
+            logger_NoDM_NoAdmin(interaction);
             return;
         }
 
@@ -72,21 +77,12 @@ const removeCodePosterRole: Command = {
                 flags: 64,
             });
 
-            console.log(
-                chalk.underline(`[ INFO ]`) +
-                "\n" +
-                chalk.green(`User: ${executor.displayName} -> removed Code Poster role from -> ${targetUser.displayName}`) +
-                "\n" +
-                chalk.magenta(`Command: /remove-code-poster-role`) +
-                "\n" +
-                chalk.cyan(`Server: ${interaction.guild?.name}`) +
-                "\n" +
-                chalk.green(`Message: Role successfully removed!\n`)
-            );
+            const UserMessage =`${executor.displayName} -> removed Code Poster role from -> ${targetUser.displayName}`;
+            logger_custom(UserMessage,"/remove-code-poster-role","Role successfully removed!");
 
         } catch (error) {
             console.error("Error removing role:", error);
-            await interaction.reply({ content: "❌ An error occurred while removing the role.", ephemeral: true });
+            await interaction.reply({ content: "❌ An error occurred while removing the role.", flags: 64 });
         }
     }
 };

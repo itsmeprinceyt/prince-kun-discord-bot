@@ -1,12 +1,10 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
+const discord_js_1 = require("discord.js");
+const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
+const logger_custom_1 = require("../utility/logger-custom");
 const rolePerms_1 = require("../utility/rolePerms");
 const ShopManager = rolePerms_1.RolesPerms[1].roleId;
-const discord_js_1 = require("discord.js");
-const chalk_1 = __importDefault(require("chalk"));
 const ShopItemsNoStock = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("game-items-no-stock")
@@ -17,11 +15,11 @@ const ShopItemsNoStock = {
         .addChoices({ name: "Welkin Moon", value: "welkin" }, { name: "Express Pass", value: "express-pass" }, { name: "Lunite Subscription", value: "lunite-subscription" }, { name: "Inter-Knot Membership", value: "inter-knot-membership" })),
     async execute(interaction) {
         const isDM = !interaction.guild;
-        const location = isDM ? "DM" : `Server: ${interaction.guild?.name}`;
         if (isDM) {
             await interaction.reply({
                 content: "This is a Server-Only Command! 🖕",
             });
+            (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
             return;
         }
         const ownerId = interaction.guild.ownerId;
@@ -30,15 +28,7 @@ const ShopItemsNoStock = {
             await interaction.reply({
                 content: "🚫 You don't have permission to use this command!",
             });
-            console.log(chalk_1.default.underline(`[ INFO ]`) +
-                "\n" +
-                chalk_1.default.yellow(`User: ${interaction.user.username}`) +
-                "\n" +
-                chalk_1.default.magenta(`Command: /game-items-no-stock`) +
-                "\n" +
-                chalk_1.default.cyan(`Location: ${location}`) +
-                "\n" +
-                chalk_1.default.red(`Message: Unauthorized user attempted to execute!\n`));
+            (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
             return;
         }
         const item = interaction.options.getString("item", true);
@@ -50,7 +40,14 @@ const ShopItemsNoStock = {
         })
             .setTitle("Blessing of the Welkin Moon is out of Stock!")
             .setDescription("```GENSHIN IMPACT - BLESSING OF THE WELKIN MOON```")
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171003356221461/Blessing_of_the_Welkin.png");
+            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171003356221461/Blessing_of_the_Welkin.png")
+            .setFooter({
+            text: `${new Date().toLocaleTimeString("en-GB", {
+                hour: "2-digit",
+                minute: "2-digit",
+                timeZone: "Asia/Kolkata",
+            })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`
+        });
         const express_pass = new discord_js_1.EmbedBuilder()
             .setColor(0xff0000)
             .setAuthor({
@@ -59,7 +56,14 @@ const ShopItemsNoStock = {
         })
             .setTitle("Express Pass is out of Stock!")
             .setDescription("```HONKAI STAR RAIL - EXPRESS PASS```")
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171003843018893/Express_Supply_Pass.png");
+            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171003843018893/Express_Supply_Pass.png")
+            .setFooter({
+            text: `${new Date().toLocaleTimeString("en-GB", {
+                hour: "2-digit",
+                minute: "2-digit",
+                timeZone: "Asia/Kolkata",
+            })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`
+        });
         const lunite_subscription = new discord_js_1.EmbedBuilder()
             .setColor(0xff0000)
             .setAuthor({
@@ -68,7 +72,14 @@ const ShopItemsNoStock = {
         })
             .setTitle("Lunite Subscription is out of Stock!")
             .setDescription("```WUTHERING WAVES - LUNITE SUBSCRIPTION```")
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171011216605297/Lunite_Subscription.png");
+            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171011216605297/Lunite_Subscription.png")
+            .setFooter({
+            text: `${new Date().toLocaleTimeString("en-GB", {
+                hour: "2-digit",
+                minute: "2-digit",
+                timeZone: "Asia/Kolkata",
+            })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`
+        });
         const inter_knot_membership = new discord_js_1.EmbedBuilder()
             .setColor(0xff0000)
             .setAuthor({
@@ -77,7 +88,14 @@ const ShopItemsNoStock = {
         })
             .setTitle("Inter-Knot Membership is out of Stock!")
             .setDescription("```ZENLESS ZONE ZERO - INTER-KNOT MEMBERSHIP```")
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171008834113546/Inter-Knot_Membership.png");
+            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171008834113546/Inter-Knot_Membership.png")
+            .setFooter({
+            text: `${new Date().toLocaleTimeString("en-GB", {
+                hour: "2-digit",
+                minute: "2-digit",
+                timeZone: "Asia/Kolkata",
+            })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`
+        });
         const bottomEmbed = new discord_js_1.EmbedBuilder()
             .setColor(0xff0000)
             .setTitle("Note")
@@ -96,17 +114,8 @@ const ShopItemsNoStock = {
             });
         }
         const userName = member?.displayName || interaction.user.username;
-        console.log(chalk_1.default.underline(`[ INFO ]`) +
-            "\n" +
-            chalk_1.default.yellow(`User: ${userName}`) +
-            "\n" +
-            chalk_1.default.yellow(`Username: ${interaction.user.username}`) +
-            "\n" +
-            chalk_1.default.magenta(`Command: /game-items-no-stock`) +
-            "\n" +
-            chalk_1.default.cyan(`Location: ${location}`) +
-            "\n" +
-            chalk_1.default.green(`Message: Command executed successfully! : "${item}"\n`));
+        const MessageString = `Command executed successfully! : "${item}`;
+        (0, logger_custom_1.logger_custom)(userName, "game-items-no-stock", MessageString);
         await interaction.reply({
             content: "✅ Stock information sent!",
             flags: 64,

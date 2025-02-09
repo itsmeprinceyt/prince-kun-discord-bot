@@ -10,7 +10,9 @@ import {
     TextChannel
 } from "discord.js";
 import { Command } from "../types/Command";
-import chalk from "chalk";
+import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
+import { logger_command_sent } from "../utility/logger-command-sent";
+import { logger_custom } from "../utility/logger-custom";
 
 const userCache = new Map<string, { username: string; avatarURL: string }>();
 
@@ -21,24 +23,13 @@ const botUpdatesCommand: Command = {
 
     async execute(interaction: ChatInputCommandInteraction) {
         const isDM = !interaction.guild;
-        const location = isDM ? "DM" : `Server: ${interaction.guild?.name}`;
 
         if (isDM) {
             await interaction.reply({
                 content: "This is a Server-Only Command! 🖕",
                 flags: 64,
             });
-            console.log(
-                chalk.underline(`[ INFO ]`) +
-                "\n" +
-                chalk.yellow(`User: ${interaction.user.username}`) +
-                "\n" +
-                chalk.magenta(`Command: /bot-updates`) +
-                "\n" +
-                chalk.cyan(`Location: DM`) +
-                "\n" +
-                chalk.cyan(`Message: Attempted to execute in DM!\n`)
-            );
+            logger_NoDM_NoAdmin(interaction);
             return;
         }
 
@@ -48,18 +39,7 @@ const botUpdatesCommand: Command = {
                 content: "🚫 Only the server owner can use this command!",
                 flags: 64,
             });
-
-            console.log(
-                chalk.underline(`[ INFO ]`) +
-                "\n" +
-                chalk.yellow(`User: ${interaction.user.username}`) +
-                "\n" +
-                chalk.magenta(`Command: /bot-updates`) +
-                "\n" +
-                chalk.cyan(`Location: ${location}`) +
-                "\n" +
-                chalk.red(`Message: Unauthorized user attempted to execute!\n`)
-            );
+            logger_NoDM_NoAdmin(interaction);
             return;
         }
 
@@ -68,17 +48,7 @@ const botUpdatesCommand: Command = {
             avatarURL: interaction.user.displayAvatarURL(),
         });
 
-        console.log(
-            chalk.underline(`[ INFO ]`) +
-            "\n" +
-            chalk.yellow(`User: ${interaction.user.username}`) +
-            "\n" +
-            chalk.magenta(`Command: /bot-updates`) +
-            "\n" +
-            chalk.cyan(`Location: ${location}`) +
-            "\n" +
-            chalk.green(`Message: Command executed successfully!\n`)
-        );
+        logger_command_sent(interaction);
 
         const modal = new ModalBuilder()
             .setCustomId("botUpdatesModal")
@@ -119,24 +89,18 @@ export async function handleModalSubmit(interaction: ModalSubmitInteraction) {
             text: `${username} | ${new Date().toLocaleTimeString("en-GB", {
                 hour: "2-digit",
                 minute: "2-digit",
+                timeZone: "Asia/Kolkata",
             })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
             iconURL: avatarURL,
         });
+        
 
     await interaction.reply({
         content: "✅ Update message sent!",
         flags: 64,
     });
 
-    console.log(
-        chalk.underline(`[ INFO ]`) +
-        "\n" +
-        chalk.yellow(`User: ${username}`) +
-        "\n" +
-        chalk.magenta(`Command: /bot-updates modal submit`) +
-        "\n" +
-        chalk.green(`Message: Update sent successfully!\n`)
-    );
+    logger_custom(username,"bot-updates modal submit","Update sent successfully!");
 
     const channel = interaction.channel as TextChannel;
     if (channel) {

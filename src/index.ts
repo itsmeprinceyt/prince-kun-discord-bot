@@ -7,19 +7,21 @@ import {
     GatewayIntentBits,
     Partials,
     ModalSubmitInteraction,
-    Events
 } from "discord.js";
 
 import commands from "./commandHandler";
 import msgCommands from "./msgCommandHandler";
 import deployCommands from "./deployCommands";
+import { getFormattedIST } from "./utility/time";
 import { handleModalSubmit as handleBotModalSubmit } from "./commands/bot-updates";
 import { handleServerModalSubmit } from "./commands/server-updates";
-import { initDB } from "./db"; // Import the initDB function
+import { handleShopModalSubmit } from "./commands/shop-updates";
+import { initDB } from "./db";
 
 const modalHandlers = new Map<string, (interaction: ModalSubmitInteraction) => Promise<void>>([
     ["botUpdatesModal", handleBotModalSubmit],
     ["serverUpdatesModal", handleServerModalSubmit],
+    ["shopUpdateModal", handleShopModalSubmit]
 ]);
 
 const client = new Client({
@@ -118,7 +120,7 @@ async function startBot() {
         if (message.author.bot) return;
         if (client.user && message.mentions.has(client.user.id) && !message.mentions.everyone) {
             message.channel.send("## 🥸**POK U BICH**🖕").then((msg) => {
-                setTimeout(() => msg.delete().catch(() => { }), 2000);
+                setTimeout(() => msg.delete().catch(() => { }), 10000);
             });
             return;
         }
@@ -136,6 +138,8 @@ async function startBot() {
                 chalk.yellow(`User: ${message.member?.displayName || message.author.username}`) +
                 "\n" +
                 chalk.yellow(`Username: ${message.author.username}`) +
+                "\n" +
+                chalk.blue(getFormattedIST()) +
                 "\n" +
                 chalk.magenta(`Message Command: ${content}`) +
                 "\n" +

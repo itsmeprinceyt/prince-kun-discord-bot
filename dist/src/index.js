@@ -10,12 +10,15 @@ const discord_js_1 = require("discord.js");
 const commandHandler_1 = __importDefault(require("./commandHandler"));
 const msgCommandHandler_1 = __importDefault(require("./msgCommandHandler"));
 const deployCommands_1 = __importDefault(require("./deployCommands"));
+const time_1 = require("./utility/time");
 const bot_updates_1 = require("./commands/bot-updates");
 const server_updates_1 = require("./commands/server-updates");
-const db_1 = require("./db"); // Import the initDB function
+const shop_updates_1 = require("./commands/shop-updates");
+const db_1 = require("./db");
 const modalHandlers = new Map([
     ["botUpdatesModal", bot_updates_1.handleModalSubmit],
     ["serverUpdatesModal", server_updates_1.handleServerModalSubmit],
+    ["shopUpdateModal", shop_updates_1.handleShopModalSubmit]
 ]);
 const client = new discord_js_1.Client({
     intents: [
@@ -109,7 +112,7 @@ async function startBot() {
             return;
         if (client.user && message.mentions.has(client.user.id) && !message.mentions.everyone) {
             message.channel.send("## 🥸**POK U BICH**🖕").then((msg) => {
-                setTimeout(() => msg.delete().catch(() => { }), 2000);
+                setTimeout(() => msg.delete().catch(() => { }), 10000);
             });
             return;
         }
@@ -124,6 +127,8 @@ async function startBot() {
                 chalk_1.default.yellow(`User: ${message.member?.displayName || message.author.username}`) +
                 "\n" +
                 chalk_1.default.yellow(`Username: ${message.author.username}`) +
+                "\n" +
+                chalk_1.default.blue((0, time_1.getFormattedIST)()) +
                 "\n" +
                 chalk_1.default.magenta(`Message Command: ${content}`) +
                 "\n" +

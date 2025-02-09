@@ -4,8 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
-const chalk_1 = __importDefault(require("chalk"));
 const path_1 = __importDefault(require("path"));
+const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
+const logger_custom_1 = require("../utility/logger-custom");
 const pingCommand = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("ping")
@@ -13,21 +14,12 @@ const pingCommand = {
     async execute(interaction) {
         const ownerId = interaction.guild?.ownerId;
         const isDM = !interaction.guild;
-        const location = isDM ? "DM" : `Server: ${interaction.guild?.name}`;
         if (isDM) {
             await interaction.reply({
                 content: "This is a Server-Only Command! 🖕",
                 flags: 64,
             });
-            console.log(chalk_1.default.underline(`[ INFO ]`) +
-                "\n" +
-                chalk_1.default.yellow(`User: ${interaction.user.username}`) +
-                "\n" +
-                chalk_1.default.magenta(`Command: /ping`) +
-                "\n" +
-                chalk_1.default.cyan(`Location: DM`) +
-                "\n" +
-                chalk_1.default.cyan(`Message: Attempted to execute in DM!\n`));
+            (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
             return;
         }
         const member = interaction.member;
@@ -42,34 +34,14 @@ const pingCommand = {
                 flags: 64,
             });
             await interaction.followUp("Pong!");
-            console.log(chalk_1.default.underline(`[ INFO ]`) +
-                "\n" +
-                chalk_1.default.yellow(`User: ${userName}`) +
-                "\n" +
-                chalk_1.default.yellow(`Username: ${interaction.user.username}`) +
-                "\n" +
-                chalk_1.default.magenta(`Command: /ping`) +
-                "\n" +
-                chalk_1.default.cyan(`Location: ${location}`) +
-                "\n" +
-                chalk_1.default.red(`Message: Unauthorized user attempted to execute!\n`));
+            (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
             return;
         }
         await interaction.reply({
             files: [Admin],
         });
         await interaction.followUp("Pong!");
-        console.log(chalk_1.default.underline(`[ INFO ]`) +
-            "\n" +
-            chalk_1.default.yellow(`User: ${userName}`) +
-            "\n" +
-            chalk_1.default.yellow(`Username: ${interaction.user.username}`) +
-            "\n" +
-            chalk_1.default.magenta(`Command: /ping`) +
-            "\n" +
-            chalk_1.default.cyan(`Location: ${location}`) +
-            "\n" +
-            chalk_1.default.green(`Message: Command executed successfully!\n`));
+        (0, logger_custom_1.logger_custom)(userName, "ping", "Command executed successfully!");
     },
 };
 exports.default = pingCommand;

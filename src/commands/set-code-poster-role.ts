@@ -1,14 +1,15 @@
-import { RolesPerms } from "../utility/rolePerms";
-const CodePoster = RolesPerms[0].roleId;
-
 import { 
     SlashCommandBuilder, 
     ChatInputCommandInteraction, 
-    GuildMember 
+    GuildMember,
 } from "discord.js";
-import chalk from "chalk";
-import { Command } from "../types/Command";
 
+import { Command } from "../types/Command";
+import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/logger-custom";
+
+import { RolesPerms } from "../utility/rolePerms";
+const CodePoster = RolesPerms[0].roleId;
 
 const setCodePosterRole: Command = {
     data: new SlashCommandBuilder()
@@ -26,6 +27,7 @@ const setCodePosterRole: Command = {
                 content: "This is a Server-Only Command! 🖕",
                 flags: 64,
             });
+            logger_NoDM_NoAdmin(interaction);
             return;
         }
 
@@ -37,6 +39,7 @@ const setCodePosterRole: Command = {
                 content: "🚫 You don't have permission to use this command!",
                 flags: 64,
             });
+            logger_NoDM_NoAdmin(interaction);
             return;
         }
 
@@ -60,7 +63,7 @@ const setCodePosterRole: Command = {
 
         if (targetUser.roles.cache.has(CodePoster)) {
             await interaction.reply({
-                content: `⚠️ ${targetUser.displayName} already has this role!`,
+                content: `⚠️ \`${targetUser.displayName}\` already has this role!`,
                 flags: 64,
             });
             return;
@@ -69,25 +72,16 @@ const setCodePosterRole: Command = {
         try {
             await targetUser.roles.add(CodePoster);
             await interaction.reply({
-                content: `✅ Assigned the Code Poster role to -> ${targetUser.displayName}!`,
+                content: `✅ Assigned the Code Poster role to -> \`${targetUser.displayName}\` !`,
                 flags: 64,
             });
 
-            console.log(
-                chalk.underline(`[ INFO ]`) +
-                "\n" +
-                chalk.green(`User: ${executor.displayName} -> assigned Code Poster role to -> ${targetUser.displayName}`) +
-                "\n" +
-                chalk.magenta(`Command: /set-shop-manager-role`) +
-                "\n" +
-                chalk.cyan(`Server: ${interaction.guild?.name}`) +
-                "\n" +
-                chalk.green(`Message: Role successfully assigned!\n`)
-            );
+            const USerMessage = `${executor.displayName} -> assigned Code Poster role to -> ${targetUser.displayName}`;
+            logger_custom(USerMessage,"set-shop-manager-role","Role successfully assigned!");
 
         } catch (error) {
             console.error("Error assigning role:", error);
-            await interaction.reply({ content: "❌ An error occurred while assigning the role.", ephemeral: true });
+            await interaction.reply({ content: "❌ An error occurred while assigning the role.", flags: 64});
         }
     }
 };

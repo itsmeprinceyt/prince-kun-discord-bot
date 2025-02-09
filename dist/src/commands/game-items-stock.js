@@ -1,15 +1,13 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
+const discord_js_1 = require("discord.js");
+const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
+const logger_custom_1 = require("../utility/logger-custom");
 const roles_1 = require("../utility/roles");
 const rolePerms_1 = require("../utility/rolePerms");
 const StockUpdate = roles_1.Roles[5].roleId;
 const MarketUpdate = roles_1.Roles[4].roleId;
 const ShopManager = rolePerms_1.RolesPerms[1].roleId;
-const discord_js_1 = require("discord.js");
-const chalk_1 = __importDefault(require("chalk"));
 const ShopItems = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("game-items-stock")
@@ -23,12 +21,12 @@ const ShopItems = {
         .setRequired(true)),
     async execute(interaction) {
         const isDM = !interaction.guild;
-        const location = isDM ? "DM" : `Server: ${interaction.guild?.name}`;
         if (isDM) {
             await interaction.reply({
                 content: "This is a Server-Only Command! 🖕",
                 flags: 64,
             });
+            (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
             return;
         }
         const member = interaction.member;
@@ -41,17 +39,7 @@ const ShopItems = {
                 content: "🚫 Only the server owner or users with the required role can use this command!",
                 flags: 64,
             });
-            console.log(chalk_1.default.underline(`[ INFO ]`) +
-                "\n" +
-                chalk_1.default.yellow(`User: ${userName}`) +
-                "\n" +
-                chalk_1.default.yellow(`Username: ${interaction.user.username}`) +
-                "\n" +
-                chalk_1.default.magenta(`Command: /game-items-stock`) +
-                "\n" +
-                chalk_1.default.cyan(`Location: ${location}`) +
-                "\n" +
-                chalk_1.default.red(`Message: Unauthorized user attempted to execute!\n`));
+            (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
             return;
         }
         const item = interaction.options.getString("item", true);
@@ -71,6 +59,7 @@ const ShopItems = {
             text: `Price as of: ${new Date().toLocaleTimeString("en-GB", {
                 hour: "2-digit",
                 minute: "2-digit",
+                timeZone: "Asia/Kolkata",
             })} ${new Date().getHours() >= 12 ? "PM" : "AM"} | Prices may fluctuate at anytime 👈`,
             iconURL: interaction.user.displayAvatarURL({ extension: "png", size: 512 }),
         });
@@ -97,6 +86,7 @@ const ShopItems = {
             text: `Price as of: ${new Date().toLocaleTimeString("en-GB", {
                 hour: "2-digit",
                 minute: "2-digit",
+                timeZone: "Asia/Kolkata",
             })} ${new Date().getHours() >= 12 ? "PM" : "AM"} | Prices may fluctuate at anytime 👈`,
             iconURL: interaction.user.displayAvatarURL({ extension: "png", size: 512 }),
         });
@@ -123,6 +113,7 @@ const ShopItems = {
             text: `Price as of: ${new Date().toLocaleTimeString("en-GB", {
                 hour: "2-digit",
                 minute: "2-digit",
+                timeZone: "Asia/Kolkata",
             })} ${new Date().getHours() >= 12 ? "PM" : "AM"} | Prices may fluctuate at anytime 👈`,
             iconURL: interaction.user.displayAvatarURL({ extension: "png", size: 512 }),
         });
@@ -149,6 +140,7 @@ const ShopItems = {
             text: `Price as of: ${new Date().toLocaleTimeString("en-GB", {
                 hour: "2-digit",
                 minute: "2-digit",
+                timeZone: "Asia/Kolkata",
             })} ${new Date().getHours() >= 12 ? "PM" : "AM"} | Prices may fluctuate at anytime 👈`,
             iconURL: interaction.user.displayAvatarURL({ extension: "png", size: 512 }),
         });
@@ -178,17 +170,8 @@ const ShopItems = {
             content: "✅ Stock information sent!",
             flags: 64,
         });
-        console.log(chalk_1.default.underline(`[ INFO ]`) +
-            "\n" +
-            chalk_1.default.yellow(`User: ${userName}`) +
-            "\n" +
-            chalk_1.default.yellow(`Username: ${interaction.user.username}`) +
-            "\n" +
-            chalk_1.default.magenta(`Command: /game-items-stock`) +
-            "\n" +
-            chalk_1.default.cyan(`Location: ${location}`) +
-            "\n" +
-            chalk_1.default.green(`Message: Command executed successfully! : "${item}" at price ${price} INR/-\n`));
+        const MessageString = `Command executed successfully! : "${item}" at price ${price} INR/-`;
+        (0, logger_custom_1.logger_custom)(userName, "game-code", MessageString);
     },
 };
 exports.default = ShopItems;

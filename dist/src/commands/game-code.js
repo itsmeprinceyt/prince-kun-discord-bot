@@ -1,8 +1,8 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
+const discord_js_1 = require("discord.js");
+const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
+const logger_custom_1 = require("../utility/logger-custom");
 const roles_1 = require("../utility/roles");
 const rolePerms_1 = require("../utility/rolePerms");
 const GenshinPing = roles_1.Roles[1].roleId;
@@ -12,8 +12,6 @@ const CodePoster = rolePerms_1.RolesPerms[0].roleId;
 const DefaultImageGenshin = "https://media.discordapp.net/attachments/1336322293437038602/1337338720189284352/Primogems.png";
 const DefaultImageHSR = "https://media.discordapp.net/attachments/1336322293437038602/1337338704288677949/Jade.png";
 const DefaultImageWuwa = "https://media.discordapp.net/attachments/1336322293437038602/1337338722097692682/Astrite.png";
-const discord_js_1 = require("discord.js");
-const chalk_1 = __importDefault(require("chalk"));
 const userCache = new Map();
 const GameCode = {
     data: new discord_js_1.SlashCommandBuilder()
@@ -43,10 +41,10 @@ const GameCode = {
                 content: "This is a Server-Only Command! 🖕",
                 flags: 64,
             });
+            (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
             return;
         }
         const member = interaction.member;
-        const userName = member?.displayName || interaction.user.username;
         const userRoles = member.roles.cache.map(role => role.id);
         const ownerId = interaction.guild.ownerId;
         const hasRequiredRole = userRoles.includes(CodePoster);
@@ -55,17 +53,7 @@ const GameCode = {
                 content: "🚫 Only the server owner or users with the required role can use this command!",
                 flags: 64,
             });
-            console.log(chalk_1.default.underline(`[ INFO ]`) +
-                "\n" +
-                chalk_1.default.yellow(`User: ${userName}`) +
-                "\n" +
-                chalk_1.default.yellow(`Username: ${interaction.user.username}`) +
-                "\n" +
-                chalk_1.default.magenta(`Command: /game-code`) +
-                "\n" +
-                chalk_1.default.cyan(`Location: ${location}`) +
-                "\n" +
-                chalk_1.default.red(`Message: Unauthorized user attempted to execute!\n`));
+            (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
             return;
         }
         userCache.set(interaction.user.id, {
@@ -116,6 +104,7 @@ const GameCode = {
             text: `${username} | ${new Date().toLocaleTimeString("en-GB", {
                 hour: "2-digit",
                 minute: "2-digit",
+                timeZone: "Asia/Kolkata",
             })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
             iconURL: avatarURL,
         });
@@ -134,6 +123,7 @@ const GameCode = {
             text: `${username} | ${new Date().toLocaleTimeString("en-GB", {
                 hour: "2-digit",
                 minute: "2-digit",
+                timeZone: "Asia/Kolkata",
             })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
             iconURL: avatarURL,
         });
@@ -152,6 +142,7 @@ const GameCode = {
             text: `${username} | ${new Date().toLocaleTimeString("en-GB", {
                 hour: "2-digit",
                 minute: "2-digit",
+                timeZone: "Asia/Kolkata",
             })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
             iconURL: avatarURL,
         });
@@ -190,17 +181,8 @@ const GameCode = {
                 content: "✅ Redemption Code Sent!!",
                 flags: 64,
             });
-            console.log(chalk_1.default.underline(`[ INFO ]`) +
-                "\n" +
-                chalk_1.default.yellow(`User: ${userName}`) +
-                "\n" +
-                chalk_1.default.yellow(`Username: ${interaction.user.username}`) +
-                "\n" +
-                chalk_1.default.magenta(`Command: /game-code`) +
-                "\n" +
-                chalk_1.default.cyan(`Location: ${location}`) +
-                "\n" +
-                chalk_1.default.green(`Message: Command executed successfully! : Game:"${game}", Code: ${redemptionCode} sent!\n`));
+            const MessageString = `Command executed successfully! : Game: "${game}", Code: "${redemptionCode}" sent!`;
+            (0, logger_custom_1.logger_custom)(username, "game-code", MessageString);
         }
     }
 };

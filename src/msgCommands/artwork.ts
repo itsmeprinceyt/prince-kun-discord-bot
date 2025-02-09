@@ -25,10 +25,11 @@ export default {
                 text: `${message.author.username} | ${new Date().toLocaleTimeString("en-GB", {
                     hour: "2-digit",
                     minute: "2-digit",
+                    timeZone: "Asia/Kolkata",
                 })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
                 iconURL: message.author.displayAvatarURL(),
             });
-
+            
         await message.reply({ embeds: [embed], files: [attachment] });
     },
 };
