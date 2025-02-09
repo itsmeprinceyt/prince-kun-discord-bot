@@ -70,7 +70,7 @@ export default {
                 }
 
                 await interaction.reply({
-                    content: `📋 **Copied Answer:** \`${answer}\``,
+                    content: `${answer}`,
                     flags: 64,
                 });
             });
