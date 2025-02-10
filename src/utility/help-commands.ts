@@ -25,4 +25,4 @@ export const HelpDescription = `**🚀 Message Commands!**\n` +
     `**🚀 Slash Commands!**\n` +
     `> **📌 \`/ping         \`** • Replies with Pong\n\n` +
     
-    `Use these commands to get started! | [Invite Prince-Kun !](https://discord.com/oauth2/authorize?client_id=1335342572758892615&permissions=1927098263638&integration_type=0&scope=bot)`;
+    `Use these commands to get started!`;

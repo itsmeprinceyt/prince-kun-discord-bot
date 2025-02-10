@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HelpDescriptionAdmin = void 0;
 exports.HelpDescriptionAdmin = `**🚀 Message Commands!**\n` +
+    `> **🟣 \`.?bot                         \`**\n` +
     `> **🟣 \`.?help-force                  \`**\n\n` +
     `**🚀 Slash Commands!**\n` +
     `> **🟠 \`/ban                          \`** \n` +

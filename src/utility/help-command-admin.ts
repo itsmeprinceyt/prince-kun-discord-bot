@@ -1,4 +1,5 @@
 export const HelpDescriptionAdmin = `**🚀 Message Commands!**\n` +
+    `> **🟣 \`.?bot                         \`**\n` +
     `> **🟣 \`.?help-force                  \`**\n\n` +
 
     `**🚀 Slash Commands!**\n` +
