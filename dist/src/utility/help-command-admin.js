@@ -15,11 +15,13 @@ exports.HelpDescriptionAdmin = `**🚀 Message Commands!**\n` +
     `> **🟠 \`/purge                        \`** \n` +
     `> **🟣 \`/remove-client                \`** \n` +
     `> **🟣 \`/remove-code-poster-role      \`** \n` +
+    `> **🟣 \`/remove-leaker                \`** \n` +
     `> **🟣 \`/remove-mod                   \`** \n` +
     `> **🟣 \`/remove-shop-manager-role     \`** \n` +
     `> **🟣 \`/server-updates               \`** \n` +
     `> **🟣 \`/set-client                   \`** \n` +
     `> **🟣 \`/set-code-poster-role         \`** \n` +
+    `> **🟣 \`/set-leaker                   \`** \n` +
     `> **🟣 \`/set-mod                      \`** \n` +
     `> **🟣 \`/set-shop-manager-role        \`** \n` +
     `> **🟠 \`/shop-updates                 \`** \n\n` +
