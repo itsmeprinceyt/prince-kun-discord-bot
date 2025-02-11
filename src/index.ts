@@ -118,12 +118,37 @@ async function startBot() {
 
     client.on("messageCreate", async (message) => {
         if (message.author.bot) return;
-        if (client.user && message.mentions.has(client.user.id) && !message.mentions.everyone) {
-            message.channel.send("## 🥸**POK U BICH**🖕").then((msg) => {
-                setTimeout(() => msg.delete().catch(() => { }), 10000);
-            });
+        if (!client.user) return;
+
+        if (message.reference && message.content.includes("🖕")) {
+            message.channel.send("## **🥸RIGHT BACK AT YA🖕**");
             return;
         }
+
+        if (message.mentions.has(client.user.id) && !message.mentions.everyone) {
+            const mentionedUsers = message.mentions.users.filter(user => user.id !== client.user!.id);
+
+            if (mentionedUsers.size > 0) {
+                const mentionedUser = mentionedUsers.first();
+                if (!mentionedUser) return;
+
+                const member = message.guild?.members.cache.get(mentionedUser.id);
+
+                if (member?.id === message.guild?.ownerId) {
+                    message.channel.send(`## **Nah, he's a good person 😎**`);
+                } else if (member?.roles.cache.has("1039624778715250780")) {
+                    message.channel.send(`## **Nah, she's a good person 😊**`);
+                } else {
+                    message.channel.send(`## **🥸Yes, ${mentionedUser} is a bich🤡**`);
+                }
+            } else {
+                message.channel.send("## 🥸**POK U BICH**🖕");
+            }
+            return;
+        }
+
+
+
 
         const content = message.content.toLowerCase();
         const args = message.content.split(" ").slice(1).join(" ");

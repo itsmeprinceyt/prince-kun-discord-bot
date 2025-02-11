@@ -12,16 +12,25 @@ exports.default = {
             return message.reply("❌ Please provide a mathematical expression to evaluate.");
         }
         expression = expression
-            .replace(/x/g, "*")
+            .replace(/[x×﹡＊·‧]/g, "*")
             .replace(/√(\d+(\.\d+)?)/g, "sqrt($1)")
             .replace(/\^/g, "**")
             .replace(/(\d)\(/g, "$1*(");
         try {
-            const answer = (0, mathjs_1.evaluate)(expression);
+            let answer = (0, mathjs_1.evaluate)(expression);
             if (answer === undefined || answer === null || isNaN(answer)) {
                 return message.reply("❌ Invalid mathematical expression.");
             }
-            const formattedAnswer = Number.isInteger(answer) ? answer : answer.toFixed(2);
+            let formattedAnswer;
+            if (answer.toString().includes("e")) {
+                formattedAnswer = answer.toFixed(10).replace(/\.?0+$/, "");
+            }
+            else {
+                formattedAnswer = Number.isInteger(answer) ? answer.toString() : answer.toFixed(2);
+            }
+            if (formattedAnswer.length > 50) {
+                formattedAnswer = parseFloat(answer).toExponential(10);
+            }
             const embed = new discord_js_1.EmbedBuilder()
                 .setColor(0xc200ff)
                 .setAuthor({
@@ -60,7 +69,7 @@ exports.default = {
                     });
                 }
                 await interaction.reply({
-                    content: `${answer}`,
+                    content: `${formattedAnswer}`,
                     flags: 64,
                 });
             });
