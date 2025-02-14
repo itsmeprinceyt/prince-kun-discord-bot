@@ -162,9 +162,9 @@ const GameLivestreamCode: Command = {
             })
             .setTitle(`${codeTitle}`)
             .setDescription(
-                `Code: [${redemptionCode1}](https://genshin.hoyoverse.com/en/gift?code=${redemptionCode1})\n` +
-                `Code: [${redemptionCode2}](https://genshin.hoyoverse.com/en/gift?code=${redemptionCode2})\n` +
-                `Code: [${redemptionCode3}](https://genshin.hoyoverse.com/en/gift?code=${redemptionCode3})\n\n` +
+                `Code: [${redemptionCode1}](https://hsr.hoyoverse.com/gift?code=${redemptionCode1})\n` +
+                `Code: [${redemptionCode2}](https://hsr.hoyoverse.com/gift?code=${redemptionCode2})\n` +
+                `Code: [${redemptionCode3}](https://hsr.hoyoverse.com/gift?code=${redemptionCode3})\n\n` +
                 `Click on the code above or redeem through the website below:\n https://hsr.hoyoverse.com/gift`
             )
             .setImage(imageUrl)
