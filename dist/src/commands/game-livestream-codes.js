@@ -126,9 +126,9 @@ const GameLivestreamCode = {
             iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
         })
             .setTitle(`${codeTitle}`)
-            .setDescription(`Code: [${redemptionCode1}](https://genshin.hoyoverse.com/en/gift?code=${redemptionCode1})\n` +
-            `Code: [${redemptionCode2}](https://genshin.hoyoverse.com/en/gift?code=${redemptionCode2})\n` +
-            `Code: [${redemptionCode3}](https://genshin.hoyoverse.com/en/gift?code=${redemptionCode3})\n\n` +
+            .setDescription(`Code: [${redemptionCode1}](https://hsr.hoyoverse.com/gift?code=${redemptionCode1})\n` +
+            `Code: [${redemptionCode2}](https://hsr.hoyoverse.com/gift?code=${redemptionCode2})\n` +
+            `Code: [${redemptionCode3}](https://hsr.hoyoverse.com/gift?code=${redemptionCode3})\n\n` +
             `Click on the code above or redeem through the website below:\n https://hsr.hoyoverse.com/gift`)
             .setImage(imageUrl)
             .setFooter({
