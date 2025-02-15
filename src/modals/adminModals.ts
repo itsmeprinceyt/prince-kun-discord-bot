@@ -86,20 +86,20 @@ export async function handleSelectUserSubmit(interaction: ModalSubmitInteraction
         .setThumbnail(selectedAvatar)
         .setTitle("ItsMe Prince Shop")
         .setDescription(
-            `${YC} **Name:** <@${selectedUser.user_id}>\n` +
-            `${YC} **Username:** ${selectedUsername}\n` +
-            `${YC} **UserID:** ${selectedUser.user_id}\n` +
-            `${YC} **Registered on:** ${formattedDate}\n\n` +
+`${YC} **Name:** <@${selectedUser.user_id}>\n` +
+`${YC} **Username:** ${selectedUsername}\n` +
+`${YC} **UserID:** ${selectedUser.user_id}\n` +
+`${YC} **Registered on:** ${formattedDate}\n\n` +
 
-            `**Stats**\n` +
-            `${YC} \`PP Cash          \` • \`${AA}\`\n` +
-            `${YC} \`Referral Tickets \` • \`${BB}\`\n` +
-            `${YC} \`Total Purchases  \` • \`${CC}\`\n` +
-            `${YC} \`Total Referred   \` • \`${DD}\`\n\n` +
+`**Stats**\n` +
+`${YC} \`PP Cash          \` • \`${AA}\`\n` +
+`${YC} \`Referral Tickets \` • \`${BB}\`\n` +
+`${YC} \`Total Purchases  \` • \`${CC}\`\n` +
+`${YC} \`Total Referred   \` • \`${DD}\`\n\n` +
 
-            `**Extra**\n` +
-            `${GC} \`1 PP Cash = 1₹\`\n` +
-            `${GC} To know rules & information, type \`.?shoprules\``)
+`**Extra**\n` +
+`${GC} \`1 PP Cash = 1₹\`\n` +
+`${GC} To know rules & information, type \`.?shoprules\``)
         .setFooter({
             text: `${selectedUsername} | ${new Date().toLocaleTimeString("en-GB", {
                 hour: "2-digit",
