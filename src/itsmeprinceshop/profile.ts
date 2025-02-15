@@ -8,61 +8,59 @@ import {
   ComponentType,
   GuildMember
 } from "discord.js";
+import moment from "moment-timezone";
+
 import pool from "../db";
 import { Command } from "../types/Command";
-import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
 import { logger_custom } from "../utility/logger-custom";
+import { ItsMePrinceRules } from "../utility/itsmeprince-rules";
 
 const profileCommand: Command = {
   data: new SlashCommandBuilder()
     .setName("profile")
-    .setDescription("Check your profile and register if needed."),
+    .setDescription("Check your ItsMe Prince Shop profile."),
 
   async execute(interaction: ChatInputCommandInteraction) {
-    if (!interaction.guild) {
-      await interaction.reply({
-        content: "This is a Server-Only Command! 🖕",
-        flags: 64,
-      });
-      logger_NoDM_NoAdmin(interaction);
-      return;
-    }
-
     const userId = interaction.user.id;
     const member = interaction.member as GuildMember;
     const userName = member?.displayName || interaction.user.username;
     const [rows]: any = await pool.query(
-      "SELECT pp_cash, refer_tickets, total_purchases FROM users WHERE user_id = ?",
+      "SELECT pp_cash, refer_tickets, total_purchases, registration_date FROM users WHERE user_id = ?",
       [userId]
     );
 
     if (rows.length > 0) {
-      const { pp_cash, refer_tickets, total_purchases } = rows[0];
+
+      const { pp_cash, refer_tickets, total_purchases, registration_date } = rows[0];
+      const formattedDate = moment(registration_date).tz("Asia/Kolkata").format("DD MMM YYYY, hh:mm A");
 
       const embed = new EmbedBuilder()
-        .setTitle("Your Profile")
+        .setTitle("ItsMe Prince - Profile")
+        .setThumbnail(interaction.user.displayAvatarURL())
         .setDescription(
           `🎉 **You're registered!**\n` +
           `💰 **PP CASH:** ${pp_cash}\n` +
           `🎟 **Refer Tickets:** ${refer_tickets}\n` +
-          `🛒 **Total Purchases:** ${total_purchases}`
+          `🛒 **Total Purchases:** ${total_purchases}\n` +
+          `🗓 **Registered On:** ${formattedDate} (IST)`
         )
         .setColor("Green");
 
-      await interaction.reply({ embeds: [embed], flags: 64 });
+      await interaction.reply({ embeds: [embed] });
       const MessageString = `[ DATABASE ] User ${userName} (${userId}) fetched profile`;
       logger_custom(userName, "profile", MessageString);
       return;
     }
 
     const embed = new EmbedBuilder()
-      .setTitle("ItsMe Prince Shop - Profile")
-      .setDescription("You are not registered yet. Click **Register** to create your profile.")
-      .setColor("Blue");
+      .setTitle("ItsMe Prince Shop - Profile Registeration")
+      .setThumbnail(interaction.user.displayAvatarURL())
+      .setDescription(ItsMePrinceRules + `**You accept the rules by registering and you also agree to any future updates or changes in the value of PP CASH. It is your responsibility to stay updated with the latest rules.**`)
+      .setColor(0x006eff);
 
     const registerButton = new ButtonBuilder()
       .setCustomId(`register_${userId}`)
-      .setLabel("Register")
+      .setLabel("Accept & Register")
       .setStyle(ButtonStyle.Success);
 
     const cancelButton = new ButtonBuilder()
@@ -74,8 +72,7 @@ const profileCommand: Command = {
 
     const reply = await interaction.reply({
       embeds: [embed],
-      components: [row],
-      flags: 64,
+      components: [row]
     });
 
     const collector = reply.createMessageComponentCollector({
@@ -86,9 +83,10 @@ const profileCommand: Command = {
 
     collector.on("collect", async (buttonInteraction) => {
       if (buttonInteraction.customId === `register_${userId}`) {
+        const istTime = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
         await pool.query(
-          "INSERT INTO users (user_id, pp_cash, refer_tickets, total_purchases) VALUES (?, ?, ?, ?)",
-          [userId, 0, 0, 0]
+          "INSERT INTO users (user_id, pp_cash, refer_tickets, total_purchases, registration_date) VALUES (?, ?, ?, ?, ?)",
+          [userId, 0, 0, 0, istTime]
         );
 
         const MessageString = `[ DATABASE ] User ${userName} (${userId}) registered`;
@@ -98,13 +96,9 @@ const profileCommand: Command = {
           embeds: [
             new EmbedBuilder()
               .setTitle("Registration Successful!")
-              .setDescription(
-                "🎉 **You are now registered!**\n" +
-                "💰 **PP CASH: 0**\n" +
-                "🎟 **Refer Tickets: 0**\n" +
-                "🛒 **Total Purchases: 0**"
-              )
-              .setColor("Green")
+              .setThumbnail(interaction.user.displayAvatarURL())
+              .setDescription("Well, you're registered!\n Use \`/profile\` to check your inventory!\n\n**Current Marketplace:** https://discord.com/channels/310675536340844544/1177928471951966339/1179354261365211218")
+              .setColor(0x00ff00)
           ],
           components: []
         });

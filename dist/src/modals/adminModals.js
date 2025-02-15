@@ -41,17 +41,17 @@ async function handleSelectUserSubmit(interaction) {
         `🎟 **Referral Tickets:** ${refer_tickets}\n` +
         `🛒 **Total Purchases:** ${total_purchases}`)
         .setColor("Green");
-    const userRow = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder().setCustomId(`modify_pp_cash_${selectedUser.user_id}`).setLabel("💰 Modify PP Cash").setStyle(discord_js_1.ButtonStyle.Primary), new discord_js_1.ButtonBuilder().setCustomId(`modify_referral_${selectedUser.user_id}`).setLabel("🎟 Modify Referral Tickets").setStyle(discord_js_1.ButtonStyle.Secondary), new discord_js_1.ButtonBuilder().setCustomId(`modify_purchases_${selectedUser.user_id}`).setLabel("🛒 Modify Purchases").setStyle(discord_js_1.ButtonStyle.Success), new discord_js_1.ButtonBuilder().setCustomId(`delete_${selectedUser.user_id}`).setLabel("❌ Delete User").setStyle(discord_js_1.ButtonStyle.Danger));
+    const userRow = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder().setCustomId(`modify_ppCash_${selectedUser.user_id}`).setLabel("💰 Modify PP Cash").setStyle(discord_js_1.ButtonStyle.Primary), new discord_js_1.ButtonBuilder().setCustomId(`modify_referral_${selectedUser.user_id}`).setLabel("🎟 Modify Referral Tickets").setStyle(discord_js_1.ButtonStyle.Secondary), new discord_js_1.ButtonBuilder().setCustomId(`modify_purchases_${selectedUser.user_id}`).setLabel("🛒 Modify Purchases").setStyle(discord_js_1.ButtonStyle.Success), new discord_js_1.ButtonBuilder().setCustomId(`delete_${selectedUser.user_id}`).setLabel("❌ Delete User").setStyle(discord_js_1.ButtonStyle.Danger));
     await interaction.reply({ embeds: [userEmbed], components: [userRow], flags: 64 });
 }
 async function handleModifyPP(interaction) {
     (0, logger_custom_1.logger_custom)("ADMIN", "admin", "Admin clicked modify PP cash button");
     const userId = interaction.customId.split("_")[2];
     const modal = new discord_js_1.ModalBuilder()
-        .setCustomId(`modify_pp_cash_${userId}`)
+        .setCustomId(`modify_ppCash_${userId}`)
         .setTitle("Modify PP Cash")
         .addComponents(new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.TextInputBuilder()
-        .setCustomId("new_pp_cash")
+        .setCustomId("new_ppCash")
         .setLabel("Enter new PP Cash:")
         .setStyle(discord_js_1.TextInputStyle.Short)));
     await interaction.showModal(modal);
@@ -86,8 +86,8 @@ async function handleModifySubmit(interaction) {
     const type = parts[1];
     const userId = parts[2];
     let field, inputValue, updateField;
-    if (type === "pp") {
-        field = "new_pp_cash";
+    if (type === "ppCash") {
+        field = "new_ppCash";
         updateField = "pp_cash";
     }
     else if (type === "referral") {

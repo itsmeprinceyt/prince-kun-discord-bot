@@ -19,15 +19,10 @@ const adminModals_1 = require("./modals/adminModals");
 const db_1 = require("./db");
 const modalHandlers = new Map([
     ["select_user", adminModals_1.handleSelectUserSubmit],
-    ["modify_submit", adminModals_1.handleModifySubmit],
+    ["modify_points", adminModals_1.handleModifySubmit],
     ["botUpdatesModal", bot_updates_1.handleModalSubmit],
     ["serverUpdatesModal", server_updates_1.handleServerModalSubmit],
     ["shopUpdateModal", shop_updates_1.handleShopModalSubmit]
-]);
-const buttonHandlers = new Map([
-    ["modify_pp_cash", adminModals_1.handleModifyPP],
-    ["modify_referral", adminModals_1.handleModifyReferral],
-    ["modify_purchases", adminModals_1.handleModifyPurchases]
 ]);
 const client = new discord_js_1.Client({
     intents: [
@@ -93,7 +88,6 @@ async function startBot() {
     });
     client.on("interactionCreate", async (interaction) => {
         if (interaction.isChatInputCommand()) {
-            // ✅ Handle slash commands
             const command = commandHandler_1.default.get(interaction.commandName) || itsmeprinceshopCommandHandler_1.default.get(interaction.commandName);
             if (!command)
                 return;
@@ -109,18 +103,38 @@ async function startBot() {
             }
         }
         else if (interaction.isButton()) {
-            const handler = buttonHandlers.get(interaction.customId);
-            if (handler)
-                await handler(interaction);
+            if (interaction.customId.startsWith("select_user")) {
+                await (0, adminModals_1.handleSelectUser)(interaction);
+            }
+            else if (interaction.customId.startsWith("delete_")) {
+                await (0, adminModals_1.handleDeleteUser)(interaction);
+            }
+            else if (interaction.customId.startsWith("modify_ppCash_")) {
+                await (0, adminModals_1.handleModifyPP)(interaction);
+            }
+            else if (interaction.customId.startsWith("modify_referral_")) {
+                await (0, adminModals_1.handleModifyReferral)(interaction);
+            }
+            else if (interaction.customId.startsWith("modify_purchases_")) {
+                await (0, adminModals_1.handleModifyPurchases)(interaction);
+            }
         }
         else if (interaction.isModalSubmit()) {
             const customId = interaction.customId;
-            const handler = modalHandlers.get(customId);
-            if (handler) {
-                await handler(interaction);
+            if (customId === "select_user") {
+                await (0, adminModals_1.handleSelectUserSubmit)(interaction);
+            }
+            else if (customId.startsWith("modify_")) {
+                await (0, adminModals_1.handleModifySubmit)(interaction);
             }
             else {
-                console.warn(`[ WARNING ] No handler found for modal: ${customId}`);
+                const handler = modalHandlers.get(customId);
+                if (handler) {
+                    await handler(interaction);
+                }
+                else {
+                    console.warn(`[ WARNING ] No handler found for modal: ${customId}`);
+                }
             }
         }
     });

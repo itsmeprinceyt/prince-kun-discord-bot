@@ -8,34 +8,24 @@ const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const db_1 = __importDefault(require("../db"));
 const logger_custom_1 = require("../utility/logger-custom");
 const itsmeprince_rules_1 = require("../utility/itsmeprince-rules");
-const profileCommand = {
+const registerCommand = {
     data: new discord_js_1.SlashCommandBuilder()
-        .setName("profile")
-        .setDescription("Check your ItsMe Prince Shop profile."),
+        .setName("register")
+        .setDescription("Register your profile for ItsMe Prince Shop."),
     async execute(interaction) {
         const userId = interaction.user.id;
         const member = interaction.member;
         const userName = member?.displayName || interaction.user.username;
-        const [rows] = await db_1.default.query("SELECT pp_cash, refer_tickets, total_purchases, registration_date FROM users WHERE user_id = ?", [userId]);
+        const [rows] = await db_1.default.query("SELECT user_id FROM users WHERE user_id = ?", [userId]);
         if (rows.length > 0) {
-            const { pp_cash, refer_tickets, total_purchases, registration_date } = rows[0];
-            const formattedDate = (0, moment_timezone_1.default)(registration_date).tz("Asia/Kolkata").format("DD MMM YYYY, hh:mm A");
-            const embed = new discord_js_1.EmbedBuilder()
-                .setTitle("ItsMe Prince - Profile")
-                .setThumbnail(interaction.user.displayAvatarURL())
-                .setDescription(`🎉 **You're registered!**\n` +
-                `💰 **PP CASH:** ${pp_cash}\n` +
-                `🎟 **Refer Tickets:** ${refer_tickets}\n` +
-                `🛒 **Total Purchases:** ${total_purchases}\n` +
-                `🗓 **Registered On:** ${formattedDate} (IST)`)
-                .setColor("Green");
-            await interaction.reply({ embeds: [embed] });
-            const MessageString = `[ DATABASE ] User ${userName} (${userId}) fetched profile`;
-            (0, logger_custom_1.logger_custom)(userName, "profile", MessageString);
+            await interaction.reply({
+                content: "❌ You are already registered!",
+                flags: 64,
+            });
             return;
         }
         const embed = new discord_js_1.EmbedBuilder()
-            .setTitle("ItsMe Prince Shop - Profile Registeration")
+            .setTitle("ItsMe Prince Shop - Registration")
             .setThumbnail(interaction.user.displayAvatarURL())
             .setDescription(itsmeprince_rules_1.ItsMePrinceRules + `**You accept the rules by registering and you also agree to any future updates or changes in the value of PP CASH. It is your responsibility to stay updated with the latest rules.**`)
             .setColor(0x006eff);
@@ -92,4 +82,4 @@ const profileCommand = {
         });
     }
 };
-exports.default = profileCommand;
+exports.default = registerCommand;

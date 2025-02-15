@@ -17,6 +17,7 @@ exports.HelpDescription = `**🚀 Message Commands!**\n` +
     `> **📌 \`.?math        \`** • Solves Math-related problems\n` +
     `> **📌 \`.?paypal      \`** • Sends PayPal donation Link\n` +
     `> **📌 \`.?pcspecs     \`** • Sends my setup specifications\n` +
+    `> **📌 \`.?shoprules   \`** • Sends ItsMe Prince Shop rules\n` +
     `> **📌 \`.?sofi-guides \`** • Sends Sofi Guides\n` +
     `> **📌 \`.?upi         \`** • Sends UPI for donation\n` +
     `> **📌 \`.?whatsapp    \`** • Sends Broadcast link & WA number\n` +
@@ -25,5 +26,7 @@ exports.HelpDescription = `**🚀 Message Commands!**\n` +
     `> **📌 \`.?clips       \`** • Sends Clips/Highlight link\n` +
     `> **📌 \`.?life        \`** • Wakes you up from reality!\n\n` +
     `**🚀 Slash Commands!**\n` +
-    `> **📌 \`/ping         \`** • Replies with Pong\n\n` +
+    `> **📌 \`/ping         \`** • Replies with Pong\n` +
+    `> **📌 \`/profile      \`** • Check your ItsMe Prince Shop inventory\n` +
+    `> **📌 \`/register     \`** • Register for ItsMe Prince Shop\n\n` +
     `Use these commands to get started!`;

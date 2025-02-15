@@ -139,7 +139,7 @@ const GameCode: Command = {
                 })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
                 iconURL: avatarURL,
             });
-        /*=================================================== EXPRESS PASS*/
+        /*=================================================== HONKAI STAR RAIL*/
         const hsrPing = new EmbedBuilder()
             .setColor(0x006eff)
             .setAuthor({
@@ -161,7 +161,7 @@ const GameCode: Command = {
                 iconURL: avatarURL,
             });
 
-        /*=================================================== LUNITE SUBSCRIPTION*/
+        /*=================================================== WUTHERING WAVES*/
         const wuwaPing = new EmbedBuilder()
             .setColor(0x006eff)
             .setAuthor({

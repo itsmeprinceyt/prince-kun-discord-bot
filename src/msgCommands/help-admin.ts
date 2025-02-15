@@ -23,8 +23,15 @@ export default {
                 iconURL: message.author.displayAvatarURL(),
             });
 
+        const adminId = "310672946316181514";
         if (!message.guild) {
-            await message.reply("This is a Server-Only Command! 🖕");
+            if (message.id !== adminId) {
+                await message.reply({ embeds: [embed] });
+                return;
+            }
+            else {
+                await message.reply("This is a Server-Only Command! 🖕");
+            }
             return;
         }
 

@@ -14,22 +14,26 @@ const adminCommand = {
         .setName("admin")
         .setDescription("Manage registered users (Admins only)."),
     async execute(interaction) {
+        const adminId = "310672946316181514";
         if (!interaction.guild) {
-            await interaction.reply({
-                content: "This is a Server-Only Command! 🖕",
-                flags: 64,
-            });
-            (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
-            return;
+            if (interaction.user.id !== adminId) {
+                await interaction.reply({
+                    content: "🚫 This command can only be used in a server!",
+                    flags: 64
+                });
+                (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
+                return;
+            }
         }
-        const adminId = interaction.user.id;
-        if (adminId !== interaction.guild.ownerId) {
-            await interaction.reply({
-                content: "🚫 You do not have permission to use this command!",
-                flags: 64,
-            });
-            (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
-            return;
+        else {
+            if (interaction.user.id !== interaction.guild.ownerId) {
+                await interaction.reply({
+                    content: "🚫 You do not have permission to use this command!",
+                    flags: 64
+                });
+                (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
+                return;
+            }
         }
         let page = 0;
         const [users] = await db_1.default.query("SELECT user_id FROM users");

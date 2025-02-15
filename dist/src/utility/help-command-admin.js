@@ -5,6 +5,7 @@ exports.HelpDescriptionAdmin = `**🚀 Message Commands!**\n` +
     `> **🟣 \`.?bot                         \`**\n` +
     `> **🟣 \`.?help-force                  \`**\n\n` +
     `**🚀 Slash Commands!**\n` +
+    `> **🟣 \`/admin                        \`** \n` +
     `> **🟠 \`/ban                          \`** \n` +
     `> **🟣 \`/bot-updates                  \`** \n` +
     `> **🟠 \`/game-code                    \`** \n` +

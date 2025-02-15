@@ -3,6 +3,7 @@ export const HelpDescriptionAdmin = `**🚀 Message Commands!**\n` +
     `> **🟣 \`.?help-force                  \`**\n\n` +
 
     `**🚀 Slash Commands!**\n` +
+    `> **🟣 \`/admin                        \`** \n` +
     `> **🟠 \`/ban                          \`** \n` +
     `> **🟣 \`/bot-updates                  \`** \n` +
     `> **🟠 \`/game-code                    \`** \n` +

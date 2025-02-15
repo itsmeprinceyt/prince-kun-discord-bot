@@ -135,15 +135,21 @@ async function startBot() {
         } 
         else if (interaction.isModalSubmit()) {
             const customId = interaction.customId;
-    
             if (customId === "select_user") {
                 await handleSelectUserSubmit(interaction);
             } else if (customId.startsWith("modify_")) {
                 await handleModifySubmit(interaction);
-            } else {
-                console.warn(`[ WARNING ] No handler found for modal: ${customId}`);
+            }
+            else {
+                const handler = modalHandlers.get(customId);
+                if (handler) {
+                    await handler(interaction);
+                } else {
+                    console.warn(`[ WARNING ] No handler found for modal: ${customId}`);
+                }
             }
         }
+        
     });
     
     
