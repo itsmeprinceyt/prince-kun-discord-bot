@@ -24,6 +24,7 @@ import {
     handleModifyReferral,
     handleModifyPurchases,
     handleModifyReferred,
+    handleRefresh,
     handleModifySubmit, 
     handleDeleteUser 
 } from "./modals/adminModals";
@@ -134,6 +135,8 @@ async function startBot() {
                 await handleModifyPurchases(interaction);
             } else if(interaction.customId.startsWith("modify_referred_")) {
                 await handleModifyReferred(interaction);
+            } else if(interaction.customId.startsWith("refresh_")) {
+                await handleRefresh(interaction);
             }
         } 
         else if (interaction.isModalSubmit()) {

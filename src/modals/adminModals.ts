@@ -8,6 +8,7 @@ import {
     TextInputBuilder,
     TextInputStyle,
     ModalBuilder,
+    MessageFlags ,
 } from "discord.js";
 import pool from "../db";
 import moment from "moment-timezone";
@@ -112,7 +113,78 @@ export async function handleSelectUserSubmit(interaction: ModalSubmitInteraction
         new ButtonBuilder().setCustomId(`modify_referred_${selectedUser.user_id}`).setLabel("👥 Modify Total Referred").setStyle(ButtonStyle.Primary),
         new ButtonBuilder().setCustomId(`delete_${selectedUser.user_id}`).setLabel("❌ Delete User").setStyle(ButtonStyle.Danger)
     );
-    await interaction.reply({ embeds: [userEmbed], components: [userRow], flags: 64 });
+    const navigationRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder().setCustomId(`go_back`).setLabel("⬅️ Go Back").setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder().setCustomId(`refresh_${selectedUser.user_id}`).setLabel("🔄 Refresh").setStyle(ButtonStyle.Primary)
+    );
+    
+    await interaction.reply({ embeds: [userEmbed], components: [userRow, navigationRow], flags: 64 });
+}
+
+export async function handleRefresh(interaction: ButtonInteraction) {
+    logger_custom("ADMIN", "admin", "Admin clicked Refresh button");
+    const userId = interaction.customId.split("_")[1];
+    const [userData]: any = await pool.query(
+        "SELECT pp_cash, refer_tickets, total_purchases, registration_date, total_referred FROM users WHERE user_id = ?",
+        [userId]
+    );
+
+    if (userData.length === 0) {
+        await interaction.reply({ content: "❌ User data not found!", ephemeral: true });
+        return;
+    }
+
+    const { pp_cash, refer_tickets, total_purchases, registration_date, total_referred } = userData[0];
+    const formattedDate = moment(registration_date).tz("Asia/Kolkata", true).format("DD MMM YYYY, hh:mm A");
+
+    const selectedDiscordUser = await interaction.client.users.fetch(userId).catch(() => null);
+    const selectedUsername = selectedDiscordUser?.username || "Unknown User";
+    const selectedAvatar = selectedDiscordUser?.displayAvatarURL() || interaction.client.user.displayAvatarURL();
+
+    const userEmbed = new EmbedBuilder()
+        .setColor(0xeeff00)
+        .setAuthor({
+            name: "Prince-Kun • Profile Info",
+            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+        })
+        .setThumbnail(selectedAvatar)
+        .setTitle("ItsMe Prince Shop")
+        .setDescription(
+`${YC} **Name:** <@${userId}>\n` +
+`${YC} **Username:** ${selectedUsername}\n` +
+`${YC} **UserID:** ${userId}\n` +
+`${YC} **Registered on:** ${formattedDate}\n\n` +
+`**Stats**\n` +
+`${YC} \`PP Cash          \` • \`${String(pp_cash).padEnd(8)}\`\n` +
+`${YC} \`Referral Tickets \` • \`${String(refer_tickets).padEnd(8)}\`\n` +
+`${YC} \`Total Purchases  \` • \`${String(total_purchases).padEnd(8)}\`\n` +
+`${YC} \`Total Referred   \` • \`${String(total_referred).padEnd(8)}\`\n\n` +
+`**Extra**\n` +
+`${GC} \`1 PP Cash = 1₹\`\n` +
+`${GC} To know rules & information, type \`.?shoprules\``)
+        .setFooter({
+            text: `${selectedUsername} | ${new Date().toLocaleTimeString("en-GB", {
+                hour: "2-digit",
+                minute: "2-digit",
+                timeZone: "Asia/Kolkata",
+            })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
+            iconURL: selectedAvatar,
+        });
+
+    const userRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder().setCustomId(`modify_ppCash_${userId}`).setLabel("💰 Modify PP Cash").setStyle(ButtonStyle.Success),
+        new ButtonBuilder().setCustomId(`modify_referral_${userId}`).setLabel("🎟 Modify Referral Tickets").setStyle(ButtonStyle.Primary),
+        new ButtonBuilder().setCustomId(`modify_purchases_${userId}`).setLabel("🛒 Modify Purchases").setStyle(ButtonStyle.Success),
+        new ButtonBuilder().setCustomId(`modify_referred_${userId}`).setLabel("👥 Modify Total Referred").setStyle(ButtonStyle.Primary),
+        new ButtonBuilder().setCustomId(`delete_${userId}`).setLabel("❌ Delete User").setStyle(ButtonStyle.Danger),
+    );
+
+    const controlRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder().setCustomId(`goBack`).setLabel("⬅️ Go Back").setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder().setCustomId(`refresh_${userId}`).setLabel("🔄 Refresh").setStyle(ButtonStyle.Primary)
+    );
+
+    await interaction.update({ embeds: [userEmbed], components: [userRow, controlRow] });
 }
 
 export async function handleModifyPP(interaction: ButtonInteraction) {

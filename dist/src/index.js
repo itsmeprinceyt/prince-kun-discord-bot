@@ -121,6 +121,9 @@ async function startBot() {
             else if (interaction.customId.startsWith("modify_referred_")) {
                 await (0, adminModals_1.handleModifyReferred)(interaction);
             }
+            else if (interaction.customId.startsWith("refresh_")) {
+                await (0, adminModals_1.handleRefresh)(interaction);
+            }
         }
         else if (interaction.isModalSubmit()) {
             const customId = interaction.customId;
