@@ -40,7 +40,7 @@ async function handleSelectUserSubmit(interaction) {
     const selectedDiscordUser = await interaction.client.users.fetch(selectedUserId).catch(() => null);
     let selectedUsername = "Unknown User";
     let selectedDisplayName = "Unknown Name";
-    let selectedAvatar = interaction.client.user.displayAvatarURL(); // Default bot avatar in case of errors
+    let selectedAvatar = interaction.client.user.displayAvatarURL();
     if (selectedDiscordUser) {
         selectedUsername = selectedDiscordUser.username;
         selectedDisplayName = selectedDiscordUser.globalName || selectedUsername;
@@ -62,7 +62,6 @@ async function handleSelectUserSubmit(interaction) {
     (0, logger_custom_1.logger_custom)("ADMIN", "admin", `Selected user: ${selectedUser.user_id}`);
     const userEmbed = new discord_js_1.EmbedBuilder()
         .setColor(0xeeff00)
-        .setTitle("ItsMe Prince - Profile")
         .setAuthor({
         name: "Prince-Kun • Profile Info",
         iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
@@ -158,7 +157,7 @@ async function handleModifySubmit(interaction) {
         field = "new_total_purchases";
         updateField = "total_purchases";
     }
-    else if (type === "referred") { // Added total referred
+    else if (type === "referred") {
         field = "new_total_referred";
         updateField = "total_referred";
     }

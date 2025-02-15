@@ -51,10 +51,16 @@ const adminCommand = {
             const end = start + ITEMS_PER_PAGE;
             const pageUsers = users.slice(start, end);
             return new discord_js_1.EmbedBuilder()
+                .setColor(0xeeff00)
+                .setAuthor({
+                name: "Prince-Kun • User Database",
+                iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            })
                 .setTitle("Registered Users")
-                .setDescription(pageUsers
-                .map((user, index) => `**${start + index + 1}.** <@${user.user_id}>`)
-                .join("\n"))
+                .setDescription(`\`S.N  \` \`USERS\`\n` +
+                pageUsers
+                    .map((user, index) => `\`${(start + index + 1).toString().padEnd(5)}\` <@${user.user_id}>`)
+                    .join("\n"))
                 .setFooter({ text: `Page ${page + 1} of ${Math.ceil(users.length / ITEMS_PER_PAGE)}` })
                 .setColor("Blue");
         };

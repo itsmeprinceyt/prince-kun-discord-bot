@@ -62,11 +62,18 @@ const adminCommand: Command = {
             const pageUsers = users.slice(start, end);
 
             return new EmbedBuilder()
+                .setColor(0xeeff00)
+                .setAuthor({
+                    name: "Prince-Kun • User Database",
+                    iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                })
                 .setTitle("Registered Users")
                 .setDescription(
+                    `\`S.N  \` \`USERS\`\n` +
                     pageUsers
-                        .map((user: any, index: number) => `**${start + index + 1}.** <@${user.user_id}>`)
+                        .map((user: any, index: number) => `\`${(start + index + 1).toString().padEnd(5)}\` <@${user.user_id}>`)
                         .join("\n")
+
                 )
                 .setFooter({ text: `Page ${page + 1} of ${Math.ceil(users.length / ITEMS_PER_PAGE)}` })
                 .setColor("Blue");

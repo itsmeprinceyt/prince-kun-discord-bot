@@ -6,7 +6,8 @@ import {
   ButtonStyle,
   EmbedBuilder,
   ComponentType,
-  GuildMember
+  GuildMember,
+  User
 } from "discord.js";
 import moment from "moment-timezone";
 
@@ -24,16 +25,33 @@ const PC = EMOTES[4].roleId;
 const profileCommand: Command = {
   data: new SlashCommandBuilder()
     .setName("profile")
-    .setDescription("Check your ItsMe Prince Shop profile."),
+    .setDescription("Check your ItsMe Prince Shop profile or someone else's.")
+    .addUserOption(option =>
+      option.setName("user")
+        .setDescription("Mention a user to check their profile.")
+        .setRequired(false)
+    ) as SlashCommandBuilder,
 
   async execute(interaction: ChatInputCommandInteraction) {
-    const userId = interaction.user.id;
-    const username = interaction.user.username;
-    const member = interaction.member as GuildMember;
-    const userName = member?.displayName || interaction.user.username;
+    const mentionedUser: User | null = interaction.options.getUser("user");
+    const targetUser = mentionedUser || interaction.user;
+    const targetUserId = targetUser.id;
+    const targetUsername = targetUser.username;
+    const targetDisplayName = (interaction.guild?.members.cache.get(targetUserId) as GuildMember)?.displayName || targetUsername;
+    if (mentionedUser) {
+      const [rows]: any = await pool.query("SELECT pp_cash FROM users WHERE user_id = ?", [mentionedUser.id]);
+      if (rows.length === 0) {
+        await interaction.reply({
+          content: `❌ **${mentionedUser.username}** is not registered in the ItsMe Prince Shop database.`,
+          flags: 64,
+          
+        });
+        return;
+      }
+    }
     const [rows]: any = await pool.query(
       "SELECT pp_cash, refer_tickets, total_purchases, registration_date, total_referred FROM users WHERE user_id = ?",
-      [userId]
+      [targetUserId]
     );
 
     if (rows.length > 0) {
@@ -46,44 +64,46 @@ const profileCommand: Command = {
       const formattedDate = moment(registration_date)
         .tz("Asia/Kolkata", true)
         .format("DD MMM YYYY, hh:mm A");
+        const avatarURL = mentionedUser && rows.length > 0 
+        ? mentionedUser.displayAvatarURL() 
+        : interaction.user.displayAvatarURL();
 
       const embed = new EmbedBuilder()
-      .setColor(0xeeff00)
-        .setTitle("ItsMe Prince - Profile")
+        .setColor(0xeeff00)
         .setAuthor({
           name: "Prince-Kun • Profile Info",
           iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
-      })
-        .setThumbnail(interaction.user.displayAvatarURL())
+        })
+        .setThumbnail(avatarURL)
         .setTitle("ItsMe Prince Shop")
         .setDescription(
-`${YC} **Name:** <@${userId}>\n`+
-`${YC} **Username:** ${username}\n`+
-`${YC} **UserID:** ${userId}\n`+
-`${YC} **Registered on:** ${formattedDate}\n\n`+
+          `${YC} **Name:** <@${targetUserId}>\n` +
+          `${YC} **Username:** ${targetUsername}\n` +
+          `${YC} **UserID:** ${targetUserId}\n` +
+          `${YC} **Registered on:** ${formattedDate}\n\n` +
 
-`**Stats**\n` +
-`${YC} \`PP Cash          \` • \`${AA}\`\n` +
-`${YC} \`Referral Tickets \` • \`${BB}\`\n` +
-`${YC} \`Total Purchases  \` • \`${CC}\`\n` +
-`${YC} \`Total Referred   \` • \`${DD}\`\n\n` +
+          `**Stats**\n` +
+          `${YC} \`PP Cash          \` • \`${AA}\`\n` +
+          `${YC} \`Referral Tickets \` • \`${BB}\`\n` +
+          `${YC} \`Total Purchases  \` • \`${CC}\`\n` +
+          `${YC} \`Total Referred   \` • \`${DD}\`\n\n` +
 
-`**Extra**\n`+
-`${GC} \`1 PP Cash = 1₹\`\n`+
-`${GC} To know rules & information, type \`.?shoprules\``)
-.setFooter({
-  text: `${username} | ${new Date().toLocaleTimeString("en-GB", {
-      hour: "2-digit",
-      minute: "2-digit",
-      timeZone: "Asia/Kolkata",
-  })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
-  iconURL: interaction.user.displayAvatarURL(),
-});
-        
+          `**Extra**\n` +
+          `${GC} \`1 PP Cash = 1₹\`\n` +
+          `${GC} To know rules & information, type \`.?shoprules\``)
+        .setFooter({
+          text: `${targetUsername} | ${new Date().toLocaleTimeString("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+            timeZone: "Asia/Kolkata",
+          })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
+          iconURL: avatarURL,
+        });
+
 
       await interaction.reply({ embeds: [embed] });
-      const MessageString = `[ DATABASE ] User ${userName} (${userId}) fetched profile`;
-      logger_custom(userName, "profile", MessageString);
+      const MessageString = `[ DATABASE ] User ${targetDisplayName} (${targetUserId}) fetched profile`;
+      logger_custom(targetDisplayName, "profile", MessageString);
       return;
     }
 
@@ -99,7 +119,7 @@ const profileCommand: Command = {
       .setTitle("ItsMe Prince Shop - Profile Registeration")
       .setDescription(ItsMePrinceRules + `**You accept the rules by registering and you also agree to any future updates or changes in the value of PP CASH. It is your responsibility to stay updated with the latest rules.**`)
       .setFooter({
-        text: `${userName} | ${new Date().toLocaleTimeString("en-GB", {
+        text: `${targetDisplayName} | ${new Date().toLocaleTimeString("en-GB", {
           hour: "2-digit",
           minute: "2-digit",
           timeZone: "Asia/Kolkata",
@@ -108,12 +128,12 @@ const profileCommand: Command = {
       });
 
     const registerButton = new ButtonBuilder()
-      .setCustomId(`register_${userId}`)
+      .setCustomId(`register_${targetUserId}`)
       .setLabel("Accept & Register")
       .setStyle(ButtonStyle.Success);
 
     const cancelButton = new ButtonBuilder()
-      .setCustomId(`cancel_${userId}`)
+      .setCustomId(`cancel_${targetUserId}`)
       .setLabel("Cancel")
       .setStyle(ButtonStyle.Danger);
 
@@ -127,19 +147,19 @@ const profileCommand: Command = {
     const collector = reply.createMessageComponentCollector({
       componentType: ComponentType.Button,
       time: 30000,
-      filter: (buttonInteraction) => buttonInteraction.user.id === userId
+      filter: (buttonInteraction) => buttonInteraction.user.id === targetUserId
     });
 
     collector.on("collect", async (buttonInteraction) => {
-      if (buttonInteraction.customId === `register_${userId}`) {
+      if (buttonInteraction.customId === `register_${targetUserId}`) {
         const istTime = moment.utc().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
         await pool.query(
           "INSERT INTO users (user_id, pp_cash, refer_tickets, total_purchases, registration_date, total_referred) VALUES (?, ?, ?, ?, ?, ?)",
-          [userId, 0, 0, 0, istTime, 0]
-      );
+          [targetUserId, 0, 0, 0, istTime, 0]
+        );
 
-        const MessageString = `[ DATABASE ] User ${userName} (${userId}) registered`;
-        logger_custom(userName, "profile", MessageString);
+        const MessageString = `[ DATABASE ] User ${targetDisplayName} (${targetUserId}) registered`;
+        logger_custom(targetDisplayName, "profile", MessageString);
 
         await buttonInteraction.update({
           embeds: [
@@ -151,8 +171,8 @@ const profileCommand: Command = {
           ],
           components: []
         });
-      } else if (buttonInteraction.customId === `cancel_${userId}`) {
-        console.log(`[ INFO ] User ${userName} (${userId}) cancelled registration.`);
+      } else if (buttonInteraction.customId === `cancel_${targetUserId}`) {
+        console.log(`[ INFO ] User ${targetDisplayName} (${targetUserId}) cancelled registration.`);
 
         await buttonInteraction.update({
           content: "Registration cancelled.",
