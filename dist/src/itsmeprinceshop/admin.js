@@ -8,13 +8,14 @@ const db_1 = __importDefault(require("../db"));
 const adminModals_1 = require("../modals/adminModals");
 const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
 const logger_custom_1 = require("../utility/logger-custom");
+const rolePerms_1 = require("../utility/rolePerms");
 const ITEMS_PER_PAGE = 15;
 const adminCommand = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("admin")
         .setDescription("Manage registered users (Admins only)."),
     async execute(interaction) {
-        const adminId = "310672946316181514";
+        const adminId = rolePerms_1.RolesPerms[5].roleId;
         if (!interaction.guild) {
             if (interaction.user.id !== adminId) {
                 await interaction.reply({

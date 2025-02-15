@@ -23,7 +23,7 @@ export default {
                 iconURL: message.author.displayAvatarURL(),
             });
 
-        const adminId = "310672946316181514";
+        const adminId = RolesPerms[5].roleId;
         if (!message.guild) {
             if (message.id !== adminId) {
                 await message.reply({ embeds: [embed] });

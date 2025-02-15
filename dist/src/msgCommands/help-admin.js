@@ -23,7 +23,7 @@ exports.default = {
             })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
             iconURL: message.author.displayAvatarURL(),
         });
-        const adminId = "310672946316181514";
+        const adminId = rolePerms_1.RolesPerms[5].roleId;
         if (!message.guild) {
             if (message.id !== adminId) {
                 await message.reply({ embeds: [embed] });

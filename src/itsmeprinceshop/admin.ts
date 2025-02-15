@@ -12,6 +12,7 @@ import { Command } from "../types/Command";
 import { handleSelectUser } from "../modals/adminModals";
 import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
 import { logger_custom } from "../utility/logger-custom";
+import { RolesPerms } from "../utility/rolePerms";
 
 const ITEMS_PER_PAGE = 15;
 
@@ -21,7 +22,7 @@ const adminCommand: Command = {
         .setDescription("Manage registered users (Admins only)."),
 
     async execute(interaction: ChatInputCommandInteraction) {
-        const adminId = "310672946316181514";
+        const adminId = RolesPerms[5].roleId;
 
         if (!interaction.guild) {
             if (interaction.user.id !== adminId) {
