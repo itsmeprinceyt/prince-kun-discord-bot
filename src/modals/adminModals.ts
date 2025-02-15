@@ -114,8 +114,7 @@ export async function handleSelectUserSubmit(interaction: ModalSubmitInteraction
         new ButtonBuilder().setCustomId(`delete_${selectedUser.user_id}`).setLabel("❌ Delete User").setStyle(ButtonStyle.Danger)
     );
     const navigationRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-        new ButtonBuilder().setCustomId(`go_back`).setLabel("⬅️ Go Back").setStyle(ButtonStyle.Secondary),
-        new ButtonBuilder().setCustomId(`refresh_${selectedUser.user_id}`).setLabel("🔄 Refresh").setStyle(ButtonStyle.Primary)
+        new ButtonBuilder().setCustomId(`refresh_${selectedUser.user_id}`).setLabel("🔄 Refresh").setStyle(ButtonStyle.Secondary)
     );
     
     await interaction.reply({ embeds: [userEmbed], components: [userRow, navigationRow], flags: 64 });
@@ -180,8 +179,7 @@ export async function handleRefresh(interaction: ButtonInteraction) {
     );
 
     const controlRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-        new ButtonBuilder().setCustomId(`goBack`).setLabel("⬅️ Go Back").setStyle(ButtonStyle.Secondary),
-        new ButtonBuilder().setCustomId(`refresh_${userId}`).setLabel("🔄 Refresh").setStyle(ButtonStyle.Primary)
+        new ButtonBuilder().setCustomId(`refresh_${userId}`).setLabel("🔄 Refresh").setStyle(ButtonStyle.Secondary)
     );
 
     await interaction.update({ embeds: [userEmbed], components: [userRow, controlRow] });

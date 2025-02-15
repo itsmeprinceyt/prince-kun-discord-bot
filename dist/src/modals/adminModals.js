@@ -90,7 +90,7 @@ async function handleSelectUserSubmit(interaction) {
         iconURL: selectedAvatar,
     });
     const userRow = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder().setCustomId(`modify_ppCash_${selectedUser.user_id}`).setLabel("💰 Modify PP Cash").setStyle(discord_js_1.ButtonStyle.Success), new discord_js_1.ButtonBuilder().setCustomId(`modify_referral_${selectedUser.user_id}`).setLabel("🎟 Modify Referral Tickets").setStyle(discord_js_1.ButtonStyle.Primary), new discord_js_1.ButtonBuilder().setCustomId(`modify_purchases_${selectedUser.user_id}`).setLabel("🛒 Modify Purchases").setStyle(discord_js_1.ButtonStyle.Success), new discord_js_1.ButtonBuilder().setCustomId(`modify_referred_${selectedUser.user_id}`).setLabel("👥 Modify Total Referred").setStyle(discord_js_1.ButtonStyle.Primary), new discord_js_1.ButtonBuilder().setCustomId(`delete_${selectedUser.user_id}`).setLabel("❌ Delete User").setStyle(discord_js_1.ButtonStyle.Danger));
-    const navigationRow = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder().setCustomId(`go_back`).setLabel("⬅️ Go Back").setStyle(discord_js_1.ButtonStyle.Secondary), new discord_js_1.ButtonBuilder().setCustomId(`refresh_${selectedUser.user_id}`).setLabel("🔄 Refresh").setStyle(discord_js_1.ButtonStyle.Primary));
+    const navigationRow = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder().setCustomId(`refresh_${selectedUser.user_id}`).setLabel("🔄 Refresh").setStyle(discord_js_1.ButtonStyle.Secondary));
     await interaction.reply({ embeds: [userEmbed], components: [userRow, navigationRow], flags: 64 });
 }
 async function handleRefresh(interaction) {
@@ -135,7 +135,7 @@ async function handleRefresh(interaction) {
         iconURL: selectedAvatar,
     });
     const userRow = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder().setCustomId(`modify_ppCash_${userId}`).setLabel("💰 Modify PP Cash").setStyle(discord_js_1.ButtonStyle.Success), new discord_js_1.ButtonBuilder().setCustomId(`modify_referral_${userId}`).setLabel("🎟 Modify Referral Tickets").setStyle(discord_js_1.ButtonStyle.Primary), new discord_js_1.ButtonBuilder().setCustomId(`modify_purchases_${userId}`).setLabel("🛒 Modify Purchases").setStyle(discord_js_1.ButtonStyle.Success), new discord_js_1.ButtonBuilder().setCustomId(`modify_referred_${userId}`).setLabel("👥 Modify Total Referred").setStyle(discord_js_1.ButtonStyle.Primary), new discord_js_1.ButtonBuilder().setCustomId(`delete_${userId}`).setLabel("❌ Delete User").setStyle(discord_js_1.ButtonStyle.Danger));
-    const controlRow = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder().setCustomId(`goBack`).setLabel("⬅️ Go Back").setStyle(discord_js_1.ButtonStyle.Secondary), new discord_js_1.ButtonBuilder().setCustomId(`refresh_${userId}`).setLabel("🔄 Refresh").setStyle(discord_js_1.ButtonStyle.Primary));
+    const controlRow = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder().setCustomId(`refresh_${userId}`).setLabel("🔄 Refresh").setStyle(discord_js_1.ButtonStyle.Secondary));
     await interaction.update({ embeds: [userEmbed], components: [userRow, controlRow] });
 }
 async function handleModifyPP(interaction) {
