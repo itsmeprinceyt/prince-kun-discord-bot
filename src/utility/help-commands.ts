@@ -1,4 +1,5 @@
 export const HelpDescription = `**🚀 Message Commands!**\n` +
+    `> **📌 \`.?av          \`** • Sends you your requested avatar\n` +
     `> **📌 \`.?help        \`** • Sends you all commands in your DM\n` +
     `> **📌 \`.?artwork     \`** • Sends credit for artwork\n` +
     `> **📌 \`.?device      \`** • Sends my device information\n` +
