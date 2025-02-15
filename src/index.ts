@@ -73,6 +73,7 @@ async function startBot() {
 
             } catch (error) {
                 console.error("[ ERROR ] Failed to update presence:", error);
+                console.log(chalk.cyan(`[ INFO ] Setting 'over y'all souls' as default activity. `));
                 c.user.setPresence({
                     status: "dnd",
                     activities: [
