@@ -32,7 +32,9 @@ const profileCommand: Command = {
     if (rows.length > 0) {
 
       const { pp_cash, refer_tickets, total_purchases, registration_date } = rows[0];
-      const formattedDate = moment(registration_date).tz("Asia/Kolkata").format("DD MMM YYYY, hh:mm A");
+      const formattedDate = moment(registration_date)
+        .tz("Asia/Kolkata", true)
+        .format("DD MMM YYYY, hh:mm A");
 
       const embed = new EmbedBuilder()
         .setTitle("ItsMe Prince - Profile")
@@ -83,7 +85,7 @@ const profileCommand: Command = {
 
     collector.on("collect", async (buttonInteraction) => {
       if (buttonInteraction.customId === `register_${userId}`) {
-        const istTime = moment.utc().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss"); 
+        const istTime = moment.utc().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
         await pool.query(
           "INSERT INTO users (user_id, pp_cash, refer_tickets, total_purchases, registration_date) VALUES (?, ?, ?, ?, ?)",
           [userId, 0, 0, 0, istTime]

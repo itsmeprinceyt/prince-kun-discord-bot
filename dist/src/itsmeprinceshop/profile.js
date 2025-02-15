@@ -19,7 +19,9 @@ const profileCommand = {
         const [rows] = await db_1.default.query("SELECT pp_cash, refer_tickets, total_purchases, registration_date FROM users WHERE user_id = ?", [userId]);
         if (rows.length > 0) {
             const { pp_cash, refer_tickets, total_purchases, registration_date } = rows[0];
-            const formattedDate = (0, moment_timezone_1.default)(registration_date).tz("Asia/Kolkata").format("DD MMM YYYY, hh:mm A");
+            const formattedDate = (0, moment_timezone_1.default)(registration_date)
+                .tz("Asia/Kolkata", true)
+                .format("DD MMM YYYY, hh:mm A");
             const embed = new discord_js_1.EmbedBuilder()
                 .setTitle("ItsMe Prince - Profile")
                 .setThumbnail(interaction.user.displayAvatarURL())

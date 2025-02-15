@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc && node dist/copyAssets.js",
-    "start": "node ."
+    "start": "node .",
+    "sql": "node dist/src/sql.js"
   },
   "keywords": [],
   "author": "",
