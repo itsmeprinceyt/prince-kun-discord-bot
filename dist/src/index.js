@@ -118,6 +118,9 @@ async function startBot() {
             else if (interaction.customId.startsWith("modify_purchases_")) {
                 await (0, adminModals_1.handleModifyPurchases)(interaction);
             }
+            else if (interaction.customId.startsWith("modify_referred_")) {
+                await (0, adminModals_1.handleModifyReferred)(interaction);
+            }
         }
         else if (interaction.isModalSubmit()) {
             const customId = interaction.customId;

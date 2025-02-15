@@ -1,16 +1,10 @@
 import pool from './db'; // Assuming 'pool' is your MySQL connection pool.
 
-async function checkSystemTimezone() {
-    try {
-        const [rows]: any = await pool.query("SELECT @@system_time_zone AS system_timezone");
-
-        console.log("[ DATABASE ] ✅ System Timezone Info:");
-        console.log(`🖥️ System Timezone: ${rows[0].system_timezone}`);
-    } catch (error) {
-        console.error("[ DATABASE ] ❌ Error fetching system timezone info:", error);
-    } finally {
-        process.exit();
-    }
+async function addTotalReferredColumn() {
+    
+        await pool.query("ALTER TABLE users ADD COLUMN total_referred INT DEFAULT 0");
+        console.log("[ DATABASE ] ✅ Column 'total_referred' added successfully.");
+    
 }
 
-checkSystemTimezone();
+addTotalReferredColumn();

@@ -35,11 +35,25 @@ const registerCommand: Command = {
         }
 
         const embed = new EmbedBuilder()
-            .setTitle("ItsMe Prince Shop - Registration")
+            .setColor(0xc200ff)
+            .setAuthor({
+                name: "Prince-Kun • ItsMe Prince Shop",
+                iconURL:
+                    "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            })
+            .setTitle("Rules & Information")
             .setThumbnail(interaction.user.displayAvatarURL())
+            .setTitle("ItsMe Prince Shop - Profile Registeration")
             .setDescription(ItsMePrinceRules + `**You accept the rules by registering and you also agree to any future updates or changes in the value of PP CASH. It is your responsibility to stay updated with the latest rules.**`
             )
-            .setColor(0x006eff);
+            .setFooter({
+                text: `${userName} | ${new Date().toLocaleTimeString("en-GB", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    timeZone: "Asia/Kolkata",
+                })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
+                iconURL: interaction.user.displayAvatarURL(),
+            });
 
         const registerButton = new ButtonBuilder()
             .setCustomId(`register_${userId}`)
@@ -68,20 +82,20 @@ const registerCommand: Command = {
             if (buttonInteraction.customId === `register_${userId}`) {
                 const istTime = moment.tz("Europe/Paris").tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
                 await pool.query(
-                    "INSERT INTO users (user_id, pp_cash, refer_tickets, total_purchases, registration_date) VALUES (?, ?, ?, ?, ?)",
-                    [userId, 0, 0, 0, istTime]
+                    "INSERT INTO users (user_id, pp_cash, refer_tickets, total_purchases, registration_date, total_referred) VALUES (?, ?, ?, ?, ?, ?)",
+                    [userId, 0, 0, 0, istTime, 0]
                 );
 
                 const MessageString = `[ DATABASE ] User ${userName} (${userId}) registered`;
-                logger_custom(userName, "profile", MessageString);
+                logger_custom(userName, "register", MessageString);
 
                 await buttonInteraction.update({
                     embeds: [
                         new EmbedBuilder()
-                            .setTitle("Registration Successful!")
+                            .setColor(0x00ff00)
+                            .setTitle("Registration Successful !")
                             .setThumbnail(interaction.user.displayAvatarURL())
                             .setDescription("Well, you're registered!\n Use \`/profile\` to check your inventory!\n\n**Current Marketplace:** https://discord.com/channels/310675536340844544/1177928471951966339/1179354261365211218")
-                            .setColor(0x00ff00)
                     ],
                     components: []
                 });

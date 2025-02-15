@@ -8,39 +8,83 @@ const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const db_1 = __importDefault(require("../db"));
 const logger_custom_1 = require("../utility/logger-custom");
 const itsmeprince_rules_1 = require("../utility/itsmeprince-rules");
+const emotes_1 = require("../utility/emotes");
+const GC = emotes_1.EMOTES[0].roleId;
+const YC = emotes_1.EMOTES[1].roleId;
+const RC = emotes_1.EMOTES[2].roleId;
+const BC = emotes_1.EMOTES[3].roleId;
+const PC = emotes_1.EMOTES[4].roleId;
 const profileCommand = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("profile")
         .setDescription("Check your ItsMe Prince Shop profile."),
     async execute(interaction) {
         const userId = interaction.user.id;
+        const username = interaction.user.username;
         const member = interaction.member;
         const userName = member?.displayName || interaction.user.username;
-        const [rows] = await db_1.default.query("SELECT pp_cash, refer_tickets, total_purchases, registration_date FROM users WHERE user_id = ?", [userId]);
+        const [rows] = await db_1.default.query("SELECT pp_cash, refer_tickets, total_purchases, registration_date, total_referred FROM users WHERE user_id = ?", [userId]);
         if (rows.length > 0) {
-            const { pp_cash, refer_tickets, total_purchases, registration_date } = rows[0];
+            const { pp_cash, refer_tickets, total_purchases, registration_date, total_referred } = rows[0];
+            const AA = String(pp_cash).padEnd(8, " ");
+            const BB = String(refer_tickets).padEnd(8, " ");
+            const CC = String(total_purchases).padEnd(8, " ");
+            const DD = String(total_referred).padEnd(8, " ");
             const formattedDate = (0, moment_timezone_1.default)(registration_date)
                 .tz("Asia/Kolkata", true)
                 .format("DD MMM YYYY, hh:mm A");
             const embed = new discord_js_1.EmbedBuilder()
+                .setColor(0xeeff00)
                 .setTitle("ItsMe Prince - Profile")
+                .setAuthor({
+                name: "Prince-Kun • Profile Info",
+                iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            })
                 .setThumbnail(interaction.user.displayAvatarURL())
-                .setDescription(`🎉 **You're registered!**\n` +
-                `💰 **PP CASH:** ${pp_cash}\n` +
-                `🎟 **Refer Tickets:** ${refer_tickets}\n` +
-                `🛒 **Total Purchases:** ${total_purchases}\n` +
-                `🗓 **Registered On:** ${formattedDate} (IST)`)
-                .setColor("Green");
+                .setTitle("ItsMe Prince Shop")
+                .setDescription(`${YC} **Name:** <@${userId}>\n` +
+                `${YC} **Username:** ${username}\n` +
+                `${YC} **UserID:** ${userId}\n` +
+                `${YC} **Registered on:** ${formattedDate}\n\n` +
+                `**Stats**\n` +
+                `${YC} \`PP Cash          \` • \`${AA}\`\n` +
+                `${YC} \`Referral Tickets \` • \`${BB}\`\n` +
+                `${YC} \`Total Purchases  \` • \`${CC}\`\n` +
+                `${YC} \`Total Referred   \` • \`${DD}\`\n\n` +
+                `**Extra**\n` +
+                `${GC} \`1 PP Cash = 1₹\`\n` +
+                `${GC} To know rules & information, type \`.?shoprules\``)
+                .setFooter({
+                text: `${username} | ${new Date().toLocaleTimeString("en-GB", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    timeZone: "Asia/Kolkata",
+                })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
+                iconURL: interaction.user.displayAvatarURL(),
+            });
             await interaction.reply({ embeds: [embed] });
             const MessageString = `[ DATABASE ] User ${userName} (${userId}) fetched profile`;
             (0, logger_custom_1.logger_custom)(userName, "profile", MessageString);
             return;
         }
         const embed = new discord_js_1.EmbedBuilder()
-            .setTitle("ItsMe Prince Shop - Profile Registeration")
+            .setColor(0xc200ff)
+            .setAuthor({
+            name: "Prince-Kun • ItsMe Prince Shop",
+            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+        })
+            .setTitle("Rules & Information")
             .setThumbnail(interaction.user.displayAvatarURL())
+            .setTitle("ItsMe Prince Shop - Profile Registeration")
             .setDescription(itsmeprince_rules_1.ItsMePrinceRules + `**You accept the rules by registering and you also agree to any future updates or changes in the value of PP CASH. It is your responsibility to stay updated with the latest rules.**`)
-            .setColor(0x006eff);
+            .setFooter({
+            text: `${userName} | ${new Date().toLocaleTimeString("en-GB", {
+                hour: "2-digit",
+                minute: "2-digit",
+                timeZone: "Asia/Kolkata",
+            })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
+            iconURL: interaction.user.displayAvatarURL(),
+        });
         const registerButton = new discord_js_1.ButtonBuilder()
             .setCustomId(`register_${userId}`)
             .setLabel("Accept & Register")
@@ -62,7 +106,7 @@ const profileCommand = {
         collector.on("collect", async (buttonInteraction) => {
             if (buttonInteraction.customId === `register_${userId}`) {
                 const istTime = moment_timezone_1.default.utc().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
-                await db_1.default.query("INSERT INTO users (user_id, pp_cash, refer_tickets, total_purchases, registration_date) VALUES (?, ?, ?, ?, ?)", [userId, 0, 0, 0, istTime]);
+                await db_1.default.query("INSERT INTO users (user_id, pp_cash, refer_tickets, total_purchases, registration_date, total_referred) VALUES (?, ?, ?, ?, ?, ?)", [userId, 0, 0, 0, istTime, 0]);
                 const MessageString = `[ DATABASE ] User ${userName} (${userId}) registered`;
                 (0, logger_custom_1.logger_custom)(userName, "profile", MessageString);
                 await buttonInteraction.update({

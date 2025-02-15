@@ -23,6 +23,7 @@ import {
     handleModifyPP,
     handleModifyReferral,
     handleModifyPurchases,
+    handleModifyReferred,
     handleModifySubmit, 
     handleDeleteUser 
 } from "./modals/adminModals";
@@ -131,6 +132,8 @@ async function startBot() {
                 await handleModifyReferral(interaction);
             } else if(interaction.customId.startsWith("modify_purchases_")) {
                 await handleModifyPurchases(interaction);
+            } else if(interaction.customId.startsWith("modify_referred_")) {
+                await handleModifyReferred(interaction);
             }
         } 
         else if (interaction.isModalSubmit()) {

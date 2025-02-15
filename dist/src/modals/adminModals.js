@@ -8,11 +8,19 @@ exports.handleSelectUserSubmit = handleSelectUserSubmit;
 exports.handleModifyPP = handleModifyPP;
 exports.handleModifyReferral = handleModifyReferral;
 exports.handleModifyPurchases = handleModifyPurchases;
+exports.handleModifyReferred = handleModifyReferred;
 exports.handleModifySubmit = handleModifySubmit;
 exports.handleDeleteUser = handleDeleteUser;
 const discord_js_1 = require("discord.js");
 const db_1 = __importDefault(require("../db"));
+const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const logger_custom_1 = require("../utility/logger-custom");
+const emotes_1 = require("../utility/emotes");
+const GC = emotes_1.EMOTES[0].roleId;
+const YC = emotes_1.EMOTES[1].roleId;
+const RC = emotes_1.EMOTES[2].roleId;
+const BC = emotes_1.EMOTES[3].roleId;
+const PC = emotes_1.EMOTES[4].roleId;
 async function handleSelectUser(interaction) {
     (0, logger_custom_1.logger_custom)("ADMIN", "admin", "Admin clicked select user button");
     const modal = new discord_js_1.ModalBuilder().setCustomId("select_user").setTitle("Select User")
@@ -28,20 +36,60 @@ async function handleSelectUserSubmit(interaction) {
         return;
     }
     const selectedUser = users[userIndex];
-    const [userData] = await db_1.default.query("SELECT pp_cash, refer_tickets, total_purchases FROM users WHERE user_id = ?", [selectedUser.user_id]);
+    const selectedUserId = selectedUser.user_id;
+    const selectedDiscordUser = await interaction.client.users.fetch(selectedUserId).catch(() => null);
+    let selectedUsername = "Unknown User";
+    let selectedDisplayName = "Unknown Name";
+    let selectedAvatar = interaction.client.user.displayAvatarURL(); // Default bot avatar in case of errors
+    if (selectedDiscordUser) {
+        selectedUsername = selectedDiscordUser.username;
+        selectedDisplayName = selectedDiscordUser.globalName || selectedUsername;
+        selectedAvatar = selectedDiscordUser.displayAvatarURL();
+    }
+    const [userData] = await db_1.default.query("SELECT pp_cash, refer_tickets, total_purchases, registration_date, total_referred FROM users WHERE user_id = ?", [selectedUser.user_id]);
     if (userData.length === 0) {
         await interaction.reply({ content: "❌ User data not found!", flags: 64 });
         return;
     }
-    const { pp_cash, refer_tickets, total_purchases } = userData[0];
+    const { pp_cash, refer_tickets, total_purchases, registration_date, total_referred } = userData[0];
+    const AA = String(pp_cash).padEnd(8, " ");
+    const BB = String(refer_tickets).padEnd(8, " ");
+    const CC = String(total_purchases).padEnd(8, " ");
+    const DD = String(total_referred).padEnd(8, " ");
+    const formattedDate = (0, moment_timezone_1.default)(registration_date)
+        .tz("Asia/Kolkata", true)
+        .format("DD MMM YYYY, hh:mm A");
     (0, logger_custom_1.logger_custom)("ADMIN", "admin", `Selected user: ${selectedUser.user_id}`);
     const userEmbed = new discord_js_1.EmbedBuilder()
-        .setTitle(`User Details: <@${selectedUser.user_id}>`)
-        .setDescription(`💰 **PP CASH:** ${pp_cash}\n` +
-        `🎟 **Referral Tickets:** ${refer_tickets}\n` +
-        `🛒 **Total Purchases:** ${total_purchases}`)
-        .setColor("Green");
-    const userRow = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder().setCustomId(`modify_ppCash_${selectedUser.user_id}`).setLabel("💰 Modify PP Cash").setStyle(discord_js_1.ButtonStyle.Primary), new discord_js_1.ButtonBuilder().setCustomId(`modify_referral_${selectedUser.user_id}`).setLabel("🎟 Modify Referral Tickets").setStyle(discord_js_1.ButtonStyle.Secondary), new discord_js_1.ButtonBuilder().setCustomId(`modify_purchases_${selectedUser.user_id}`).setLabel("🛒 Modify Purchases").setStyle(discord_js_1.ButtonStyle.Success), new discord_js_1.ButtonBuilder().setCustomId(`delete_${selectedUser.user_id}`).setLabel("❌ Delete User").setStyle(discord_js_1.ButtonStyle.Danger));
+        .setColor(0xeeff00)
+        .setTitle("ItsMe Prince - Profile")
+        .setAuthor({
+        name: "Prince-Kun • Profile Info",
+        iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+    })
+        .setThumbnail(selectedAvatar)
+        .setTitle("ItsMe Prince Shop")
+        .setDescription(`${YC} **Name:** <@${selectedUser.user_id}>\n` +
+        `${YC} **Username:** ${selectedUsername}\n` +
+        `${YC} **UserID:** ${selectedUser.user_id}\n` +
+        `${YC} **Registered on:** ${formattedDate}\n\n` +
+        `**Stats**\n` +
+        `${YC} \`PP Cash          \` • \`${AA}\`\n` +
+        `${YC} \`Referral Tickets \` • \`${BB}\`\n` +
+        `${YC} \`Total Purchases  \` • \`${CC}\`\n` +
+        `${YC} \`Total Referred   \` • \`${DD}\`\n\n` +
+        `**Extra**\n` +
+        `${GC} \`1 PP Cash = 1₹\`\n` +
+        `${GC} To know rules & information, type \`.?shoprules\``)
+        .setFooter({
+        text: `${selectedUsername} | ${new Date().toLocaleTimeString("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+            timeZone: "Asia/Kolkata",
+        })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
+        iconURL: selectedAvatar,
+    });
+    const userRow = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder().setCustomId(`modify_ppCash_${selectedUser.user_id}`).setLabel("💰 Modify PP Cash").setStyle(discord_js_1.ButtonStyle.Success), new discord_js_1.ButtonBuilder().setCustomId(`modify_referral_${selectedUser.user_id}`).setLabel("🎟 Modify Referral Tickets").setStyle(discord_js_1.ButtonStyle.Primary), new discord_js_1.ButtonBuilder().setCustomId(`modify_purchases_${selectedUser.user_id}`).setLabel("🛒 Modify Purchases").setStyle(discord_js_1.ButtonStyle.Success), new discord_js_1.ButtonBuilder().setCustomId(`modify_referred_${selectedUser.user_id}`).setLabel("👥 Modify Total Referred").setStyle(discord_js_1.ButtonStyle.Primary), new discord_js_1.ButtonBuilder().setCustomId(`delete_${selectedUser.user_id}`).setLabel("❌ Delete User").setStyle(discord_js_1.ButtonStyle.Danger));
     await interaction.reply({ embeds: [userEmbed], components: [userRow], flags: 64 });
 }
 async function handleModifyPP(interaction) {
@@ -80,6 +128,18 @@ async function handleModifyPurchases(interaction) {
         .setStyle(discord_js_1.TextInputStyle.Short)));
     await interaction.showModal(modal);
 }
+async function handleModifyReferred(interaction) {
+    (0, logger_custom_1.logger_custom)("ADMIN", "admin", "Admin clicked modify total referred button");
+    const userId = interaction.customId.split("_")[2];
+    const modal = new discord_js_1.ModalBuilder()
+        .setCustomId(`modify_referred_${userId}`)
+        .setTitle("Modify Total Referred")
+        .addComponents(new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.TextInputBuilder()
+        .setCustomId("new_total_referred")
+        .setLabel("Enter new Total Referred:")
+        .setStyle(discord_js_1.TextInputStyle.Short)));
+    await interaction.showModal(modal);
+}
 async function handleModifySubmit(interaction) {
     (0, logger_custom_1.logger_custom)("ADMIN", "admin", "Admin submitted modify modal");
     const parts = interaction.customId.split("_");
@@ -97,6 +157,10 @@ async function handleModifySubmit(interaction) {
     else if (type === "purchases") {
         field = "new_total_purchases";
         updateField = "total_purchases";
+    }
+    else if (type === "referred") { // Added total referred
+        field = "new_total_referred";
+        updateField = "total_referred";
     }
     else {
         await interaction.reply({ content: "❌ Invalid action!", flags: 64 });
