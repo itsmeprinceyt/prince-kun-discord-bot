@@ -59,7 +59,7 @@ const profileCommand = {
         });
         collector.on("collect", async (buttonInteraction) => {
             if (buttonInteraction.customId === `register_${userId}`) {
-                const istTime = (0, moment_timezone_1.default)().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+                const istTime = moment_timezone_1.default.utc().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
                 await db_1.default.query("INSERT INTO users (user_id, pp_cash, refer_tickets, total_purchases, registration_date) VALUES (?, ?, ?, ?, ?)", [userId, 0, 0, 0, istTime]);
                 const MessageString = `[ DATABASE ] User ${userName} (${userId}) registered`;
                 (0, logger_custom_1.logger_custom)(userName, "profile", MessageString);

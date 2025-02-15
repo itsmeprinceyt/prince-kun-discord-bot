@@ -83,7 +83,7 @@ const profileCommand: Command = {
 
     collector.on("collect", async (buttonInteraction) => {
       if (buttonInteraction.customId === `register_${userId}`) {
-        const istTime = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+        const istTime = moment.utc().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss"); 
         await pool.query(
           "INSERT INTO users (user_id, pp_cash, refer_tickets, total_purchases, registration_date) VALUES (?, ?, ?, ?, ?)",
           [userId, 0, 0, 0, istTime]
