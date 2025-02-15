@@ -10,15 +10,27 @@ import {
 } from "discord.js";
 
 import commands from "./commandHandler";
+import itsmeprinceshopCommands from "./itsmeprinceshopCommandHandler";
 import msgCommands from "./msgCommandHandler";
 import deployCommands from "./deployCommands";
 import { getFormattedIST } from "./utility/time";
 import { handleModalSubmit as handleBotModalSubmit } from "./commands/bot-updates";
 import { handleServerModalSubmit } from "./commands/server-updates";
 import { handleShopModalSubmit } from "./commands/shop-updates";
+import { 
+    handleSelectUser, 
+    handleSelectUserSubmit, 
+    handleModifyPP,
+    handleModifyReferral,
+    handleModifyPurchases,
+    handleModifySubmit, 
+    handleDeleteUser 
+} from "./modals/adminModals";
 import { initDB } from "./db";
 
 const modalHandlers = new Map<string, (interaction: ModalSubmitInteraction) => Promise<void>>([
+    ["select_user", handleSelectUserSubmit],
+    ["modify_points", handleModifySubmit],
     ["botUpdatesModal", handleBotModalSubmit],
     ["serverUpdatesModal", handleServerModalSubmit],
     ["shopUpdateModal", handleShopModalSubmit]
@@ -95,9 +107,9 @@ async function startBot() {
 
     client.on("interactionCreate", async (interaction) => {
         if (interaction.isChatInputCommand()) {
-            const command = commands.get(interaction.commandName);
+            const command = commands.get(interaction.commandName) || itsmeprinceshopCommands.get(interaction.commandName);
             if (!command) return;
-
+    
             try {
                 await command.execute(interaction);
             } catch (error) {
@@ -107,15 +119,34 @@ async function startBot() {
                     ephemeral: true,
                 });
             }
-        } else if (interaction.isModalSubmit()) {
-            const handler = modalHandlers.get(interaction.customId);
-            if (handler) {
-                await handler(interaction as ModalSubmitInteraction);
+        } 
+        else if (interaction.isButton()) {
+            if (interaction.customId.startsWith("select_user")) {
+                await handleSelectUser(interaction);
+            } else if (interaction.customId.startsWith("delete_")) {
+                await handleDeleteUser(interaction);
+            } else if (interaction.customId.startsWith("modify_ppCash_")) {
+                await handleModifyPP(interaction);
+            } else if (interaction.customId.startsWith("modify_referral_")) {
+                await handleModifyReferral(interaction);
+            } else if(interaction.customId.startsWith("modify_purchases_")) {
+                await handleModifyPurchases(interaction);
+            }
+        } 
+        else if (interaction.isModalSubmit()) {
+            const customId = interaction.customId;
+    
+            if (customId === "select_user") {
+                await handleSelectUserSubmit(interaction);
+            } else if (customId.startsWith("modify_")) {
+                await handleModifySubmit(interaction);
             } else {
-                console.warn(`[ WARNING ] No handler found for modal: ${interaction.customId}`);
+                console.warn(`[ WARNING ] No handler found for modal: ${customId}`);
             }
         }
     });
+    
+    
 
     client.on("messageCreate", async (message) => {
         if (message.author.bot) return;

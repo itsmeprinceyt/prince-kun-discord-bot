@@ -1,11 +1,13 @@
-import { REST, Routes } from 'discord.js';
-import { readdirSync } from 'fs';
-import { join } from 'path';
+import { REST, Routes } from "discord.js";
+import { readdirSync } from "fs";
+import { join } from "path";
 import "dotenv/config";
-import { Command } from './types/Command';
+import { Command } from "./types/Command";
+import itsmeprinceshopCommands from "./itsmeprinceshopCommandHandler";
 
 async function deployCommands() {
     const commands = [];
+
     const commandFiles = readdirSync(join(__dirname, "commands")).filter(
         (file) => file.endsWith(".ts") || file.endsWith(".js")
     );
@@ -18,13 +20,20 @@ async function deployCommands() {
             commands.push(command.data.toJSON());
         }
     }
-    const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN as string);
+
+    for (const command of itsmeprinceshopCommands.values()) {
+        if (command && command.data) {
+            commands.push(command.data.toJSON());
+        }
+    }
+
+    const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_BOT_TOKEN as string);
+
     try {
         console.log(`[ INFO ] Registering Slash commands. | Commands: ${commands.length}`);
-        await rest.put(
-            Routes.applicationCommands(process.env.CLIENT_ID as string),
-            { body: commands }
-        );
+        await rest.put(Routes.applicationCommands(process.env.CLIENT_ID as string), {
+            body: commands,
+        });
     } catch (error) {
         console.error(`[ ERROR ] Registering command failed: ${error}`);
     }

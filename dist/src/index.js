@@ -8,17 +8,26 @@ dotenv_1.default.config();
 const chalk_1 = __importDefault(require("chalk"));
 const discord_js_1 = require("discord.js");
 const commandHandler_1 = __importDefault(require("./commandHandler"));
+const itsmeprinceshopCommandHandler_1 = __importDefault(require("./itsmeprinceshopCommandHandler"));
 const msgCommandHandler_1 = __importDefault(require("./msgCommandHandler"));
 const deployCommands_1 = __importDefault(require("./deployCommands"));
 const time_1 = require("./utility/time");
 const bot_updates_1 = require("./commands/bot-updates");
 const server_updates_1 = require("./commands/server-updates");
 const shop_updates_1 = require("./commands/shop-updates");
+const adminModals_1 = require("./modals/adminModals");
 const db_1 = require("./db");
 const modalHandlers = new Map([
+    ["select_user", adminModals_1.handleSelectUserSubmit],
+    ["modify_submit", adminModals_1.handleModifySubmit],
     ["botUpdatesModal", bot_updates_1.handleModalSubmit],
     ["serverUpdatesModal", server_updates_1.handleServerModalSubmit],
     ["shopUpdateModal", shop_updates_1.handleShopModalSubmit]
+]);
+const buttonHandlers = new Map([
+    ["modify_pp_cash", adminModals_1.handleModifyPP],
+    ["modify_referral", adminModals_1.handleModifyReferral],
+    ["modify_purchases", adminModals_1.handleModifyPurchases]
 ]);
 const client = new discord_js_1.Client({
     intents: [
@@ -84,7 +93,8 @@ async function startBot() {
     });
     client.on("interactionCreate", async (interaction) => {
         if (interaction.isChatInputCommand()) {
-            const command = commandHandler_1.default.get(interaction.commandName);
+            // ✅ Handle slash commands
+            const command = commandHandler_1.default.get(interaction.commandName) || itsmeprinceshopCommandHandler_1.default.get(interaction.commandName);
             if (!command)
                 return;
             try {
@@ -98,13 +108,19 @@ async function startBot() {
                 });
             }
         }
+        else if (interaction.isButton()) {
+            const handler = buttonHandlers.get(interaction.customId);
+            if (handler)
+                await handler(interaction);
+        }
         else if (interaction.isModalSubmit()) {
-            const handler = modalHandlers.get(interaction.customId);
+            const customId = interaction.customId;
+            const handler = modalHandlers.get(customId);
             if (handler) {
                 await handler(interaction);
             }
             else {
-                console.warn(`[ WARNING ] No handler found for modal: ${interaction.customId}`);
+                console.warn(`[ WARNING ] No handler found for modal: ${customId}`);
             }
         }
     });
