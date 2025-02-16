@@ -76,7 +76,8 @@ const adminCommand: Command = {
 
                 )
                 .setFooter({ text: `Page ${page + 1} of ${Math.ceil(users.length / ITEMS_PER_PAGE)}` })
-                .setColor("Blue");
+                .setColor("Blue")
+                .setTimestamp();
         };
 
         const row = new ActionRowBuilder<ButtonBuilder>().addComponents(

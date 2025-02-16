@@ -97,14 +97,8 @@ export async function handleShopModalSubmit(
     .setColor(0xff6767)
         .setTitle("📢 LATEST SHOP UPDATES")
         .setDescription(messageContent)
-        .setFooter({
-            text: `${username} | ${new Date().toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "Asia/Kolkata",
-            })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
-            iconURL: avatarURL,
-        });
+        .setFooter({ text: `${username}`, iconURL: avatarURL })
+        .setTimestamp();
 
     await interaction.reply({
         content: "✅ Shop update message sent!",

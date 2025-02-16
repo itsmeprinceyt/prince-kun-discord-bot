@@ -63,14 +63,8 @@ async function handleModalSubmit(interaction) {
         .setTitle("🛠️ Changelog: Latest Updates & Improvements!")
         .setDescription(messageContent)
         .setImage("https://media.discordapp.net/attachments/1336322293437038602/1336814350249365554/Bot_Updates.png")
-        .setFooter({
-        text: `${username} | ${new Date().toLocaleTimeString("en-GB", {
-            hour: "2-digit",
-            minute: "2-digit",
-            timeZone: "Asia/Kolkata",
-        })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
-        iconURL: avatarURL,
-    });
+        .setFooter({ text: `${username}`, iconURL: avatarURL })
+        .setTimestamp();
     await interaction.reply({
         content: "✅ Update message sent!",
         flags: 64,

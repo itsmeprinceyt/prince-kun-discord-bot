@@ -161,21 +161,15 @@ export async function handleRefresh(interaction: ButtonInteraction) {
             `**🍱 Extra**\n` +
             `${GC} \`1 PP Cash = 1₹\`\n` +
             `${GC} To know rules & information, type \`.?shoprules\``)
-        .setFooter({
-            text: `${selectedUsername} | ${new Date().toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "Asia/Kolkata",
-            })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
-            iconURL: selectedAvatar,
-        });
+        .setFooter({ text: `${selectedUsername}`, iconURL: selectedAvatar })
+        .setTimestamp();
 
     const userRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-        new ButtonBuilder().setCustomId(`modify_ppCash_${userId}`).setLabel("💰 Modify PP Cash").setStyle(ButtonStyle.Success),
-        new ButtonBuilder().setCustomId(`modify_referral_${userId}`).setLabel("🎟 Modify Referral Tickets").setStyle(ButtonStyle.Primary),
+        new ButtonBuilder().setCustomId(`modify_ppCash_${userId}`).setLabel("💵 Modify PP Cash").setStyle(ButtonStyle.Success),
+        new ButtonBuilder().setCustomId(`modify_referral_${userId}`).setLabel("🎟️ Modify Referral Tickets").setStyle(ButtonStyle.Primary),
         new ButtonBuilder().setCustomId(`modify_purchases_${userId}`).setLabel("🛒 Modify Purchases").setStyle(ButtonStyle.Success),
         new ButtonBuilder().setCustomId(`modify_referred_${userId}`).setLabel("👥 Modify Total Referred").setStyle(ButtonStyle.Primary),
-        new ButtonBuilder().setCustomId(`delete_${userId}`).setLabel("❌ Delete User").setStyle(ButtonStyle.Danger),
+        new ButtonBuilder().setCustomId(`delete_${userId}`).setLabel("Delete User").setStyle(ButtonStyle.Danger),
     );
 
     const controlRow = new ActionRowBuilder<ButtonBuilder>().addComponents(

@@ -126,15 +126,9 @@ async function handleRefresh(interaction) {
         `**🍱 Extra**\n` +
         `${GC} \`1 PP Cash = 1₹\`\n` +
         `${GC} To know rules & information, type \`.?shoprules\``)
-        .setFooter({
-        text: `${selectedUsername} | ${new Date().toLocaleTimeString("en-GB", {
-            hour: "2-digit",
-            minute: "2-digit",
-            timeZone: "Asia/Kolkata",
-        })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
-        iconURL: selectedAvatar,
-    });
-    const userRow = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder().setCustomId(`modify_ppCash_${userId}`).setLabel("💰 Modify PP Cash").setStyle(discord_js_1.ButtonStyle.Success), new discord_js_1.ButtonBuilder().setCustomId(`modify_referral_${userId}`).setLabel("🎟 Modify Referral Tickets").setStyle(discord_js_1.ButtonStyle.Primary), new discord_js_1.ButtonBuilder().setCustomId(`modify_purchases_${userId}`).setLabel("🛒 Modify Purchases").setStyle(discord_js_1.ButtonStyle.Success), new discord_js_1.ButtonBuilder().setCustomId(`modify_referred_${userId}`).setLabel("👥 Modify Total Referred").setStyle(discord_js_1.ButtonStyle.Primary), new discord_js_1.ButtonBuilder().setCustomId(`delete_${userId}`).setLabel("❌ Delete User").setStyle(discord_js_1.ButtonStyle.Danger));
+        .setFooter({ text: `${selectedUsername}`, iconURL: selectedAvatar })
+        .setTimestamp();
+    const userRow = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder().setCustomId(`modify_ppCash_${userId}`).setLabel("💵 Modify PP Cash").setStyle(discord_js_1.ButtonStyle.Success), new discord_js_1.ButtonBuilder().setCustomId(`modify_referral_${userId}`).setLabel("🎟️ Modify Referral Tickets").setStyle(discord_js_1.ButtonStyle.Primary), new discord_js_1.ButtonBuilder().setCustomId(`modify_purchases_${userId}`).setLabel("🛒 Modify Purchases").setStyle(discord_js_1.ButtonStyle.Success), new discord_js_1.ButtonBuilder().setCustomId(`modify_referred_${userId}`).setLabel("👥 Modify Total Referred").setStyle(discord_js_1.ButtonStyle.Primary), new discord_js_1.ButtonBuilder().setCustomId(`delete_${userId}`).setLabel("Delete User").setStyle(discord_js_1.ButtonStyle.Danger));
     const controlRow = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder().setCustomId(`refresh_${userId}`).setLabel("🔄 Refresh").setStyle(discord_js_1.ButtonStyle.Secondary));
     await interaction.update({ embeds: [userEmbed], components: [userRow, controlRow] });
 }

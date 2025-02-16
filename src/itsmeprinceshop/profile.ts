@@ -89,15 +89,8 @@ const profileCommand: Command = {
           `**🍱 Extra**\n` +
           `${GC} \`1 PP Cash = 1₹\`\n` +
           `${GC} To know rules & information, type \`.?shoprules\``)
-        .setFooter({
-          text: `${targetUsername} | ${new Date().toLocaleTimeString("en-GB", {
-            hour: "2-digit",
-            minute: "2-digit",
-            timeZone: "Asia/Kolkata",
-          })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
-          iconURL: avatarURL,
-        });
-
+        .setFooter({ text: `${targetUsername}`, iconURL: avatarURL })
+        .setTimestamp();
 
       await interaction.reply({ embeds: [embed] });
       const MessageString = `[ DATABASE ] User ${targetDisplayName} (${targetUserId}) fetched profile`;
@@ -116,14 +109,8 @@ const profileCommand: Command = {
       .setThumbnail(interaction.user.displayAvatarURL())
       .setTitle("ItsMe Prince Shop - Profile Registeration")
       .setDescription(ItsMePrinceRules + `**You accept the rules by registering and you also agree to any future updates or changes in the value of PP CASH. It is your responsibility to stay updated with the latest rules.**`)
-      .setFooter({
-        text: `${targetDisplayName} | ${new Date().toLocaleTimeString("en-GB", {
-          hour: "2-digit",
-          minute: "2-digit",
-          timeZone: "Asia/Kolkata",
-        })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
-        iconURL: interaction.user.displayAvatarURL(),
-      });
+      .setFooter({ text: `${targetDisplayName}`, iconURL: interaction.user.displayAvatarURL() })
+      .setTimestamp();
 
     const registerButton = new ButtonBuilder()
       .setCustomId(`register_${targetUserId}`)

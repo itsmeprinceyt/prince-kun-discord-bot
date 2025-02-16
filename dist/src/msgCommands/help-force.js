@@ -14,14 +14,8 @@ exports.default = {
             .setTitle("Here are all the available commands which you can use!")
             .setDescription(help_commands_1.HelpDescription)
             .setImage("https://media.discordapp.net/attachments/1336322293437038602/1336708310904340572/Help.png")
-            .setFooter({
-            text: `${message.author.username} | ${new Date().toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "Asia/Kolkata",
-            })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
-            iconURL: message.author.displayAvatarURL(),
-        });
+            .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
+            .setTimestamp();
         if (!message.guild) {
             await message.reply({ embeds: [embed] });
             return;

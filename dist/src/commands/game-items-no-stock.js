@@ -41,13 +41,7 @@ const ShopItemsNoStock = {
             .setTitle("Blessing of the Welkin Moon is out of Stock!")
             .setDescription("```GENSHIN IMPACT - BLESSING OF THE WELKIN MOON```")
             .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171003356221461/Blessing_of_the_Welkin.png")
-            .setFooter({
-            text: `${new Date().toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "Asia/Kolkata",
-            })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`
-        });
+            .setTimestamp();
         const express_pass = new discord_js_1.EmbedBuilder()
             .setColor(0xff0000)
             .setAuthor({
@@ -57,13 +51,7 @@ const ShopItemsNoStock = {
             .setTitle("Express Pass is out of Stock!")
             .setDescription("```HONKAI STAR RAIL - EXPRESS PASS```")
             .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171003843018893/Express_Supply_Pass.png")
-            .setFooter({
-            text: `${new Date().toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "Asia/Kolkata",
-            })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`
-        });
+            .setTimestamp();
         const lunite_subscription = new discord_js_1.EmbedBuilder()
             .setColor(0xff0000)
             .setAuthor({
@@ -73,13 +61,7 @@ const ShopItemsNoStock = {
             .setTitle("Lunite Subscription is out of Stock!")
             .setDescription("```WUTHERING WAVES - LUNITE SUBSCRIPTION```")
             .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171011216605297/Lunite_Subscription.png")
-            .setFooter({
-            text: `${new Date().toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "Asia/Kolkata",
-            })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`
-        });
+            .setTimestamp();
         const inter_knot_membership = new discord_js_1.EmbedBuilder()
             .setColor(0xff0000)
             .setAuthor({
@@ -89,13 +71,7 @@ const ShopItemsNoStock = {
             .setTitle("Inter-Knot Membership is out of Stock!")
             .setDescription("```ZENLESS ZONE ZERO - INTER-KNOT MEMBERSHIP```")
             .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171008834113546/Inter-Knot_Membership.png")
-            .setFooter({
-            text: `${new Date().toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "Asia/Kolkata",
-            })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`
-        });
+            .setTimestamp();
         const bottomEmbed = new discord_js_1.EmbedBuilder()
             .setColor(0xff0000)
             .setTitle("Note")

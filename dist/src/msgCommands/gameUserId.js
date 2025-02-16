@@ -35,14 +35,8 @@ exports.default = {
             `\`BGMI UID:     \` - ${UIDs.bgmi}\n` +
             `\`ZZZ UID:      \` - ${UIDs.zzz} [Server: ASIA]`)
             .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337083370819162184/Game_User_Id.png")
-            .setFooter({
-            text: `${message.author.username} | ${new Date().toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "Asia/Kolkata",
-            })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
-            iconURL: message.author.displayAvatarURL(),
-        });
+            .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
+            .setTimestamp();
         const row = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder().setCustomId("copy_genshin").setLabel("Copy Genshin UID").setStyle(discord_js_1.ButtonStyle.Secondary).setEmoji("📋"), new discord_js_1.ButtonBuilder().setCustomId("copy_hsr").setLabel("Copy HSR UID").setStyle(discord_js_1.ButtonStyle.Secondary).setEmoji("📋"), new discord_js_1.ButtonBuilder().setCustomId("copy_wuwa").setLabel("Copy Wuwa UID").setStyle(discord_js_1.ButtonStyle.Secondary).setEmoji("📋"), new discord_js_1.ButtonBuilder().setCustomId("copy_bgmi").setLabel("Copy BGMI UID").setStyle(discord_js_1.ButtonStyle.Secondary).setEmoji("📋"), new discord_js_1.ButtonBuilder().setCustomId("copy_zzz").setLabel("Copy ZZZ UID").setStyle(discord_js_1.ButtonStyle.Secondary).setEmoji("📋"));
         const sentMessage = await message.reply({ embeds: [embed], components: [row] });
         const collector = sentMessage.createMessageComponentCollector({ time: 60000 });

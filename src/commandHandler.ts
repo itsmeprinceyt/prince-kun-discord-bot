@@ -3,7 +3,6 @@ import { readdirSync } from "fs";
 import { join } from "path";
 import { Command } from "./types/Command";
 const commands = new Collection<string, Command>();
-const isDev = process.env.NODE_ENV !== 'production';
 const commandFiles = readdirSync(join(__dirname, "commands")).filter(
   (file) => file.endsWith(".ts") || file.endsWith(".js")
 );

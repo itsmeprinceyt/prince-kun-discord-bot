@@ -77,14 +77,8 @@ const ShopItems: Command = {
             .setDescription(`\`\`\`GENSHIN IMPACT - BLESSING OF THE WELKIN MOON\`\`\`` +
                 `\`\`\`PRICE: ${price} INR/-\`\`\``)
             .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171003356221461/Blessing_of_the_Welkin.png")
-            .setFooter({
-                text: `Price as of: ${new Date().toLocaleTimeString("en-GB", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    timeZone: "Asia/Kolkata",
-                })} ${new Date().getHours() >= 12 ? "PM" : "AM"} | Prices may fluctuate at anytime 👈`,
-                iconURL: interaction.user.displayAvatarURL({ extension: "png", size: 512 }),
-            });
+            .setFooter({ text: `Price as of:`, iconURL: interaction.user.displayAvatarURL({ extension: "png", size: 512 }) })
+            .setTimestamp();
 
         const welkin2 = new EmbedBuilder()
             .setColor(0x00ff00)
@@ -94,7 +88,6 @@ const ShopItems: Command = {
         const welkin3 = new EmbedBuilder()
             .setColor(0x00ff00)
             .setTitle("To Purchase")
-
             .setDescription(`Use <#1181972522900660264> to initiate an order or Message <@310672946316181514>`);
 
         /*=================================================== EXPRESS PASS*/
@@ -108,14 +101,8 @@ const ShopItems: Command = {
             .setDescription(`\`\`\`HONKAI STAR RAIL - EXPRESS PASS\`\`\`` +
                 `\`\`\`PRICE: ${price} INR/-\`\`\``)
             .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171003843018893/Express_Supply_Pass.png")
-            .setFooter({
-                text: `Price as of: ${new Date().toLocaleTimeString("en-GB", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    timeZone: "Asia/Kolkata",
-                })} ${new Date().getHours() >= 12 ? "PM" : "AM"} | Prices may fluctuate at anytime 👈`,
-                iconURL: interaction.user.displayAvatarURL({ extension: "png", size: 512 }),
-            });
+            .setFooter({ text: `Price as of:`, iconURL: interaction.user.displayAvatarURL({ extension: "png", size: 512 }) })
+            .setTimestamp();
 
         const express_pass2 = new EmbedBuilder()
             .setColor(0x00ff00)
@@ -125,7 +112,6 @@ const ShopItems: Command = {
         const express_pass3 = new EmbedBuilder()
             .setColor(0x00ff00)
             .setTitle("To Purchase")
-
             .setDescription(`Use <#1181972522900660264> to initiate an order or Message <@310672946316181514>`);
 
         /*=================================================== LUNITE SUBSCRIPTION*/
@@ -139,14 +125,8 @@ const ShopItems: Command = {
             .setDescription(`\`\`\`WUTHERING WAVES - LUNITE SUBSCRIPTION\`\`\`` +
                 `\`\`\`PRICE: ${price} INR/-\`\`\``)
             .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171011216605297/Lunite_Subscription.png")
-            .setFooter({
-                text: `Price as of: ${new Date().toLocaleTimeString("en-GB", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    timeZone: "Asia/Kolkata",
-                })} ${new Date().getHours() >= 12 ? "PM" : "AM"} | Prices may fluctuate at anytime 👈`,
-                iconURL: interaction.user.displayAvatarURL({ extension: "png", size: 512 }),
-            });
+            .setFooter({ text: `Price as of:`, iconURL: interaction.user.displayAvatarURL({ extension: "png", size: 512 }) })
+            .setTimestamp();
 
         const lunite_subscription2 = new EmbedBuilder()
             .setColor(0x00ff00)
@@ -156,7 +136,6 @@ const ShopItems: Command = {
         const lunite_subscription3 = new EmbedBuilder()
             .setColor(0x00ff00)
             .setTitle("To Purchase")
-
             .setDescription(`Use <#1181972522900660264> to initiate an order or Message <@310672946316181514>`);
 
         /*=================================================== INTER-KNOT-SUBSCRIPTION*/

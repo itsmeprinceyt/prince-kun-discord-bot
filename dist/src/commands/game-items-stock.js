@@ -55,14 +55,8 @@ const ShopItems = {
             .setDescription(`\`\`\`GENSHIN IMPACT - BLESSING OF THE WELKIN MOON\`\`\`` +
             `\`\`\`PRICE: ${price} INR/-\`\`\``)
             .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171003356221461/Blessing_of_the_Welkin.png")
-            .setFooter({
-            text: `Price as of: ${new Date().toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "Asia/Kolkata",
-            })} ${new Date().getHours() >= 12 ? "PM" : "AM"} | Prices may fluctuate at anytime 👈`,
-            iconURL: interaction.user.displayAvatarURL({ extension: "png", size: 512 }),
-        });
+            .setFooter({ text: `Price as of:`, iconURL: interaction.user.displayAvatarURL({ extension: "png", size: 512 }) })
+            .setTimestamp();
         const welkin2 = new discord_js_1.EmbedBuilder()
             .setColor(0x00ff00)
             .setTitle("Read before purchasing")
@@ -82,14 +76,8 @@ const ShopItems = {
             .setDescription(`\`\`\`HONKAI STAR RAIL - EXPRESS PASS\`\`\`` +
             `\`\`\`PRICE: ${price} INR/-\`\`\``)
             .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171003843018893/Express_Supply_Pass.png")
-            .setFooter({
-            text: `Price as of: ${new Date().toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "Asia/Kolkata",
-            })} ${new Date().getHours() >= 12 ? "PM" : "AM"} | Prices may fluctuate at anytime 👈`,
-            iconURL: interaction.user.displayAvatarURL({ extension: "png", size: 512 }),
-        });
+            .setFooter({ text: `Price as of:`, iconURL: interaction.user.displayAvatarURL({ extension: "png", size: 512 }) })
+            .setTimestamp();
         const express_pass2 = new discord_js_1.EmbedBuilder()
             .setColor(0x00ff00)
             .setTitle("Read before purchasing")
@@ -109,14 +97,8 @@ const ShopItems = {
             .setDescription(`\`\`\`WUTHERING WAVES - LUNITE SUBSCRIPTION\`\`\`` +
             `\`\`\`PRICE: ${price} INR/-\`\`\``)
             .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171011216605297/Lunite_Subscription.png")
-            .setFooter({
-            text: `Price as of: ${new Date().toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "Asia/Kolkata",
-            })} ${new Date().getHours() >= 12 ? "PM" : "AM"} | Prices may fluctuate at anytime 👈`,
-            iconURL: interaction.user.displayAvatarURL({ extension: "png", size: 512 }),
-        });
+            .setFooter({ text: `Price as of:`, iconURL: interaction.user.displayAvatarURL({ extension: "png", size: 512 }) })
+            .setTimestamp();
         const lunite_subscription2 = new discord_js_1.EmbedBuilder()
             .setColor(0x00ff00)
             .setTitle("Read before purchasing")

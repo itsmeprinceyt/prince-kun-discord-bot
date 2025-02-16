@@ -110,14 +110,8 @@ const GameLivestreamCode = {
             `Code: [${redemptionCode3}](https://genshin.hoyoverse.com/en/gift?code=${redemptionCode3})\n\n` +
             `Click on the code above or redeem through the website below:\n https://genshin.hoyoverse.com/en/gift`)
             .setImage(imageUrl)
-            .setFooter({
-            text: `${username} | ${new Date().toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "Asia/Kolkata",
-            })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
-            iconURL: avatarURL,
-        });
+            .setFooter({ text: `${username}`, iconURL: avatarURL })
+            .setTimestamp();
         /*=================================================== EXPRESS PASS*/
         const hsrPing = new discord_js_1.EmbedBuilder()
             .setColor(0x006eff)
@@ -131,14 +125,8 @@ const GameLivestreamCode = {
             `Code: [${redemptionCode3}](https://hsr.hoyoverse.com/gift?code=${redemptionCode3})\n\n` +
             `Click on the code above or redeem through the website below:\n https://hsr.hoyoverse.com/gift`)
             .setImage(imageUrl)
-            .setFooter({
-            text: `${username} | ${new Date().toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "Asia/Kolkata",
-            })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
-            iconURL: avatarURL,
-        });
+            .setFooter({ text: `${username}`, iconURL: avatarURL })
+            .setTimestamp();
         /*=================================================== LUNITE SUBSCRIPTION*/
         const wuwaPing = new discord_js_1.EmbedBuilder()
             .setColor(0x006eff)
@@ -152,14 +140,8 @@ const GameLivestreamCode = {
             `Code: ${redemptionCode3}\n\n` +
             `There is no official website to redeem codes, you need to log-into your game to be able to redeem the code!`)
             .setImage(imageUrl)
-            .setFooter({
-            text: `${username} | ${new Date().toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "Asia/Kolkata",
-            })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
-            iconURL: avatarURL,
-        });
+            .setFooter({ text: `${username}`, iconURL: avatarURL })
+            .setTimestamp();
         const embedsMap = {
             "genshin": [genshinPing],
             "hsr": [hsrPing],

@@ -62,7 +62,8 @@ const adminCommand = {
                     .map((user, index) => `\`${(start + index + 1).toString().padEnd(5)}\` <@${user.user_id}>`)
                     .join("\n"))
                 .setFooter({ text: `Page ${page + 1} of ${Math.ceil(users.length / ITEMS_PER_PAGE)}` })
-                .setColor("Blue");
+                .setColor("Blue")
+                .setTimestamp();
         };
         const row = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder().setCustomId("prev").setLabel("⬅️ Previous").setStyle(discord_js_1.ButtonStyle.Primary), new discord_js_1.ButtonBuilder().setCustomId("select").setLabel("🔍 Select User").setStyle(discord_js_1.ButtonStyle.Success), new discord_js_1.ButtonBuilder().setCustomId("next").setLabel("➡️ Next").setStyle(discord_js_1.ButtonStyle.Primary));
         const reply = await interaction.reply({

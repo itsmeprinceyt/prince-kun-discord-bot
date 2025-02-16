@@ -61,14 +61,8 @@ async function handleServerModalSubmit(interaction) {
         .setTitle("📢 Latest Server Changes & Improvements!")
         .setDescription(messageContent)
         .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337156724628525127/Server_Changes.png")
-        .setFooter({
-        text: `${username} | ${new Date().toLocaleTimeString("en-GB", {
-            hour: "2-digit",
-            minute: "2-digit",
-            timeZone: "Asia/Kolkata",
-        })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
-        iconURL: avatarURL,
-    });
+        .setFooter({ text: `${username}`, iconURL: avatarURL })
+        .setTimestamp();
     await interaction.reply({
         content: "✅ Server update message sent!",
         flags: 64,

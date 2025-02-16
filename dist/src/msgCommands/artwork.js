@@ -23,14 +23,8 @@ exports.default = {
             .setTitle("Artwork Credit")
             .setDescription(`A huge thank you to <@793154222806925333> for creating this amazing artwork for the Prince-Kun! If you're looking for fantastic artwork commissions, be it anime-related or chibi related then make sure to reach out to them!`)
             .setImage("attachment://DiscordBotLogo.png")
-            .setFooter({
-            text: `${message.author.username} | ${new Date().toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "Asia/Kolkata",
-            })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
-            iconURL: message.author.displayAvatarURL(),
-        });
+            .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
+            .setTimestamp();
         await message.reply({ embeds: [embed], files: [attachment] });
     },
 };

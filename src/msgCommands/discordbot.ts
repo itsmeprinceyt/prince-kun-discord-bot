@@ -29,14 +29,8 @@ export default {
             .setImage(
                 "https://media.discordapp.net/attachments/1336322293437038602/1337038357565276160/Discord.png"
             )
-            .setFooter({
-                text: `${message.author.username} | ${new Date().toLocaleTimeString("en-GB", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    timeZone: "Asia/Kolkata",
-                })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
-                iconURL: message.author.displayAvatarURL(),
-            });
+            .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
+            .setTimestamp();
 
         const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
             new ButtonBuilder()

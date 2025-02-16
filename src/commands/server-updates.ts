@@ -49,7 +49,7 @@ const serverUpdatesCommand: Command = {
         logger_command_sent(interaction);
 
         const modal = new ModalBuilder()
-            .setCustomId("serverUpdatesModal") 
+            .setCustomId("serverUpdatesModal")
             .setTitle("Server Update Message");
 
         const messageInput = new TextInputBuilder()
@@ -83,22 +83,16 @@ export async function handleServerModalSubmit(interaction: ModalSubmitInteractio
         .setTitle("📢 Latest Server Changes & Improvements!")
         .setDescription(messageContent)
         .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337156724628525127/Server_Changes.png")
-        .setFooter({
-            text: `${username} | ${new Date().toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "Asia/Kolkata",
-            })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
-            iconURL: avatarURL,
-        });
+        .setFooter({ text: `${username}`, iconURL: avatarURL })
+        .setTimestamp();
 
     await interaction.reply({
         content: "✅ Server update message sent!",
         flags: 64,
     });
 
-    logger_custom(username,"server-updates modal submit","Server update sent successfully!");
-    
+    logger_custom(username, "server-updates modal submit", "Server update sent successfully!");
+
     const channel = interaction.channel as TextChannel;
     if (channel) {
         await channel.send({

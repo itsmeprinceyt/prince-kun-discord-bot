@@ -4,7 +4,6 @@ const discord_js_1 = require("discord.js");
 const fs_1 = require("fs");
 const path_1 = require("path");
 const commands = new discord_js_1.Collection();
-const isDev = process.env.NODE_ENV !== 'production';
 const commandFiles = (0, fs_1.readdirSync)((0, path_1.join)(__dirname, "commands")).filter((file) => file.endsWith(".ts") || file.endsWith(".js"));
 for (const file of commandFiles) {
     const commandModule = require(`./commands/${file}`);
