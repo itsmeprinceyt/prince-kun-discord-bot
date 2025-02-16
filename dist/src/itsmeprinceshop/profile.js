@@ -62,12 +62,12 @@ const profileCommand = {
                 `${YC} **Username:** ${targetUsername}\n` +
                 `${YC} **UserID:** ${targetUserId}\n` +
                 `${YC} **Registered on:** ${formattedDate}\n\n` +
-                `**Stats**\n` +
+                `**📦 Inventory & Stats**\n` +
                 `${YC} \`PP Cash          \` • \`${AA}\`\n` +
                 `${YC} \`Referral Tickets \` • \`${BB}\`\n` +
                 `${YC} \`Total Purchases  \` • \`${CC}\`\n` +
                 `${YC} \`Total Referred   \` • \`${DD}\`\n\n` +
-                `**Extra**\n` +
+                `**🍱 Extra**\n` +
                 `${GC} \`1 PP Cash = 1₹\`\n` +
                 `${GC} To know rules & information, type \`.?shoprules\``)
                 .setFooter({

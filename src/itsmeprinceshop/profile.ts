@@ -44,7 +44,7 @@ const profileCommand: Command = {
         await interaction.reply({
           content: `❌ **${mentionedUser.username}** is not registered in the ItsMe Prince Shop database.`,
           flags: 64,
-          
+
         });
         return;
       }
@@ -64,8 +64,8 @@ const profileCommand: Command = {
       const formattedDate = moment(registration_date)
         .tz("Asia/Kolkata", true)
         .format("DD MMM YYYY, hh:mm A");
-        const avatarURL = mentionedUser && rows.length > 0 
-        ? mentionedUser.displayAvatarURL() 
+      const avatarURL = mentionedUser && rows.length > 0
+        ? mentionedUser.displayAvatarURL()
         : interaction.user.displayAvatarURL();
 
       const embed = new EmbedBuilder()
@@ -81,14 +81,12 @@ const profileCommand: Command = {
           `${YC} **Username:** ${targetUsername}\n` +
           `${YC} **UserID:** ${targetUserId}\n` +
           `${YC} **Registered on:** ${formattedDate}\n\n` +
-
-          `**Stats**\n` +
+          `**📦 Inventory & Stats**\n` +
           `${YC} \`PP Cash          \` • \`${AA}\`\n` +
           `${YC} \`Referral Tickets \` • \`${BB}\`\n` +
           `${YC} \`Total Purchases  \` • \`${CC}\`\n` +
           `${YC} \`Total Referred   \` • \`${DD}\`\n\n` +
-
-          `**Extra**\n` +
+          `**🍱 Extra**\n` +
           `${GC} \`1 PP Cash = 1₹\`\n` +
           `${GC} To know rules & information, type \`.?shoprules\``)
         .setFooter({

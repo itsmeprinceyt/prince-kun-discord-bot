@@ -118,12 +118,12 @@ async function handleRefresh(interaction) {
         `${YC} **Username:** ${selectedUsername}\n` +
         `${YC} **UserID:** ${userId}\n` +
         `${YC} **Registered on:** ${formattedDate}\n\n` +
-        `**Stats**\n` +
+        `**📦 Inventory & Stats**\n` +
         `${YC} \`PP Cash          \` • \`${String(pp_cash).padEnd(8)}\`\n` +
         `${YC} \`Referral Tickets \` • \`${String(refer_tickets).padEnd(8)}\`\n` +
         `${YC} \`Total Purchases  \` • \`${String(total_purchases).padEnd(8)}\`\n` +
         `${YC} \`Total Referred   \` • \`${String(total_referred).padEnd(8)}\`\n\n` +
-        `**Extra**\n` +
+        `**🍱 Extra**\n` +
         `${GC} \`1 PP Cash = 1₹\`\n` +
         `${GC} To know rules & information, type \`.?shoprules\``)
         .setFooter({

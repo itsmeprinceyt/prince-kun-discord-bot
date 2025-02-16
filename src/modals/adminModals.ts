@@ -8,7 +8,7 @@ import {
     TextInputBuilder,
     TextInputStyle,
     ModalBuilder,
-    MessageFlags ,
+    MessageFlags,
 } from "discord.js";
 import pool from "../db";
 import moment from "moment-timezone";
@@ -83,20 +83,20 @@ export async function handleSelectUserSubmit(interaction: ModalSubmitInteraction
         .setThumbnail(selectedAvatar)
         .setTitle("ItsMe Prince Shop")
         .setDescription(
-`${YC} **Name:** <@${selectedUser.user_id}>\n` +
-`${YC} **Username:** ${selectedUsername}\n` +
-`${YC} **UserID:** ${selectedUser.user_id}\n` +
-`${YC} **Registered on:** ${formattedDate}\n\n` +
+            `${YC} **Name:** <@${selectedUser.user_id}>\n` +
+            `${YC} **Username:** ${selectedUsername}\n` +
+            `${YC} **UserID:** ${selectedUser.user_id}\n` +
+            `${YC} **Registered on:** ${formattedDate}\n\n` +
 
-`**Stats**\n` +
-`${YC} \`PP Cash          \` • \`${AA}\`\n` +
-`${YC} \`Referral Tickets \` • \`${BB}\`\n` +
-`${YC} \`Total Purchases  \` • \`${CC}\`\n` +
-`${YC} \`Total Referred   \` • \`${DD}\`\n\n` +
+            `**Stats**\n` +
+            `${YC} \`PP Cash          \` • \`${AA}\`\n` +
+            `${YC} \`Referral Tickets \` • \`${BB}\`\n` +
+            `${YC} \`Total Purchases  \` • \`${CC}\`\n` +
+            `${YC} \`Total Referred   \` • \`${DD}\`\n\n` +
 
-`**Extra**\n` +
-`${GC} \`1 PP Cash = 1₹\`\n` +
-`${GC} To know rules & information, type \`.?shoprules\``)
+            `**Extra**\n` +
+            `${GC} \`1 PP Cash = 1₹\`\n` +
+            `${GC} To know rules & information, type \`.?shoprules\``)
         .setFooter({
             text: `${selectedUsername} | ${new Date().toLocaleTimeString("en-GB", {
                 hour: "2-digit",
@@ -116,7 +116,7 @@ export async function handleSelectUserSubmit(interaction: ModalSubmitInteraction
     const navigationRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
         new ButtonBuilder().setCustomId(`refresh_${selectedUser.user_id}`).setLabel("🔄 Refresh").setStyle(ButtonStyle.Secondary)
     );
-    
+
     await interaction.reply({ embeds: [userEmbed], components: [userRow, navigationRow], flags: 64 });
 }
 
@@ -149,18 +149,18 @@ export async function handleRefresh(interaction: ButtonInteraction) {
         .setThumbnail(selectedAvatar)
         .setTitle("ItsMe Prince Shop")
         .setDescription(
-`${YC} **Name:** <@${userId}>\n` +
-`${YC} **Username:** ${selectedUsername}\n` +
-`${YC} **UserID:** ${userId}\n` +
-`${YC} **Registered on:** ${formattedDate}\n\n` +
-`**Stats**\n` +
-`${YC} \`PP Cash          \` • \`${String(pp_cash).padEnd(8)}\`\n` +
-`${YC} \`Referral Tickets \` • \`${String(refer_tickets).padEnd(8)}\`\n` +
-`${YC} \`Total Purchases  \` • \`${String(total_purchases).padEnd(8)}\`\n` +
-`${YC} \`Total Referred   \` • \`${String(total_referred).padEnd(8)}\`\n\n` +
-`**Extra**\n` +
-`${GC} \`1 PP Cash = 1₹\`\n` +
-`${GC} To know rules & information, type \`.?shoprules\``)
+            `${YC} **Name:** <@${userId}>\n` +
+            `${YC} **Username:** ${selectedUsername}\n` +
+            `${YC} **UserID:** ${userId}\n` +
+            `${YC} **Registered on:** ${formattedDate}\n\n` +
+            `**📦 Inventory & Stats**\n` +
+            `${YC} \`PP Cash          \` • \`${String(pp_cash).padEnd(8)}\`\n` +
+            `${YC} \`Referral Tickets \` • \`${String(refer_tickets).padEnd(8)}\`\n` +
+            `${YC} \`Total Purchases  \` • \`${String(total_purchases).padEnd(8)}\`\n` +
+            `${YC} \`Total Referred   \` • \`${String(total_referred).padEnd(8)}\`\n\n` +
+            `**🍱 Extra**\n` +
+            `${GC} \`1 PP Cash = 1₹\`\n` +
+            `${GC} To know rules & information, type \`.?shoprules\``)
         .setFooter({
             text: `${selectedUsername} | ${new Date().toLocaleTimeString("en-GB", {
                 hour: "2-digit",
