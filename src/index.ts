@@ -28,6 +28,7 @@ import {
     handleModifySubmit, 
     handleDeleteUser 
 } from "./modals/adminModals";
+import { handleRedeemModalSubmit } from "./commands/new-redeems";
 import { initDB } from "./db";
 
 const modalHandlers = new Map<string, (interaction: ModalSubmitInteraction) => Promise<void>>([
@@ -35,7 +36,8 @@ const modalHandlers = new Map<string, (interaction: ModalSubmitInteraction) => P
     ["modify_points", handleModifySubmit],
     ["botUpdatesModal", handleBotModalSubmit],
     ["serverUpdatesModal", handleServerModalSubmit],
-    ["shopUpdateModal", handleShopModalSubmit]
+    ["shopUpdateModal", handleShopModalSubmit],
+    ["newRedeemsModal",handleRedeemModalSubmit],
 ]);
 
 const client = new Client({

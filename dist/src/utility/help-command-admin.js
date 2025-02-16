@@ -14,6 +14,8 @@ exports.HelpDescriptionAdmin = `**🚀 Message Commands!**\n` +
     `> **🟠 \`/game-livestream-codes        \`** \n` +
     `> **🟠 \`/kick                         \`** \n` +
     `> **🟣 \`/mega-purge                   \`** \n` +
+    `> **🟣 \`/new-redeems                  \`** \n` +
+    `> **🟣 \`/new-highlight                \`** \n` +
     `> **🟠 \`/purge                        \`** \n` +
     `> **🟣 \`/remove-client                \`** \n` +
     `> **🟣 \`/remove-code-poster-role      \`** \n` +
@@ -27,6 +29,6 @@ exports.HelpDescriptionAdmin = `**🚀 Message Commands!**\n` +
     `> **🟣 \`/set-mod                      \`** \n` +
     `> **🟣 \`/set-shop-manager-role        \`** \n` +
     `> **🟠 \`/shop-updates                 \`** \n\n` +
-    '🟣 : **Commands only admin can use**\n' +
-    `🟠 : **Moderators or role restricted commands**\n\n` +
+    '> 🟣 : **Commands only admin can use**\n' +
+    `> 🟠 : **Moderators or role restricted commands**\n\n` +
     `Use these commands to get started! | [Invite Prince-Kun !](https://discord.com/oauth2/authorize?client_id=1335342572758892615&permissions=1927098263638&integration_type=0&scope=bot)`;

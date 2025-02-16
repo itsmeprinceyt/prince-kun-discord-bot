@@ -16,13 +16,15 @@ const bot_updates_1 = require("./commands/bot-updates");
 const server_updates_1 = require("./commands/server-updates");
 const shop_updates_1 = require("./commands/shop-updates");
 const adminModals_1 = require("./modals/adminModals");
+const new_redeems_1 = require("./commands/new-redeems");
 const db_1 = require("./db");
 const modalHandlers = new Map([
     ["select_user", adminModals_1.handleSelectUserSubmit],
     ["modify_points", adminModals_1.handleModifySubmit],
     ["botUpdatesModal", bot_updates_1.handleModalSubmit],
     ["serverUpdatesModal", server_updates_1.handleServerModalSubmit],
-    ["shopUpdateModal", shop_updates_1.handleShopModalSubmit]
+    ["shopUpdateModal", shop_updates_1.handleShopModalSubmit],
+    ["newRedeemsModal", new_redeems_1.handleRedeemModalSubmit],
 ]);
 const client = new discord_js_1.Client({
     intents: [
