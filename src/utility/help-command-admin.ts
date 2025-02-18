@@ -15,6 +15,7 @@ export const HelpDescriptionAdmin = `**🚀 Message Commands!**\n` +
     `> **🟣 \`/new-redeems                  \`** \n` +
     `> **🟣 \`/new-highlight                \`** \n` +
     `> **🟠 \`/purge                        \`** \n` +
+    `> **🟣 \`/register-user                \`** \n` +
     `> **🟣 \`/remove-client                \`** \n` +
     `> **🟣 \`/remove-code-poster-role      \`** \n` +
     `> **🟣 \`/remove-leaker                \`** \n` +

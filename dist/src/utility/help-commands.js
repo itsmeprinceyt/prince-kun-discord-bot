@@ -18,6 +18,7 @@ exports.HelpDescription = `**🚀 Message Commands!**\n` +
     `> **📌 \`.?math        \`** • Solves Math-related problems\n` +
     `> **📌 \`.?paypal      \`** • Sends PayPal donation Link\n` +
     `> **📌 \`.?pcspecs     \`** • Sends my setup specifications\n` +
+    `> **📌 \`.?profile     \`** • View your ItsMe Prince Shop Profile\n` +
     `> **📌 \`.?shoprules   \`** • Sends ItsMe Prince Shop rules\n` +
     `> **📌 \`.?sofi-guides \`** • Sends Sofi Guides\n` +
     `> **📌 \`.?upi         \`** • Sends UPI for donation\n` +

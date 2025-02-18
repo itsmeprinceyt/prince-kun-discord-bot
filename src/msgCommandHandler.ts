@@ -9,20 +9,25 @@ interface MessageCommand {
 
 const msgCommands = new Collection<string, MessageCommand>();
 
-const commandFiles = readdirSync(join(__dirname, "msgCommands")).filter(
-    (file) => file.endsWith(".ts") || file.endsWith(".js")
-);
+const commandFolders = ["msgCommands", "itsmeprinceshopMsgCommands"];
 
-for (const file of commandFiles) {
-    const commandModule = require(`./msgCommands/${file}`);
-    const command: MessageCommand = commandModule.default;
+for (const folder of commandFolders) {
+    const commandPath = join(__dirname, folder);
+    const commandFiles = readdirSync(commandPath).filter(
+        (file) => file.endsWith(".ts") || file.endsWith(".js")
+    );
 
-    if (command && Array.isArray(command.triggers)) {
-        for (const trigger of command.triggers) {
-            msgCommands.set(trigger, command);
+    for (const file of commandFiles) {
+        const commandModule = require(`${commandPath}/${file}`);
+        const command: MessageCommand = commandModule.default;
+
+        if (command && Array.isArray(command.triggers)) {
+            for (const trigger of command.triggers) {
+                msgCommands.set(trigger, command);
+            }
+        } else {
+            console.warn(`[ ERROR ] Message command ${file} in ${folder} is missing "triggers" or "execute"!`);
         }
-    } else {
-        console.warn(`[ ERROR ] Message command ${file} is missing "triggers" or "execute"!`);
     }
 }
 

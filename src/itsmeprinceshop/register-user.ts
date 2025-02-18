@@ -10,7 +10,6 @@ import moment from "moment-timezone";
 import pool from "../db";
 import { Command } from "../types/Command";
 import { logger_custom } from "../utility/logger-custom";
-import { ItsMePrinceRules } from "../utility/itsmeprince-rules";
 import { RolesPerms } from "../utility/rolePerms";
 const adminId = RolesPerms[5].roleId;
 
