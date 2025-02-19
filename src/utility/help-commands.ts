@@ -5,7 +5,9 @@ export const HelpDescription =
     `> **📌 \`.?pcspecs     \`** • Sends my setup specifications\n` +
     `> **📌 \`.?math        \`** • Solves Math-related problems\n` +
     `> **📌 \`.?life        \`** • Wakes you up from reality!\n` +
-    `> **📌 \`.?sofi-guides \`** • Sends Sofi Guides\n\n` +
+    `> **📌 \`.?sofi-guides \`** • Sends Sofi Guides\n` +
+    `> **📌 \`.?scan        \`** • Scans the Job Board for healthy cards\n` +
+    `> **📌 \`.?work        \`** • Gives correct cards to work in Karuta\n\n` +
 
     `**🚀 Social & Profile Commands!**\n` +
     `> **📌 \`.?github      \`** • Sends GitHub profile\n` +
