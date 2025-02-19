@@ -5,4 +5,5 @@ export const Roles = [
     { name: "WuwaPing", roleId: "1242892684226592920"},
     { name: "MarketUpdate", roleId: "1179346833294753874"},
     { name: "StockUpdate", roleId: "1179344445875953694"},
+    { name: "ZZZ Ping", roleId: "1341859427657187449"},
 ];

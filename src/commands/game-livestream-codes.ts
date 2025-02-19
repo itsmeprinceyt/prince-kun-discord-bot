@@ -15,11 +15,13 @@ import { RolesPerms } from "../utility/rolePerms";
 const GenshinPing = Roles[1].roleId;
 const HSRPing = Roles[2].roleId;
 const WuwaPing = Roles[3].roleId;
+const ZZZPing = Roles[6].roleId;
 const CodePoster = RolesPerms[0].roleId;
 
 const DefaultImageGenshin = "https://media.discordapp.net/attachments/1336322293437038602/1337338720189284352/Primogems.png";
 const DefaultImageHSR = "https://media.discordapp.net/attachments/1336322293437038602/1337338704288677949/Jade.png";
 const DefaultImageWuwa = "https://media.discordapp.net/attachments/1336322293437038602/1337338722097692682/Astrite.png";
+const DefaultImageZZZ = "https://media.discordapp.net/attachments/1336322293437038602/1341860023063810068/Polychrome.png";
 
 const userCache = new Map<string, { username: string; avatarURL: string }>();
 
@@ -35,6 +37,7 @@ const GameLivestreamCode: Command = {
                     { name: "Genshin Impact", value: "genshin" },
                     { name: "Honkai Star Rail", value: "hsr" },
                     { name: "Wuthering Waves", value: "wuwa" },
+                    { name: "Zenless Zone Zero", value: "zzz" }
                 )
         )
         .addStringOption(option =>
@@ -120,6 +123,8 @@ const GameLivestreamCode: Command = {
             imageUrl = DefaultImageHSR;
         } else if (game === "wuwa" && useDefaultImage) {
             imageUrl = DefaultImageWuwa;
+        } else if (game === "zzz" && useDefaultImage) {
+            imageUrl = DefaultImageZZZ;
         } else if (!useDefaultImage && sanitizedImageUrl) {
             imageUrl = sanitizedImageUrl;
         } else {
@@ -182,22 +187,41 @@ const GameLivestreamCode: Command = {
             .setImage(imageUrl)
             .setFooter({ text: `${username}`, iconURL: avatarURL })
             .setTimestamp();
+        /*=================================================== ZENLESS ZONE ZERO*/
+        const zzzPing = new EmbedBuilder()
+            .setColor(0xFFA500)
+            .setAuthor({
+                name: "Prince-Kun • Zenless Zone Zero",
+                iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            })
+            .setTitle(`${codeTitle}`)
+            .setDescription(
+                `Code: [${redemptionCode1}](https://zenless.hoyoverse.com/redemption?code=${redemptionCode1})\n` +
+                `Code: [${redemptionCode2}](https://zenless.hoyoverse.com/redemption?code=${redemptionCode2})\n` +
+                `Code: [${redemptionCode3}](https://zenless.hoyoverse.com/redemption?code=${redemptionCode3})\n\n` +
+                `Click on the code above or redeem through the website below:\n https://zenless.hoyoverse.com/redemption`)
+            .setImage(imageUrl)
+            .setFooter({ text: `${username}`, iconURL: avatarURL })
+            .setTimestamp();
 
         const embedsMap: Record<string, EmbedBuilder[]> = {
             "genshin": [genshinPing],
             "hsr": [hsrPing],
             "wuwa": [wuwaPing],
+            "zzz": [zzzPing],
         };
 
         const gameEmojis: Record<string, string> = {
             "genshin": "<:Primogem:977169624187695104>",
             "hsr": "<:jade:1131210828704645175>",
             "wuwa": "<:astrite:1337342930448551987>",
+            "zzz": "<:polychrome:1341859138766110842>",
         };
         const gameRoles: Record<string, string> = {
             "genshin": GenshinPing,
             "hsr": HSRPing,
             "wuwa": WuwaPing,
+            "zzz": ZZZPing,
         };
 
         const roleToPing = gameRoles[game] || "";
