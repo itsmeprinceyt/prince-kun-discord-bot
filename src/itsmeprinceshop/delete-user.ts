@@ -2,33 +2,31 @@ import {
     SlashCommandBuilder,
     ChatInputCommandInteraction,
     EmbedBuilder,
-    GuildMember,
     PermissionFlagsBits,
     User,
 } from "discord.js";
-import moment from "moment-timezone";
 import pool from "../db";
 import { Command } from "../types/Command";
 import { logger_custom } from "../utility/logger-custom";
 import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
 import { RolesPerms } from "../utility/rolePerms";
+
 const adminId = RolesPerms[5].roleId;
 
-const registerUserCommand: Command = {
+const deleteUserCommand: Command = {
     data: new SlashCommandBuilder()
-        .setName("register-user")
-        .setDescription("Register a user in the database.")
+        .setName("delete-user")
+        .setDescription("Delete a registered user from the database.")
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
         .addUserOption(option =>
             option.setName("user")
-                .setDescription("The user to register")
+                .setDescription("The user to delete")
                 .setRequired(true)
         ) as SlashCommandBuilder,
 
     async execute(interaction: ChatInputCommandInteraction) {
         if (!interaction.guild && interaction.user.id !== adminId) {
             await interaction.reply("This is a Server-Only Command! 🖕");
-            logger_NoDM_NoAdmin(interaction);
             return;
         }
 
@@ -42,37 +40,32 @@ const registerUserCommand: Command = {
         }
 
         const selectedUser = interaction.options.getUser("user") as User;
-        const selectedMember = interaction.guild?.members.cache.get(selectedUser.id) as GuildMember;
-        const userName = selectedMember?.displayName || selectedUser.username;
 
         const [rows]: any = await pool.query("SELECT user_id FROM users WHERE user_id = ?", [selectedUser.id]);
 
-        if (rows.length > 0) {
+        if (rows.length === 0) {
             await interaction.reply({
-                content: `❌ ${userName} is already registered!`,
+                content: `❌ ${selectedUser.username} is not registered!`,
                 flags: 64,
             });
+            logger_NoDM_NoAdmin(interaction);
             return;
         }
 
-        const istTime = moment.tz("Europe/Paris").tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
-        await pool.query(
-            "INSERT INTO users (user_id, pp_cash, refer_tickets, total_purchases, registration_date, total_referred) VALUES (?, ?, ?, ?, ?, ?)",
-            [selectedUser.id, 0, 0, 0, istTime, 0]
-        );
+        await pool.query("DELETE FROM users WHERE user_id = ?", [selectedUser.id]);
 
-        const logMessage = `[ DATABASE ] User ${userName} (${selectedUser.id}) registered by Admin ${interaction.user.username}`;
-        logger_custom(userName, "register", logMessage);
+        const logMessage = `[ DATABASE ] User ${selectedUser.username} (${selectedUser.id}) deleted by Admin ${interaction.user.username}`;
+        logger_custom(selectedUser.username, "delete-user", logMessage);
 
         const embed = new EmbedBuilder()
-            .setColor(0x00ff00)
-            .setTitle("Registration Successful !")
+            .setColor(0xff0000)
+            .setTitle("User Deleted")
             .setThumbnail(selectedUser.displayAvatarURL())
-            .setDescription(`Well then, <@${selectedUser.id}>, you're registered!\n Use \`/profile\` to check your inventory!\n\n**Current Marketplace:** https://discord.com/channels/310675536340844544/1177928471951966339/1179354261365211218`)
+            .setDescription(`User <@${selectedUser.id}> has been removed from the database.`)
             .setTimestamp();
 
         await interaction.reply({ embeds: [embed] });
     }
 };
 
-export default registerUserCommand;
+export default deleteUserCommand;

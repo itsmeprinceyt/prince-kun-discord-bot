@@ -89,7 +89,7 @@ const registerCommand: Command = {
                             .setColor(0x00ff00)
                             .setTitle("Registration Successful !")
                             .setThumbnail(interaction.user.displayAvatarURL())
-                            .setDescription(`Well then, <@${userId}>, you're registered!\n Use \`/profile\` to check your inventory!\n\n**Current Marketplace:** https://discord.com/channels/310675536340844544/1177928471951966339/1179354261365211218`).setTimestamp()
+                            .setDescription(`Well then, <@${userId}>, you're registered!\n Use \`/profile\` or \`.?profile\` to check your inventory!\n\n**Current Marketplace:** https://discord.com/channels/310675536340844544/1177928471951966339/1179354261365211218`).setTimestamp()
                     ],
                     components: []
                 });

@@ -44,7 +44,6 @@ const profileCommand: Command = {
         await interaction.reply({
           content: `❌ **${mentionedUser.username}** is not registered in the ItsMe Prince Shop database.`,
           flags: 64,
-
         });
         return;
       }

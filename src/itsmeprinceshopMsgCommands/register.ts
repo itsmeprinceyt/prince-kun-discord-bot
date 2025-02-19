@@ -1,0 +1,102 @@
+import { Message, EmbedBuilder, TextChannel } from "discord.js";
+import moment from "moment-timezone";
+import pool from "../db";
+import { logger_custom } from "../utility/logger-custom";
+import { ItsMePrinceRules } from "../utility/itsmeprince-rules";
+
+const registerCommand = {
+    triggers: [".?register"],
+    async execute(message: Message) {
+        if (!message.guild) {
+            return message.reply("You can only use \`/register\` in DM");
+        }
+
+        const userId = message.author.id;
+        const userName = message.member?.displayName || message.author.username;
+
+        const [rows]: any = await pool.query("SELECT user_id FROM users WHERE user_id = ?", [userId]);
+
+        if (rows.length > 0) {
+            return message.reply("❌ You are already registered!");
+        }
+
+        const embed1 = new EmbedBuilder()
+            .setColor(0xc200ff)
+            .setAuthor({
+                name: "Prince-Kun • ItsMe Prince Shop",
+                iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            })
+            .setTitle("ItsMe Prince Shop - Profile Registration")
+            .setThumbnail(message.author.displayAvatarURL())
+            .setDescription(
+                ItsMePrinceRules +
+                `\n**By registering, you agree to follow the rules and accept any future changes. It is your responsibility to stay updated.**`)
+            .setFooter({ text: `${userName}`, iconURL: message.author.displayAvatarURL() })
+            .setTimestamp();
+
+        const embed2 = new EmbedBuilder()
+            .setColor(0x00ff00)
+            .setTitle("Registration Instructions")
+            .setDescription(
+                `To register, type: \`.?confirm\`\nTo cancel, type: \`.?cancel\``
+            )
+            .setFooter({ text: `${userName}`, iconURL: message.author.displayAvatarURL() })
+            .setTimestamp();
+        await (message.channel as any).send({ embeds: [embed1, embed2] });
+
+        const filter = (msg: Message) =>
+            msg.author.id === userId &&
+            [".?confirm", ".?cancel"].includes(msg.content.toLowerCase());
+
+        if (message.channel && message.channel.isTextBased()) {
+            const textChannel = message.channel as TextChannel;
+            const collector = textChannel.createMessageCollector({ filter, time: 30000 });
+
+            collector.on("collect", async (msg) => {
+                if (msg.content.toLowerCase() === ".?confirm") {
+                } else if (msg.content.toLowerCase() === ".?cancel") {
+                    await (msg.channel as any).send("Registration cancelled.");
+                    collector.stop();
+                }
+            });
+
+            collector.on("collect", async (msg: any) => {
+                if (msg.content.toLowerCase() === ".?confirm") {
+                    const istTime = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+
+                    await pool.query(
+                        "INSERT INTO users (user_id, pp_cash, refer_tickets, total_purchases, registration_date, total_referred) VALUES (?, ?, ?, ?, ?, ?)",
+                        [userId, 0, 0, 0, istTime, 0]
+                    );
+
+                    const logMessage = `[ DATABASE ] User ${userName} (${userId}) registered`;
+                    logger_custom(userName, "register", logMessage);
+
+                    await msg.channel.send({
+                        embeds: [
+                            new EmbedBuilder()
+                                .setColor(0x00ff00)
+                                .setTitle("Registration Successful!")
+                                .setThumbnail(message.author.displayAvatarURL())
+                                .setDescription(
+                                    `Well then, <@${userId}>, you're registered!\nUse \`/profile\` or \`.?profile\` to check your inventory!\n\n**Current Marketplace:** https://discord.com/channels/310675536340844544/1177928471951966339/1179354261365211218`
+                                )
+                                .setTimestamp()
+                        ]
+                    });
+
+                    collector.stop();
+                }
+            });
+            collector.on("end", async (_, reason) => {
+                if (reason === "time") {
+                    await (message.channel as any).send("Registration timed out. Please use `.?register` again if you want to register.");
+                }
+            });
+        } else {
+            return message.reply("I can't collect messages in this type of channel.");
+        }
+    }
+};
+
+export default registerCommand;
