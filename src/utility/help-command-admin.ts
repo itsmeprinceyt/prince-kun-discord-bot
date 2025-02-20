@@ -31,6 +31,7 @@ export const HelpDescriptionAdmin =
     `> 🔸 \`/delete-user                \`\n` +
     `> 🔸 \`/item-bought                \`\n`+
     `> 🔸 \`/modify-data                \`\n` +
+    `> 🔸 \`/referring                  \`\n` +
     `> 🔸 \`/register-user              \`\n` +
     `> 🔸 \`/reset-data                 \`\n` +
     `> 🔸 \`/update-data                \`\n` +

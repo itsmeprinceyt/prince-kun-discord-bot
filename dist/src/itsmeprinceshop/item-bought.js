@@ -5,16 +5,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const db_1 = __importDefault(require("../db"));
+const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
 const logger_custom_1 = require("../utility/logger-custom");
 const text_channels_1 = require("../utility/text-channels");
 const rolePerms_1 = require("../utility/rolePerms");
 const PREDEFINED_SERVER_ID = "310675536340844544";
 const ORDER_LOG_CHANNEL_ID = text_channels_1.TextChannels[1].roleId;
 const adminId = rolePerms_1.RolesPerms[5].roleId;
+const DefaultImageGenshin = "https://media.discordapp.net/attachments/1336322293437038602/1342230984464138392/gi-logo.png";
+const DefaultImageHSR = "https://media.discordapp.net/attachments/1336322293437038602/1342230984728252498/hsr-logo.png";
+const DefaultImageWuwa = "https://media.discordapp.net/attachments/1336322293437038602/1342230985034567761/www-logo.png";
+const DefaultImageZZZ = "https://media.discordapp.net/attachments/1336322293437038602/1342230985579823206/zzz-logo.png";
 const itemBoughtCommand = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("item-bought")
         .setDescription("Log an item purchase for a user.")
+        .addStringOption((option) => option.setName("game")
+        .setDescription("Select game")
+        .setRequired(true)
+        .addChoices({ name: "Genshin Impact", value: "genshin" }, { name: "Honkai Star Rail", value: "hsr" }, { name: "Wuthering Waves", value: "wuwa" }, { name: "Zenless Zone Zero", value: "zzz" }))
         .addStringOption(option => option.setName("item")
         .setDescription("Enter the name of the item bought.")
         .setRequired(true))
@@ -34,13 +43,16 @@ const itemBoughtCommand = {
                     content: "This is a Server-Only Command! 🖕",
                     flags: 64,
                 });
+                (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
                 return;
             }
         }
         else if (interaction.user.id !== adminId) {
             await interaction.reply("❌ Only the bot admin can use this command in DMs!");
+            (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
             return;
         }
+        const game = interaction.options.getString("game", true);
         const mentionedUser = interaction.options.getUser("user");
         const usernameInput = interaction.options.getString("username");
         const item = interaction.options.getString("item", true);
@@ -48,6 +60,24 @@ const itemBoughtCommand = {
         let targetUserId = mentionedUser ? mentionedUser.id : null;
         let targetUsername = mentionedUser ? mentionedUser.username : usernameInput || "Unknown";
         let targetAvatar = mentionedUser ? mentionedUser.displayAvatarURL() : "";
+        let imageUrl = ``;
+        let boughtText = ``;
+        if (game === "genshin") {
+            imageUrl = DefaultImageGenshin;
+            boughtText = `Genshin Impact - `;
+        }
+        else if (game === "hsr") {
+            imageUrl = DefaultImageHSR;
+            boughtText = `Honkai Star Rail - `;
+        }
+        else if (game === "wuwa") {
+            imageUrl = DefaultImageWuwa;
+            boughtText = `Wuthering Waves - `;
+        }
+        else if (game === "zzz") {
+            imageUrl = DefaultImageZZZ;
+            boughtText = `Zenless Zone Zero - `;
+        }
         if (!targetUserId && !usernameInput) {
             await interaction.reply({ content: "❌ Please mention a user or provide a username.", flags: 64 });
             return;
@@ -64,10 +94,10 @@ const itemBoughtCommand = {
                 embed = new discord_js_1.EmbedBuilder()
                     .setColor(0x00ff00)
                     .setTitle("Purchase Successful")
-                    .setThumbnail(targetAvatar)
+                    .setThumbnail(imageUrl)
                     .setDescription(`
                         Ordered by: <@${targetUserId}>
-                        Bought: **${item}**
+                        Bought: ${boughtText} **${item}**
                         Price: **${price}**\n
                         Register today using \`/register\`
                         To know more, type \`.?shoprules\``)
@@ -79,7 +109,8 @@ const itemBoughtCommand = {
                 embed = new discord_js_1.EmbedBuilder()
                     .setColor(0x00ff00)
                     .setTitle("Purchase Successful")
-                    .setDescription(`Ordered by: **${targetUsername}**\nBought: **${item}**\nPrice: **${price}**`)
+                    .setThumbnail(imageUrl)
+                    .setDescription(`Ordered by: **${targetUsername}**\nBought: ${boughtText} **${item}**\nPrice: **${price}**`)
                     .setTimestamp();
                 logMessage = `Unregistered user ${targetUsername} bought ${item} for ${price}.`;
             }
@@ -87,7 +118,7 @@ const itemBoughtCommand = {
                 await orderLogChannel.send({ embeds: [embed] });
             }
             await interaction.reply({ content: `✅ Purchase logged in the order log channel! Check: <#${ORDER_LOG_CHANNEL_ID}>`, flags: 64 });
-            (0, logger_custom_1.logger_custom)(targetUsername, "item-bought", logMessage);
+            (0, logger_custom_1.logger_custom)("ADMIN", "item-bought", logMessage);
             return;
         }
         await db_1.default.query("UPDATE users SET total_purchases = total_purchases + 1 WHERE user_id = ?", [targetUserId]);
@@ -95,13 +126,13 @@ const itemBoughtCommand = {
         let finalEmbed = ``;
         let DiscordUserRegisteredBut300Below = `
         Ordered by: <@${targetUserId}>
-        Bought: **${item}**
+        Bought: ${boughtText} **${item}**
         Price: **${price}**\n
         To know more, type \`.?shoprules\``;
         let referralText = referralTickets === 1 ? "Referral Ticket 🎟️" : "Referral Tickets 🎟️";
         let DiscordUserRegisteredBut300Above = `
         Ordered by: <@${targetUserId}>
-        Bought: **${item}**
+        Bought: ${boughtText} **${item}**
         Price: **${price}**\n
         Reward: **You got \`${referralTickets}\` ${referralText} which you can convert to 💵 PP Cash by referring your friend!**\n
         Check your profile using \`/profile\`
@@ -114,7 +145,7 @@ const itemBoughtCommand = {
         const embed = new discord_js_1.EmbedBuilder()
             .setColor(0x00ff00)
             .setTitle("Purchase Successful")
-            .setThumbnail(targetAvatar)
+            .setThumbnail(imageUrl)
             .setDescription(finalEmbed)
             .setFooter({ text: targetUsername, iconURL: targetAvatar })
             .setTimestamp();
@@ -129,7 +160,7 @@ const itemBoughtCommand = {
         else {
             await interaction.reply({ embeds: [embed] });
         }
-        (0, logger_custom_1.logger_custom)(targetUsername, "item-bought", `User ${targetUsername} bought ${item} for ${price}.`);
+        (0, logger_custom_1.logger_custom)("ADMIN", "item-bought", `User ${targetUsername} bought ${item} for ${price}.`);
     }
 };
 exports.default = itemBoughtCommand;
