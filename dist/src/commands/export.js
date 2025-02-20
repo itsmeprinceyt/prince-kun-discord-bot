@@ -21,7 +21,7 @@ const ExportCommand = {
         if (isDM) {
             if (interaction.user.id !== adminId) {
                 await interaction.reply({
-                    content: "🚫 You are not authorized to use this command in DMs!",
+                    content: "This is a Server-Only Command! 🖕",
                     flags: 64
                 });
                 (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
