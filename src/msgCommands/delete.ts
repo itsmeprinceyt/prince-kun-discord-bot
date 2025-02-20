@@ -30,7 +30,7 @@ export default {
 
         try {
             await repliedTo.delete();
-            const replyMessage = await message.reply("✅ Bot message deleted successfully."+'\n'+'-# Supported bot: Karuta & Sofi');
+            const replyMessage = await message.reply("✅ Bot message deleted successfully."+'\n'+'-# Supported bot\'s: Karuta & Sofi');
             setTimeout(async () => {
                 await replyMessage.delete().catch(console.error);
                 await message.delete().catch(console.error);
