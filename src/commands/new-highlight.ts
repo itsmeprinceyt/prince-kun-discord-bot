@@ -23,6 +23,11 @@ const GameCode: Command = {
             option.setName("image-url")
                 .setDescription("Paste the image URL here.")
                 .setRequired(true)
+        )
+        .addStringOption(option =>
+            option.setName("text")
+                .setDescription("Optional text message to send before the image.")
+                .setRequired(false)
         ) as SlashCommandBuilder,
 
     async execute(interaction: ChatInputCommandInteraction) {
@@ -72,11 +77,16 @@ const GameCode: Command = {
 
         const imageUrl = interaction.options.getString("image-url", true).trim();
         const sanitizedImageUrl = imageUrl.replace(/\?.*$/, "");
+        const textMessage = interaction.options.getString("text")?.trim();
 
+        if (textMessage) {
+            await highlightChannel.send(textMessage);
+        }
+        
         await highlightChannel.send(sanitizedImageUrl);
 
         await interaction.reply({
-            content: "✅ Image URL sent to the highlight channel!",
+            content: `✅ Image URL sent to the highlight channel! Check: <#${HIGHLIGHT_CHANNEL_ID}>`,
             flags: 64,
         });
         

@@ -32,6 +32,7 @@ exports.HelpDescriptionAdmin = `**🚀 Bot & Admin Commands!**\n` +
     `> 🔸 \`/update-data                \`\n` +
     `> 🔹 \`/shop-updates               \`\n\n` +
     `**🚀 Game & Event Management Commands!**\n` +
+    `> 🔹 \`/donation-bot               \`\n` +
     `> 🔹 \`/game-code                  \`\n` +
     `> 🔹 \`/game-items-no-stock        \`\n` +
     `> 🔹 \`/game-items-stock           \`\n` +

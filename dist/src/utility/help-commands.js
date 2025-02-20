@@ -4,6 +4,7 @@ exports.HelpDescription = void 0;
 exports.HelpDescription = `**🚀 Utility Commands!**\n` +
     `> **📌 \`.?av          \`** • Sends you your requested avatar\n` +
     `> **📌 \`.?device      \`** • Sends my device information\n` +
+    `> **📌 \`.?delete      \`** • Can be used to delete bot message\n` +
     `> **📌 \`.?pcspecs     \`** • Sends my setup specifications\n` +
     `> **📌 \`.?math        \`** • Solves Math-related problems\n` +
     `> **📌 \`.?life        \`** • Wakes you up from reality!\n` +

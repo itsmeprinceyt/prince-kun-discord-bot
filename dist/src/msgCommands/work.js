@@ -1,5 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const discord_js_1 = require("discord.js");
+const path_1 = __importDefault(require("path"));
+const botId_1 = require("../utility/botId");
+const Karuta = botId_1.BOT_ID[0].roleId;
 const jobBoardHealthyCards = [];
 exports.default = {
     triggers: [".?scan", ".?work"],
@@ -9,12 +16,17 @@ exports.default = {
         const repliedTo = await message.channel.messages.fetch(message.reference.messageId);
         if (!repliedTo)
             return;
-        if (!repliedTo.author.bot || repliedTo.author.id !== "646937666251915264")
+        if (!repliedTo.author.bot || repliedTo.author.id !== Karuta)
             return;
-        const messagesBefore = await message.channel.messages.fetch({ limit: 10 });
-        const userPreviousMessage = messagesBefore.find((msg) => msg.author.id === message.author.id && msg.createdTimestamp < repliedTo.createdTimestamp);
-        if (!userPreviousMessage) {
-            await message.reply("⚠️ You can only learn from your own Job Board embed.");
+        let triggeredByUser = false;
+        if (repliedTo.reference) {
+            const originalMessage = await message.channel.messages.fetch(repliedTo.reference.messageId).catch(() => null);
+            if (originalMessage && originalMessage.author.id === message.author.id) {
+                triggeredByUser = true;
+            }
+        }
+        if (!triggeredByUser) {
+            await message.reply("⚠️ You can only use the command on the embed message triggered by you.");
             return;
         }
         const embed = repliedTo.embeds[0];
@@ -34,6 +46,15 @@ exports.default = {
                     }
                 }
             }
+            if (!foundJobBoard) {
+                const gifPath = path_1.default.join(__dirname, "../public/GIF/silly-cat-silly-car.gif");
+                const gif = new discord_js_1.AttachmentBuilder(gifPath);
+                await message.reply({
+                    content: "⚠️ No Job Board found. Make sure you're replying to the correct embed.",
+                    files: [gif]
+                });
+                return;
+            }
             if (jobBoardHealthyCards.length === 0) {
                 const hasCards = lines.some(line => line.match(/^(🇦|🇧|🇨|🇩|🇪)\s(.+?)\s·\s\*\*(\d+)\*\*\sEffort\s·\s`(Injured)`/));
                 if (hasCards) { }
@@ -42,17 +63,13 @@ exports.default = {
                     return;
                 }
             }
-            if (!foundJobBoard) {
-                await message.reply("⚠️ No Job Board found. Make sure you're replying to the correct embed.");
-                return;
-            }
             const count = jobBoardHealthyCards.length;
             if (count === 5) {
                 await message.reply("✅ All cards are already healthy in the Job Board.");
                 return;
             }
-            const cardText = `✅ I've learned that there ${count === 1 ? "is" : "are"} ${count} healthy ${count === 1 ? "card" : "cards"} in the Job Board.\n Type \`kc o:eff\` and reply your collection with \`.?work\`\n -# This command will not run as expected if you have any card's alias setup.`;
-            await message.reply(cardText);
+            const cardText = `✅ I've learned that there ${count === 1 ? "is" : "are"} ${count} healthy ${count === 1 ? "card" : "cards"} in the Job Board.\n Type \`kc o:eff\` and reply your collection with \`.?work\`\n`;
+            await message.reply(cardText + `-# This command will not run as expected if you have any card's alias setup.`);
         }
         if (message.content.startsWith(".?work")) {
             const availableCards = [...embed.description.matchAll(/\*\*`([^`]+)`\*\*.*\*\*(.+?)\*\*$/gm)].map((match) => ({
@@ -77,7 +94,7 @@ exports.default = {
             const availableLabels = allLabels.filter((label) => !usedLabels.includes(label));
             let labelIndex = 0;
             for (const { code, name } of availableCards) {
-                if (jobBoardHealthyCards.some((card) => card.name === name))
+                if (jobBoardHealthyCards.some((card) => name.startsWith(card.name)))
                     continue;
                 if (labelIndex >= availableLabels.length)
                     break;
