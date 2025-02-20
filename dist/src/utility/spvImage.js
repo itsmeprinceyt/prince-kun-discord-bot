@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateSPVImage = generateSPVImage;
 const canvas_1 = require("canvas");
 async function generateSPVImage(spv) {
-    const width = 100;
+    const width = 90;
     const height = 100;
     const canvas = (0, canvas_1.createCanvas)(width, height);
     const ctx = canvas.getContext("2d");

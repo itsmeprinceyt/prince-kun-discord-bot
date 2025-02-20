@@ -1,7 +1,7 @@
 import { createCanvas } from "canvas";
 
 export async function generateSPVImage(spv: number): Promise<Buffer> {
-    const width = 100;
+    const width = 90;
     const height = 100;
     const canvas = createCanvas(width, height);
     const ctx = canvas.getContext("2d");
