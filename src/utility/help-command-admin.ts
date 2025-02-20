@@ -1,9 +1,10 @@
 export const HelpDescriptionAdmin = 
     `**🚀 Bot & Admin Commands!**\n` +
-    `> 🔸 \`.?bot                       \`\n` +
-    `> 🔸 \`.?help-force                \`\n` +
     `> 🔸 \`/admin                      \`\n` +
+    `> 🔸 \`.?bot                       \`\n` +
     `> 🔸 \`/bot-updates                \`\n` +
+    `> 🔸 \`/export                     \`\n` +
+    `> 🔸 \`.?help-force                \`\n` +
     `> 🔸 \`/server-updates             \`\n\n` +
 
     `**🚀 Moderation Commands!**\n` +
