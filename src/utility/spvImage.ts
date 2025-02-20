@@ -1,7 +1,11 @@
-import { createCanvas } from "canvas";
+import { createCanvas, registerFont } from "canvas";
+import path from "path";
+
+const fontPath = path.join(__dirname, "../public/FONT", "Arial-Bold.ttf");
+registerFont(fontPath, { family: "Arial" });
 
 export async function generateSPVImage(spv: number): Promise<Buffer> {
-    const width = 90;
+    const width = 100;
     const height = 100;
     const canvas = createCanvas(width, height);
     const ctx = canvas.getContext("2d");

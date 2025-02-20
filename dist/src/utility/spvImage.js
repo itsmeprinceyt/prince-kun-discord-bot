@@ -1,9 +1,15 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateSPVImage = generateSPVImage;
 const canvas_1 = require("canvas");
+const path_1 = __importDefault(require("path"));
+const fontPath = path_1.default.join(__dirname, "../public/FONT", "Arial-Bold.ttf");
+(0, canvas_1.registerFont)(fontPath, { family: "Arial" });
 async function generateSPVImage(spv) {
-    const width = 90;
+    const width = 100;
     const height = 100;
     const canvas = (0, canvas_1.createCanvas)(width, height);
     const ctx = canvas.getContext("2d");
