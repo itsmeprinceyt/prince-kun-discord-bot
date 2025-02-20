@@ -51,7 +51,7 @@ exports.default = {
                 await message.reply("✅ All cards are already healthy in the Job Board.");
                 return;
             }
-            const cardText = `✅ I've learned that there ${count === 1 ? "is" : "are"} ${count} healthy ${count === 1 ? "card" : "cards"} in the Job Board.\n Type \`kc o:eff\` and reply your collection with \`.?work\``;
+            const cardText = `✅ I've learned that there ${count === 1 ? "is" : "are"} ${count} healthy ${count === 1 ? "card" : "cards"} in the Job Board.\n Type \`kc o:eff\` and reply your collection with \`.?work\`\n -# This command will not run as expected if you have any card's alias setup.`;
             await message.reply(cardText);
         }
         if (message.content.startsWith(".?work")) {
