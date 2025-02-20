@@ -14,11 +14,13 @@ export const HelpDescriptionAdmin =
     `> 🔸 \`/mega-purge                 \`\n\n` +
 
     `**🚀 Role Management Commands!**\n` +
+    `> 🔸 \`/set-bot-tester             \`\n` +
     `> 🔸 \`/set-client                 \`\n` +
     `> 🔸 \`/set-code-poster-role       \`\n` +
     `> 🔸 \`/set-leaker                 \`\n` +
     `> 🔸 \`/set-mod                    \`\n` +
     `> 🔸 \`/set-shop-manager-role      \`\n` +
+    `> 🔸 \`/remove-bot-tester          \`\n` +
     `> 🔸 \`/remove-client              \`\n` +
     `> 🔸 \`/remove-code-poster-role    \`\n` +
     `> 🔸 \`/remove-leaker              \`\n` +

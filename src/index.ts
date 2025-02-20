@@ -68,7 +68,7 @@ async function startBot() {
                             .map(member => member.displayName);
                         allMembers = allMembers.concat(members);
                     } catch (error) {
-                        console.error(`[ ERROR ] Could not fetch members from guild: ${guildId}`, error);
+                        console.log(chalk.cyan(`[ INFO ] Setting 'over y'all souls' as default activity as Member's information didn't arrived at time from the Guild. `));
                     }
                 }
 
@@ -88,8 +88,7 @@ async function startBot() {
                 });
 
             } catch (error) {
-                console.error("[ ERROR ] Failed to update presence:", error);
-                console.log(chalk.cyan(`[ INFO ] Setting 'over y'all souls' as default activity. `));
+                console.log(chalk.cyan(`[ INFO ] Setting 'over y'all souls' as default activity as Member's information didn't arrived at time from the Guild. `));
                 c.user.setPresence({
                     status: "dnd",
                     activities: [
