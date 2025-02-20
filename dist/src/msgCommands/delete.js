@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const botId_1 = require("../utility/botId");
 const allowedBotIds = [botId_1.BOT_ID[0].roleId, botId_1.BOT_ID[1].roleId, botId_1.BOT_ID[2].roleId, botId_1.BOT_ID[3].roleId];
+const Mazoku = botId_1.BOT_ID[2].roleId;
+const Lumina = botId_1.BOT_ID[3].roleId;
 exports.default = {
     triggers: [".?delete"],
     async execute(message) {
@@ -12,6 +14,30 @@ exports.default = {
             return;
         if (!repliedTo.author.bot || !allowedBotIds.includes(repliedTo.author.id))
             return;
+        const embed = repliedTo.embeds[0];
+        const embedTitle = embed.title || "";
+        const embedAuthor = embed.author?.name || "";
+        const embedDescription = embed.description || "";
+        const embedFooter = embed.footer?.text || "";
+        const userDisplayName = message.member?.displayName || message.author.username;
+        const globalName = message.author.globalName ?? message.author.username;
+        const userUsername = message.author.username;
+        const userCapitalizedUsername = userUsername.charAt(0).toUpperCase() + userUsername.slice(1);
+        const userId = message.author.id;
+        const contentToCheck = `${embedTitle} ${embedAuthor} ${embedDescription} ${embedFooter}`;
+        if (contentToCheck.includes(userDisplayName) ||
+            contentToCheck.includes(userUsername) ||
+            contentToCheck.includes(userCapitalizedUsername) ||
+            contentToCheck.includes(`<@${userId}>`) ||
+            contentToCheck.includes(globalName)) {
+            await repliedTo.delete();
+            const replyMessage = await message.reply("✅ Bot message deleted successfully." + '\n' + '-# Supported bot\'s: Karuta / Sofi / Mazoku / Lumina');
+            setTimeout(async () => {
+                await replyMessage.delete().catch(console.error);
+                await message.delete().catch(console.error);
+            }, 5000);
+            return;
+        }
         let triggeredByUser = false;
         if (repliedTo.reference) {
             const originalMessage = await message.channel.messages.fetch(repliedTo.reference.messageId).catch(() => null);
@@ -29,7 +55,7 @@ exports.default = {
         }
         try {
             await repliedTo.delete();
-            const replyMessage = await message.reply("✅ Bot message deleted successfully." + '\n' + '-# Supported bot\'s: Karuta & Sofi');
+            const replyMessage = await message.reply("✅ Bot message deleted successfully." + '\n' + '-# Supported bot\'s: Karuta / Sofi / Mazoku / Lumina');
             setTimeout(async () => {
                 await replyMessage.delete().catch(console.error);
                 await message.delete().catch(console.error);
