@@ -144,7 +144,7 @@ const referring = {
         if (price >= 300) {
             const referralTicketsEarned = Math.floor(price / 300);
             await db_1.default.query("UPDATE users SET refer_tickets = refer_tickets + ?, total_purchases = total_purchases + 1 WHERE user_id = ?", [referralTicketsEarned, referred.id]);
-            rewardText = `<@${referred.id}> earned yourself ${referralTicketsEarned} which you can convert to 💵 PP Cash by referring your friend!**\n\n`;
+            rewardText = `<@${referred.id}>, you earned yourself **${referralTicketsEarned} Referral Ticket🎟️** which you can convert to 💵 PP Cash by referring your friend!**\n\n`;
         }
         else if (price > 0) {
             await db_1.default.query("UPDATE users SET total_purchases = total_purchases + 1 WHERE user_id = ?", [referred.id]);
