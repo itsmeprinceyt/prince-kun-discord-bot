@@ -7,7 +7,8 @@ import {
   EmbedBuilder,
   ComponentType,
   GuildMember,
-  User
+  User,
+  AttachmentBuilder
 } from "discord.js";
 import moment from "moment-timezone";
 
@@ -15,6 +16,8 @@ import pool from "../db";
 import { Command } from "../types/Command";
 import { logger_custom } from "../utility/logger-custom";
 import { ItsMePrinceRules } from "../utility/itsmeprince-rules";
+import { calculateSPV } from "../utility/spvCalculator";
+import { generateSPVImage } from "../utility/spvImage";
 import { EMOTES } from "../utility/emotes";
 const GC = EMOTES[0].roleId;
 const YC = EMOTES[1].roleId;
@@ -66,6 +69,10 @@ const profileCommand: Command = {
       const avatarURL = mentionedUser && rows.length > 0
         ? mentionedUser.displayAvatarURL()
         : interaction.user.displayAvatarURL();
+      const spv = calculateSPV(pp_cash, refer_tickets, total_purchases, total_referred);
+      const spvRounded = Math.round(spv);
+      const imageBuffer = await generateSPVImage(spvRounded);
+      const attachment = new AttachmentBuilder(imageBuffer, { name: "spv.png" });
 
       const embed = new EmbedBuilder()
         .setColor(0xeeff00)
@@ -73,13 +80,14 @@ const profileCommand: Command = {
           name: "Prince-Kun • Profile Info",
           iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
         })
-        .setThumbnail(avatarURL)
+        .setThumbnail("attachment://spv.png")
         .setTitle("ItsMe Prince Shop")
         .setDescription(
           `${YC} **Name:** <@${targetUserId}>\n` +
           `${YC} **Username:** ${targetUsername}\n` +
           `${YC} **UserID:** ${targetUserId}\n` +
-          `${YC} **Registered on:** ${formattedDate}\n\n` +
+          `${YC} **Registered on:** ${formattedDate}\n` +
+          `${YC} **__SPV:__** ${spv}\n\n` +
           `**📦 Inventory & Stats**\n` +
           `${YC} \`PP Cash          \` • \`${AA}\`\n` +
           `${YC} \`Referral Tickets \` • \`${BB}\`\n` +
@@ -91,7 +99,7 @@ const profileCommand: Command = {
         .setFooter({ text: `${targetUsername}`, iconURL: avatarURL })
         .setTimestamp();
 
-      await interaction.reply({ embeds: [embed] });
+      await interaction.reply({ embeds: [embed], files: [attachment] });
       const MessageString = `[ DATABASE ] User ${targetDisplayName} (${targetUserId}) fetched profile`;
       logger_custom(targetDisplayName, "profile", MessageString);
       return;

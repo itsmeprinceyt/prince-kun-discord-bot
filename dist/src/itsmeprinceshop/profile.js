@@ -8,6 +8,8 @@ const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const db_1 = __importDefault(require("../db"));
 const logger_custom_1 = require("../utility/logger-custom");
 const itsmeprince_rules_1 = require("../utility/itsmeprince-rules");
+const spvCalculator_1 = require("../utility/spvCalculator");
+const spvImage_1 = require("../utility/spvImage");
 const emotes_1 = require("../utility/emotes");
 const GC = emotes_1.EMOTES[0].roleId;
 const YC = emotes_1.EMOTES[1].roleId;
@@ -50,18 +52,23 @@ const profileCommand = {
             const avatarURL = mentionedUser && rows.length > 0
                 ? mentionedUser.displayAvatarURL()
                 : interaction.user.displayAvatarURL();
+            const spv = (0, spvCalculator_1.calculateSPV)(pp_cash, refer_tickets, total_purchases, total_referred);
+            const spvRounded = Math.round(spv);
+            const imageBuffer = await (0, spvImage_1.generateSPVImage)(spvRounded);
+            const attachment = new discord_js_1.AttachmentBuilder(imageBuffer, { name: "spv.png" });
             const embed = new discord_js_1.EmbedBuilder()
                 .setColor(0xeeff00)
                 .setAuthor({
                 name: "Prince-Kun • Profile Info",
                 iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
             })
-                .setThumbnail(avatarURL)
+                .setThumbnail("attachment://spv.png")
                 .setTitle("ItsMe Prince Shop")
                 .setDescription(`${YC} **Name:** <@${targetUserId}>\n` +
                 `${YC} **Username:** ${targetUsername}\n` +
                 `${YC} **UserID:** ${targetUserId}\n` +
-                `${YC} **Registered on:** ${formattedDate}\n\n` +
+                `${YC} **Registered on:** ${formattedDate}\n` +
+                `${YC} **__SPV:__** ${spv}\n\n` +
                 `**📦 Inventory & Stats**\n` +
                 `${YC} \`PP Cash          \` • \`${AA}\`\n` +
                 `${YC} \`Referral Tickets \` • \`${BB}\`\n` +
@@ -72,7 +79,7 @@ const profileCommand = {
                 `${GC} To know rules & information, type \`.?shoprules\``)
                 .setFooter({ text: `${targetUsername}`, iconURL: avatarURL })
                 .setTimestamp();
-            await interaction.reply({ embeds: [embed] });
+            await interaction.reply({ embeds: [embed], files: [attachment] });
             const MessageString = `[ DATABASE ] User ${targetDisplayName} (${targetUserId}) fetched profile`;
             (0, logger_custom_1.logger_custom)(targetDisplayName, "profile", MessageString);
             return;

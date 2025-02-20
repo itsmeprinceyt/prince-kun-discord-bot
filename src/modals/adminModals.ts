@@ -9,10 +9,13 @@ import {
     TextInputStyle,
     ModalBuilder,
     MessageFlags,
+    AttachmentBuilder
 } from "discord.js";
 import pool from "../db";
 import moment from "moment-timezone";
 import { logger_custom } from "../utility/logger-custom";
+import { calculateSPV } from "../utility/spvCalculator";
+import { generateSPVImage } from "../utility/spvImage";
 import { EMOTES } from "../utility/emotes";
 const GC = EMOTES[0].roleId;
 const YC = EMOTES[1].roleId;
@@ -73,6 +76,10 @@ export async function handleSelectUserSubmit(interaction: ModalSubmitInteraction
         .tz("Asia/Kolkata", true)
         .format("DD MMM YYYY, hh:mm A");
     logger_custom("ADMIN", "admin", `Selected user: ${selectedUser.user_id}`);
+    const spv = calculateSPV(pp_cash, refer_tickets, total_purchases, total_referred);
+    const spvRounded = Math.round(spv);
+    const imageBuffer = await generateSPVImage(spvRounded);
+    const attachment = new AttachmentBuilder(imageBuffer, { name: "spv.png" });
 
     const userEmbed = new EmbedBuilder()
         .setColor(0xeeff00)
@@ -80,31 +87,24 @@ export async function handleSelectUserSubmit(interaction: ModalSubmitInteraction
             name: "Prince-Kun • Profile Info",
             iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
         })
-        .setThumbnail(selectedAvatar)
+        .setThumbnail("attachment://spv.png")
         .setTitle("ItsMe Prince Shop")
         .setDescription(
             `${YC} **Name:** <@${selectedUser.user_id}>\n` +
             `${YC} **Username:** ${selectedUsername}\n` +
             `${YC} **UserID:** ${selectedUser.user_id}\n` +
-            `${YC} **Registered on:** ${formattedDate}\n\n` +
-
-            `**Stats**\n` +
+            `${YC} **Registered on:** ${formattedDate}\n` +
+            `${YC} **__SPV:__** ${spv}\n\n` +
+            `**📦 Inventory & Stats**\n` +
             `${YC} \`PP Cash          \` • \`${AA}\`\n` +
             `${YC} \`Referral Tickets \` • \`${BB}\`\n` +
             `${YC} \`Total Purchases  \` • \`${CC}\`\n` +
             `${YC} \`Total Referred   \` • \`${DD}\`\n\n` +
-
-            `**Extra**\n` +
+            `**🍱 Extra**\n` +
             `${GC} \`1 PP Cash = 1₹\`\n` +
             `${GC} To know rules & information, type \`.?shoprules\``)
-        .setFooter({
-            text: `${selectedUsername} | ${new Date().toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "Asia/Kolkata",
-            })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
-            iconURL: selectedAvatar,
-        });
+        .setFooter({ text: selectedUsername, iconURL: selectedAvatar })
+        .setTimestamp();
 
     const userRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
         new ButtonBuilder().setCustomId(`modify_ppCash_${selectedUser.user_id}`).setLabel("💰 Modify PP Cash").setStyle(ButtonStyle.Success),
@@ -117,7 +117,7 @@ export async function handleSelectUserSubmit(interaction: ModalSubmitInteraction
         new ButtonBuilder().setCustomId(`refresh_${selectedUser.user_id}`).setLabel("🔄 Refresh").setStyle(ButtonStyle.Secondary)
     );
 
-    await interaction.reply({ embeds: [userEmbed], components: [userRow, navigationRow], flags: 64 });
+    await interaction.reply({ embeds: [userEmbed], files: [attachment], components: [userRow, navigationRow], flags: 64 });
 }
 
 export async function handleRefresh(interaction: ButtonInteraction) {
@@ -139,6 +139,10 @@ export async function handleRefresh(interaction: ButtonInteraction) {
     const selectedDiscordUser = await interaction.client.users.fetch(userId).catch(() => null);
     const selectedUsername = selectedDiscordUser?.username || "Unknown User";
     const selectedAvatar = selectedDiscordUser?.displayAvatarURL() || interaction.client.user.displayAvatarURL();
+    const spv = calculateSPV(pp_cash, refer_tickets, total_purchases, total_referred);
+    const spvRounded = Math.round(spv);
+    const imageBuffer = await generateSPVImage(spvRounded);
+    const attachment = new AttachmentBuilder(imageBuffer, { name: "spv.png" });
 
     const userEmbed = new EmbedBuilder()
         .setColor(0xeeff00)
@@ -146,13 +150,14 @@ export async function handleRefresh(interaction: ButtonInteraction) {
             name: "Prince-Kun • Profile Info",
             iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
         })
-        .setThumbnail(selectedAvatar)
+        .setThumbnail("attachment://spv.png")
         .setTitle("ItsMe Prince Shop")
         .setDescription(
             `${YC} **Name:** <@${userId}>\n` +
             `${YC} **Username:** ${selectedUsername}\n` +
             `${YC} **UserID:** ${userId}\n` +
-            `${YC} **Registered on:** ${formattedDate}\n\n` +
+            `${YC} **Registered on:** ${formattedDate}\n` +
+            `${YC} **__SPV:__** ${spv}\n\n` +
             `**📦 Inventory & Stats**\n` +
             `${YC} \`PP Cash          \` • \`${String(pp_cash).padEnd(8)}\`\n` +
             `${YC} \`Referral Tickets \` • \`${String(refer_tickets).padEnd(8)}\`\n` +
@@ -161,8 +166,8 @@ export async function handleRefresh(interaction: ButtonInteraction) {
             `**🍱 Extra**\n` +
             `${GC} \`1 PP Cash = 1₹\`\n` +
             `${GC} To know rules & information, type \`.?shoprules\``)
-        .setFooter({ text: `${selectedUsername}`, iconURL: selectedAvatar })
-        .setTimestamp();
+            .setFooter({ text: selectedUsername, iconURL: selectedAvatar })
+            .setTimestamp();
 
     const userRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
         new ButtonBuilder().setCustomId(`modify_ppCash_${userId}`).setLabel("💵 Modify PP Cash").setStyle(ButtonStyle.Success),
@@ -176,7 +181,7 @@ export async function handleRefresh(interaction: ButtonInteraction) {
         new ButtonBuilder().setCustomId(`refresh_${userId}`).setLabel("🔄 Refresh").setStyle(ButtonStyle.Secondary)
     );
 
-    await interaction.update({ embeds: [userEmbed], components: [userRow, controlRow] });
+    await interaction.update({ embeds: [userEmbed], files: [attachment], components: [userRow, controlRow] });
 }
 
 export async function handleModifyPP(interaction: ButtonInteraction) {

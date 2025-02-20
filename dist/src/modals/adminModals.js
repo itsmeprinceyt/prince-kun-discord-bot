@@ -16,6 +16,8 @@ const discord_js_1 = require("discord.js");
 const db_1 = __importDefault(require("../db"));
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const logger_custom_1 = require("../utility/logger-custom");
+const spvCalculator_1 = require("../utility/spvCalculator");
+const spvImage_1 = require("../utility/spvImage");
 const emotes_1 = require("../utility/emotes");
 const GC = emotes_1.EMOTES[0].roleId;
 const YC = emotes_1.EMOTES[1].roleId;
@@ -61,37 +63,36 @@ async function handleSelectUserSubmit(interaction) {
         .tz("Asia/Kolkata", true)
         .format("DD MMM YYYY, hh:mm A");
     (0, logger_custom_1.logger_custom)("ADMIN", "admin", `Selected user: ${selectedUser.user_id}`);
+    const spv = (0, spvCalculator_1.calculateSPV)(pp_cash, refer_tickets, total_purchases, total_referred);
+    const spvRounded = Math.round(spv);
+    const imageBuffer = await (0, spvImage_1.generateSPVImage)(spvRounded);
+    const attachment = new discord_js_1.AttachmentBuilder(imageBuffer, { name: "spv.png" });
     const userEmbed = new discord_js_1.EmbedBuilder()
         .setColor(0xeeff00)
         .setAuthor({
         name: "Prince-Kun • Profile Info",
         iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
     })
-        .setThumbnail(selectedAvatar)
+        .setThumbnail("attachment://spv.png")
         .setTitle("ItsMe Prince Shop")
         .setDescription(`${YC} **Name:** <@${selectedUser.user_id}>\n` +
         `${YC} **Username:** ${selectedUsername}\n` +
         `${YC} **UserID:** ${selectedUser.user_id}\n` +
-        `${YC} **Registered on:** ${formattedDate}\n\n` +
-        `**Stats**\n` +
+        `${YC} **Registered on:** ${formattedDate}\n` +
+        `${YC} **__SPV:__** ${spv}\n\n` +
+        `**📦 Inventory & Stats**\n` +
         `${YC} \`PP Cash          \` • \`${AA}\`\n` +
         `${YC} \`Referral Tickets \` • \`${BB}\`\n` +
         `${YC} \`Total Purchases  \` • \`${CC}\`\n` +
         `${YC} \`Total Referred   \` • \`${DD}\`\n\n` +
-        `**Extra**\n` +
+        `**🍱 Extra**\n` +
         `${GC} \`1 PP Cash = 1₹\`\n` +
         `${GC} To know rules & information, type \`.?shoprules\``)
-        .setFooter({
-        text: `${selectedUsername} | ${new Date().toLocaleTimeString("en-GB", {
-            hour: "2-digit",
-            minute: "2-digit",
-            timeZone: "Asia/Kolkata",
-        })} ${new Date().getHours() >= 12 ? "PM" : "AM"}`,
-        iconURL: selectedAvatar,
-    });
+        .setFooter({ text: selectedUsername, iconURL: selectedAvatar })
+        .setTimestamp();
     const userRow = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder().setCustomId(`modify_ppCash_${selectedUser.user_id}`).setLabel("💰 Modify PP Cash").setStyle(discord_js_1.ButtonStyle.Success), new discord_js_1.ButtonBuilder().setCustomId(`modify_referral_${selectedUser.user_id}`).setLabel("🎟 Modify Referral Tickets").setStyle(discord_js_1.ButtonStyle.Primary), new discord_js_1.ButtonBuilder().setCustomId(`modify_purchases_${selectedUser.user_id}`).setLabel("🛒 Modify Purchases").setStyle(discord_js_1.ButtonStyle.Success), new discord_js_1.ButtonBuilder().setCustomId(`modify_referred_${selectedUser.user_id}`).setLabel("👥 Modify Total Referred").setStyle(discord_js_1.ButtonStyle.Primary), new discord_js_1.ButtonBuilder().setCustomId(`delete_${selectedUser.user_id}`).setLabel("❌ Delete User").setStyle(discord_js_1.ButtonStyle.Danger));
     const navigationRow = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder().setCustomId(`refresh_${selectedUser.user_id}`).setLabel("🔄 Refresh").setStyle(discord_js_1.ButtonStyle.Secondary));
-    await interaction.reply({ embeds: [userEmbed], components: [userRow, navigationRow], flags: 64 });
+    await interaction.reply({ embeds: [userEmbed], files: [attachment], components: [userRow, navigationRow], flags: 64 });
 }
 async function handleRefresh(interaction) {
     (0, logger_custom_1.logger_custom)("ADMIN", "admin", "Admin clicked Refresh button");
@@ -106,18 +107,23 @@ async function handleRefresh(interaction) {
     const selectedDiscordUser = await interaction.client.users.fetch(userId).catch(() => null);
     const selectedUsername = selectedDiscordUser?.username || "Unknown User";
     const selectedAvatar = selectedDiscordUser?.displayAvatarURL() || interaction.client.user.displayAvatarURL();
+    const spv = (0, spvCalculator_1.calculateSPV)(pp_cash, refer_tickets, total_purchases, total_referred);
+    const spvRounded = Math.round(spv);
+    const imageBuffer = await (0, spvImage_1.generateSPVImage)(spvRounded);
+    const attachment = new discord_js_1.AttachmentBuilder(imageBuffer, { name: "spv.png" });
     const userEmbed = new discord_js_1.EmbedBuilder()
         .setColor(0xeeff00)
         .setAuthor({
         name: "Prince-Kun • Profile Info",
         iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
     })
-        .setThumbnail(selectedAvatar)
+        .setThumbnail("attachment://spv.png")
         .setTitle("ItsMe Prince Shop")
         .setDescription(`${YC} **Name:** <@${userId}>\n` +
         `${YC} **Username:** ${selectedUsername}\n` +
         `${YC} **UserID:** ${userId}\n` +
-        `${YC} **Registered on:** ${formattedDate}\n\n` +
+        `${YC} **Registered on:** ${formattedDate}\n` +
+        `${YC} **__SPV:__** ${spv}\n\n` +
         `**📦 Inventory & Stats**\n` +
         `${YC} \`PP Cash          \` • \`${String(pp_cash).padEnd(8)}\`\n` +
         `${YC} \`Referral Tickets \` • \`${String(refer_tickets).padEnd(8)}\`\n` +
@@ -126,11 +132,11 @@ async function handleRefresh(interaction) {
         `**🍱 Extra**\n` +
         `${GC} \`1 PP Cash = 1₹\`\n` +
         `${GC} To know rules & information, type \`.?shoprules\``)
-        .setFooter({ text: `${selectedUsername}`, iconURL: selectedAvatar })
+        .setFooter({ text: selectedUsername, iconURL: selectedAvatar })
         .setTimestamp();
     const userRow = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder().setCustomId(`modify_ppCash_${userId}`).setLabel("💵 Modify PP Cash").setStyle(discord_js_1.ButtonStyle.Success), new discord_js_1.ButtonBuilder().setCustomId(`modify_referral_${userId}`).setLabel("🎟️ Modify Referral Tickets").setStyle(discord_js_1.ButtonStyle.Primary), new discord_js_1.ButtonBuilder().setCustomId(`modify_purchases_${userId}`).setLabel("🛒 Modify Purchases").setStyle(discord_js_1.ButtonStyle.Success), new discord_js_1.ButtonBuilder().setCustomId(`modify_referred_${userId}`).setLabel("👥 Modify Total Referred").setStyle(discord_js_1.ButtonStyle.Primary), new discord_js_1.ButtonBuilder().setCustomId(`delete_${userId}`).setLabel("Delete User").setStyle(discord_js_1.ButtonStyle.Danger));
     const controlRow = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder().setCustomId(`refresh_${userId}`).setLabel("🔄 Refresh").setStyle(discord_js_1.ButtonStyle.Secondary));
-    await interaction.update({ embeds: [userEmbed], components: [userRow, controlRow] });
+    await interaction.update({ embeds: [userEmbed], files: [attachment], components: [userRow, controlRow] });
 }
 async function handleModifyPP(interaction) {
     (0, logger_custom_1.logger_custom)("ADMIN", "admin", "Admin clicked modify PP cash button");
