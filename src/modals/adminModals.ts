@@ -94,7 +94,7 @@ export async function handleSelectUserSubmit(interaction: ModalSubmitInteraction
             `${YC} **Username:** ${selectedUsername}\n` +
             `${YC} **UserID:** ${selectedUser.user_id}\n` +
             `${YC} **Registered on:** ${formattedDate}\n` +
-            `${YC} **__SPV:__** ${spv}\n\n` +
+            `${YC} **__SPV:__** ${spv.toFixed(2)}\n\n` +
             `**📦 Inventory & Stats**\n` +
             `${YC} \`PP Cash          \` • \`${AA}\`\n` +
             `${YC} \`Referral Tickets \` • \`${BB}\`\n` +
@@ -157,7 +157,7 @@ export async function handleRefresh(interaction: ButtonInteraction) {
             `${YC} **Username:** ${selectedUsername}\n` +
             `${YC} **UserID:** ${userId}\n` +
             `${YC} **Registered on:** ${formattedDate}\n` +
-            `${YC} **__SPV:__** ${spv}\n\n` +
+            `${YC} **__SPV:__** ${spv.toFixed(2)}\n\n` +
             `**📦 Inventory & Stats**\n` +
             `${YC} \`PP Cash          \` • \`${String(pp_cash).padEnd(8)}\`\n` +
             `${YC} \`Referral Tickets \` • \`${String(refer_tickets).padEnd(8)}\`\n` +

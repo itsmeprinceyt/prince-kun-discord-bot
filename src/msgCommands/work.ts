@@ -68,8 +68,12 @@ export default {
                 await message.reply("✅ All cards are already healthy in the Job Board.");
                 return;
             }
-            const cardText = `✅ I've learned that there ${count === 1 ? "is" : "are"} ${count} healthy ${count === 1 ? "card" : "cards"} in the Job Board.\n Type \`kc o:eff\` and reply your collection with \`.?work\`\n`;
+            const healthyCount = jobBoardHealthyCards.length;
+            const injuredCount = lines.filter(line => line.match(/^(🇦|🇧|🇨|🇩|🇪)\s(.+?)\s·\s\*\*(\d+)\*\*\sEffort\s·\s`Injured`/)).length;
+
+            const cardText = `✅ I've learned that there ${healthyCount === 1 ? "is" : "are"} ${healthyCount} healthy ${healthyCount === 1 ? "card" : "cards"} and ${injuredCount} injured ${injuredCount === 1 ? "card" : "cards"} in the Job Board.\n Type \`kc o:eff\` and reply your collection with \`.?work\`\n`;
             await message.reply(cardText + `-# This command will not run as expected if you have any card's alias setup.`);
+
         }
 
         if (message.content.startsWith(".?work")) {

@@ -68,7 +68,7 @@ const profileCommand = {
                 `${YC} **Username:** ${targetUsername}\n` +
                 `${YC} **UserID:** ${targetUserId}\n` +
                 `${YC} **Registered on:** ${formattedDate}\n` +
-                `${YC} **__SPV:__** ${spv}\n\n` +
+                `${YC} **__SPV:__** ${spv.toFixed(2)}\n\n` +
                 `**📦 Inventory & Stats**\n` +
                 `${YC} \`PP Cash          \` • \`${AA}\`\n` +
                 `${YC} \`Referral Tickets \` • \`${BB}\`\n` +
