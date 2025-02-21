@@ -8,6 +8,7 @@ const db_1 = __importDefault(require("../db"));
 const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
 const logger_custom_1 = require("../utility/logger-custom");
 const text_channels_1 = require("../utility/text-channels");
+const spvCalculator_1 = require("../utility/spvCalculator");
 const rolePerms_1 = require("../utility/rolePerms");
 const PREDEFINED_SERVER_ID = "310675536340844544";
 const ORDER_LOG_CHANNEL_ID = text_channels_1.TextChannels[1].roleId;
@@ -62,7 +63,6 @@ const referring = {
         let referrer_username = referrer.username;
         let referrer_avatar = referrer.displayAvatarURL();
         let referred_username = referred.username;
-        //let referred_avatar: string = referred.displayAvatarURL();
         let imageUrl = ``;
         let boughtText = ``;
         let logMessage;
@@ -111,7 +111,13 @@ const referring = {
             (0, logger_custom_1.logger_custom)("ADMIN", "item-bought", logMessage);
             return;
         }
-        await db_1.default.query("UPDATE users SET refer_tickets = refer_tickets - 1, total_referred = total_referred + 1, pp_cash = pp_cash + 10 WHERE user_id = ?", [referrer.id]);
+        let { pp_cash, refer_tickets, total_purchases, total_referred } = referrerRows[0];
+        let spv = parseFloat(referrerRows[0].spv) || 0.00;
+        refer_tickets -= 1;
+        total_referred += 1;
+        pp_cash += 10;
+        spv = (0, spvCalculator_1.calculateSPV)(pp_cash, refer_tickets, total_purchases, total_referred);
+        await db_1.default.query("UPDATE users SET refer_tickets = ?, total_referred = ?, pp_cash = ?, spv = ? WHERE user_id = ?", [refer_tickets, total_referred, pp_cash, parseFloat(spv.toFixed(2)), referrer.id]);
         const [referredRows] = await db_1.default.query("SELECT * FROM users WHERE user_id = ?", [referred.id]);
         if (!referredRows || referredRows.length === 0) {
             const embed = new discord_js_1.EmbedBuilder()
@@ -143,11 +149,20 @@ const referring = {
         let rewardText = ``;
         if (price >= 300) {
             const referralTicketsEarned = Math.floor(price / 300);
-            await db_1.default.query("UPDATE users SET refer_tickets = refer_tickets + ?, total_purchases = total_purchases + 1 WHERE user_id = ?", [referralTicketsEarned, referred.id]);
+            let { pp_cash, refer_tickets, total_purchases, total_referred } = referredRows[0];
+            let spv = parseFloat(referredRows[0].spv) || 0.00;
+            refer_tickets += referralTicketsEarned;
+            total_purchases += 1;
+            spv = (0, spvCalculator_1.calculateSPV)(pp_cash, refer_tickets, total_purchases, total_referred);
+            await db_1.default.query("UPDATE users SET refer_tickets = ?, total_purchases = ?, spv = ? WHERE user_id = ?", [refer_tickets, total_purchases, parseFloat(spv.toFixed(2)), referred.id]);
             rewardText = `<@${referred.id}>, you earned yourself **${referralTicketsEarned} Referral Ticket🎟️** which you can convert to 💵 PP Cash by referring your friend!**\n\n`;
         }
         else if (price > 0) {
-            await db_1.default.query("UPDATE users SET total_purchases = total_purchases + 1 WHERE user_id = ?", [referred.id]);
+            let { pp_cash, refer_tickets, total_purchases, total_referred } = referrerRows[0];
+            let spv = parseFloat(referrerRows[0].spv) || 0.00;
+            total_purchases += 1;
+            spv = (0, spvCalculator_1.calculateSPV)(pp_cash, refer_tickets, total_purchases, total_referred);
+            await db_1.default.query("UPDATE users SET total_purchases = ?, spv = ? WHERE user_id = ?", [total_purchases, parseFloat(spv.toFixed(2)), referred.id]);
         }
         const embed = new discord_js_1.EmbedBuilder()
             .setColor(0x00ff00)

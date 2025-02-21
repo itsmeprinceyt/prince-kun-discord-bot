@@ -8,7 +8,6 @@ const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const db_1 = __importDefault(require("../db"));
 const logger_custom_1 = require("../utility/logger-custom");
 const itsmeprince_rules_1 = require("../utility/itsmeprince-rules");
-const spvCalculator_1 = require("../utility/spvCalculator");
 const spvImage_1 = require("../utility/spvImage");
 const emotes_1 = require("../utility/emotes");
 const GC = emotes_1.EMOTES[0].roleId;
@@ -39,9 +38,10 @@ const profileCommand = {
                 return;
             }
         }
-        const [rows] = await db_1.default.query("SELECT pp_cash, refer_tickets, total_purchases, registration_date, total_referred FROM users WHERE user_id = ?", [targetUserId]);
+        const [rows] = await db_1.default.query("SELECT pp_cash, refer_tickets, total_purchases, registration_date, total_referred, spv FROM users WHERE user_id = ?", [targetUserId]);
         if (rows.length > 0) {
             const { pp_cash, refer_tickets, total_purchases, registration_date, total_referred } = rows[0];
+            const spv = parseFloat(rows[0].spv) || 0.00;
             const AA = String(pp_cash).padEnd(8, " ");
             const BB = String(refer_tickets).padEnd(8, " ");
             const CC = String(total_purchases).padEnd(8, " ");
@@ -52,7 +52,6 @@ const profileCommand = {
             const avatarURL = mentionedUser && rows.length > 0
                 ? mentionedUser.displayAvatarURL()
                 : interaction.user.displayAvatarURL();
-            const spv = (0, spvCalculator_1.calculateSPV)(pp_cash, refer_tickets, total_purchases, total_referred);
             const spvRounded = Math.round(spv);
             const imageBuffer = await (0, spvImage_1.generateSPVImage)(spvRounded);
             const attachment = new discord_js_1.AttachmentBuilder(imageBuffer, { name: "spv.png" });

@@ -11,6 +11,7 @@ import { Command } from "../types/Command";
 import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
 import { logger_custom } from "../utility/logger-custom";
 import { TextChannels } from "../utility/text-channels";
+import { calculateSPV } from "../utility/spvCalculator";
 import { RolesPerms } from "../utility/rolePerms";
 
 const PREDEFINED_SERVER_ID = "310675536340844544";
@@ -86,7 +87,6 @@ const referring: Command = {
         let referrer_username: string = referrer.username;
         let referrer_avatar: string = referrer.displayAvatarURL();
         let referred_username: string = referred.username;
-        //let referred_avatar: string = referred.displayAvatarURL();
         let imageUrl = ``;
         let boughtText = ``;
         let logMessage: string;
@@ -141,8 +141,18 @@ const referring: Command = {
 
             return;
         }
+        let { pp_cash, refer_tickets, total_purchases, total_referred } = referrerRows[0];
+        let spv = parseFloat(referrerRows[0].spv) || 0.00;
+        refer_tickets -= 1;
+        total_referred += 1;
+        pp_cash += 10;
+        spv = calculateSPV(pp_cash, refer_tickets, total_purchases, total_referred);
 
-        await pool.query("UPDATE users SET refer_tickets = refer_tickets - 1, total_referred = total_referred + 1, pp_cash = pp_cash + 10 WHERE user_id = ?", [referrer.id]);
+        await pool.query(
+            "UPDATE users SET refer_tickets = ?, total_referred = ?, pp_cash = ?, spv = ? WHERE user_id = ?",
+            [refer_tickets, total_referred, pp_cash, parseFloat(spv.toFixed(2)), referrer.id]
+        );
+
 
         const [referredRows]: any = await pool.query("SELECT * FROM users WHERE user_id = ?", [referred.id]);
         if (!referredRows || referredRows.length === 0) {
@@ -182,13 +192,29 @@ const referring: Command = {
 
         if (price >= 300) {
             const referralTicketsEarned = Math.floor(price / 300);
-            await pool.query("UPDATE users SET refer_tickets = refer_tickets + ?, total_purchases = total_purchases + 1 WHERE user_id = ?", [referralTicketsEarned, referred.id]);
+
+            let { pp_cash, refer_tickets, total_purchases, total_referred } = referredRows[0];
+            let spv = parseFloat(referredRows[0].spv) || 0.00;
+            refer_tickets += referralTicketsEarned;
+            total_purchases += 1;
+            spv = calculateSPV(pp_cash, refer_tickets, total_purchases, total_referred);
+
+            await pool.query(
+                "UPDATE users SET refer_tickets = ?, total_purchases = ?, spv = ? WHERE user_id = ?",
+                [refer_tickets, total_purchases, parseFloat(spv.toFixed(2)), referred.id]
+            );
 
             rewardText = `<@${referred.id}>, you earned yourself **${referralTicketsEarned} Referral Ticket🎟️** which you can convert to 💵 PP Cash by referring your friend!**\n\n`;
+
         } else if (price > 0) {
+            let { pp_cash, refer_tickets, total_purchases, total_referred } = referrerRows[0];
+            let spv = parseFloat(referrerRows[0].spv) || 0.00;
+            total_purchases += 1;
+            spv = calculateSPV(pp_cash, refer_tickets, total_purchases, total_referred);
+
             await pool.query(
-                "UPDATE users SET total_purchases = total_purchases + 1 WHERE user_id = ?",
-                [referred.id]
+                "UPDATE users SET total_purchases = ?, spv = ? WHERE user_id = ?",
+                [total_purchases, parseFloat(spv.toFixed(2)), referred.id]
             );
         }
 

@@ -1,9 +1,11 @@
 import {
     Message,
-    EmbedBuilder
+    EmbedBuilder,
+    AttachmentBuilder
 } from "discord.js";
 import moment from "moment-timezone";
 import pool from "../db";
+import { generateSPVImage } from "../utility/spvImage";
 import { EMOTES } from "../utility/emotes";
 const GC = EMOTES[0].roleId;
 const YC = EMOTES[1].roleId;
@@ -24,7 +26,7 @@ const profileCommand = {
         const avatarURL = targetUser.displayAvatarURL();
 
         const [rows]: any = await pool.query(
-            "SELECT pp_cash, refer_tickets, total_purchases, registration_date, total_referred FROM users WHERE user_id = ?",
+            "SELECT pp_cash, refer_tickets, total_purchases, registration_date, total_referred, spv FROM users WHERE user_id = ?",
             [targetUserId]
         );
         if (message.mentions.users.first() && rows.length === 0) {
@@ -34,11 +36,17 @@ const profileCommand = {
         }
         if (rows.length > 0) {
             const { pp_cash, refer_tickets, total_purchases, registration_date, total_referred } = rows[0];
+            const spv = parseFloat(rows[0].spv) || 0.00;
             const AA = String(pp_cash).padEnd(8, " ");
             const BB = String(refer_tickets).padEnd(8, " ");
             const CC = String(total_purchases).padEnd(8, " ");
             const DD = String(total_referred).padEnd(8, " ");
-            const formattedDate = moment(registration_date).tz("Asia/Kolkata").format("DD MMM YYYY, hh:mm A");
+            const formattedDate = moment(registration_date)
+                .tz("Asia/Kolkata", true)
+                .format("DD MMM YYYY, hh:mm A");
+            const spvRounded = Math.round(spv);
+            const imageBuffer = await generateSPVImage(spvRounded);
+            const attachment = new AttachmentBuilder(imageBuffer, { name: "spv.png" });
 
             const embed = new EmbedBuilder()
                 .setColor(0xeeff00)
@@ -46,13 +54,14 @@ const profileCommand = {
                     name: "Prince-Kun • Profile Info",
                     iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
                 })
-                .setThumbnail(avatarURL)
+                .setThumbnail("attachment://spv.png")
                 .setTitle("ItsMe Prince Shop")
                 .setDescription(
                     `${YC} **Name:** <@${targetUserId}>\n` +
                     `${YC} **Username:** ${targetUsername}\n` +
                     `${YC} **UserID:** ${targetUserId}\n` +
-                    `${YC} **Registered on:** ${formattedDate}\n\n` +
+                    `${YC} **Registered on:** ${formattedDate}\n` +
+                    `${YC} **__SPV:__** ${spv.toFixed(2)}\n\n` +
                     `**📦 Inventory & Stats**\n` +
                     `${YC} \`PP Cash          \` • \`${AA}\`\n` +
                     `${YC} \`Referral Tickets \` • \`${BB}\`\n` +
@@ -63,7 +72,8 @@ const profileCommand = {
                     `${GC} To know rules & information, type \`.?shoprules\``)
                 .setFooter({ text: `${targetUsername}`, iconURL: avatarURL })
                 .setTimestamp();
-            await (message.channel as any).send({ embeds: [embed] });
+                
+            await (message.channel as any).send({ embeds: [embed], files: [attachment] });
             return;
         }
     }

@@ -58,9 +58,10 @@ export async function handleSelectUserSubmit(interaction: ModalSubmitInteraction
     }
 
     const [userData]: any = await pool.query(
-        "SELECT pp_cash, refer_tickets, total_purchases, registration_date, total_referred FROM users WHERE user_id = ?",
+        "SELECT * FROM users WHERE user_id = ?",
         [selectedUser.user_id]
     );
+    
 
     if (userData.length === 0) {
         await interaction.reply({ content: "❌ User data not found!", flags: 64 });
@@ -68,6 +69,7 @@ export async function handleSelectUserSubmit(interaction: ModalSubmitInteraction
     }
 
     const { pp_cash, refer_tickets, total_purchases, registration_date, total_referred } = userData[0];
+    let spv = parseFloat(userData[0].spv) || 0.00;
     const AA = String(pp_cash).padEnd(8, " ");
     const BB = String(refer_tickets).padEnd(8, " ");
     const CC = String(total_purchases).padEnd(8, " ");
@@ -76,7 +78,7 @@ export async function handleSelectUserSubmit(interaction: ModalSubmitInteraction
         .tz("Asia/Kolkata", true)
         .format("DD MMM YYYY, hh:mm A");
     logger_custom("ADMIN", "admin", `Selected user: ${selectedUser.user_id}`);
-    const spv = calculateSPV(pp_cash, refer_tickets, total_purchases, total_referred);
+    spv = calculateSPV(pp_cash, refer_tickets, total_purchases, total_referred);
     const spvRounded = Math.round(spv);
     const imageBuffer = await generateSPVImage(spvRounded);
     const attachment = new AttachmentBuilder(imageBuffer, { name: "spv.png" });
@@ -124,7 +126,7 @@ export async function handleRefresh(interaction: ButtonInteraction) {
     logger_custom("ADMIN", "admin", "Admin clicked Refresh button");
     const userId = interaction.customId.split("_")[1];
     const [userData]: any = await pool.query(
-        "SELECT pp_cash, refer_tickets, total_purchases, registration_date, total_referred FROM users WHERE user_id = ?",
+        "SELECT * FROM users WHERE user_id = ?",
         [userId]
     );
 
@@ -134,12 +136,13 @@ export async function handleRefresh(interaction: ButtonInteraction) {
     }
 
     const { pp_cash, refer_tickets, total_purchases, registration_date, total_referred } = userData[0];
+    let spv = parseFloat(userData[0].spv) || 0.00;
     const formattedDate = moment(registration_date).tz("Asia/Kolkata", true).format("DD MMM YYYY, hh:mm A");
 
     const selectedDiscordUser = await interaction.client.users.fetch(userId).catch(() => null);
     const selectedUsername = selectedDiscordUser?.username || "Unknown User";
     const selectedAvatar = selectedDiscordUser?.displayAvatarURL() || interaction.client.user.displayAvatarURL();
-    const spv = calculateSPV(pp_cash, refer_tickets, total_purchases, total_referred);
+    spv = calculateSPV(pp_cash, refer_tickets, total_purchases, total_referred);
     const spvRounded = Math.round(spv);
     const imageBuffer = await generateSPVImage(spvRounded);
     const attachment = new AttachmentBuilder(imageBuffer, { name: "spv.png" });
@@ -166,8 +169,8 @@ export async function handleRefresh(interaction: ButtonInteraction) {
             `**🍱 Extra**\n` +
             `${GC} \`1 PP Cash = 1₹\`\n` +
             `${GC} To know rules & information, type \`.?shoprules\``)
-            .setFooter({ text: selectedUsername, iconURL: selectedAvatar })
-            .setTimestamp();
+        .setFooter({ text: selectedUsername, iconURL: selectedAvatar })
+        .setTimestamp();
 
     const userRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
         new ButtonBuilder().setCustomId(`modify_ppCash_${userId}`).setLabel("💵 Modify PP Cash").setStyle(ButtonStyle.Success),
@@ -282,7 +285,33 @@ export async function handleModifySubmit(interaction: ModalSubmitInteraction) {
         await interaction.reply({ content: "❌ Invalid value entered!", flags: 64 });
         return;
     }
-    const [result] = await pool.query(`UPDATE users SET ${updateField} = ? WHERE user_id = ?`, [newValue, userId]);
+    const [rows]: any = await pool.query(
+        "SELECT * FROM users WHERE user_id = ?",
+        [userId]
+    );
+    if (rows.length === 0) {
+        await interaction.reply({ content: "❌ User not found!", flags: 64 });
+        return;
+    }
+    let { pp_cash, refer_tickets, total_purchases, total_referred } = rows[0];
+    let spv = parseFloat(rows[0].spv) || 0.00;
+    if (updateField === "pp_cash") {
+        pp_cash = newValue;
+    } else if (updateField === "refer_tickets") {
+        refer_tickets = newValue;
+    } else if (updateField === "total_purchases") {
+        total_purchases = newValue;
+    } else if (updateField === "total_referred") {
+        total_referred = newValue;
+    }
+    spv = calculateSPV(pp_cash, refer_tickets, total_purchases, total_referred);
+
+
+    const [result] = await pool.query(
+        `UPDATE users SET ${updateField} = ?, spv = ? WHERE user_id = ?`,
+        [newValue, parseFloat(spv.toFixed(2)), userId]
+    );
+    
     console.log("[DEBUG] Database Update Result:", result);
     logger_custom("ADMIN", "admin", `Updated ${updateField} for user ${userId} to ${newValue}`);
     await interaction.reply({ content: `✅ **${updateField.replace("_", " ").toUpperCase()}** updated to **${newValue}**!`, flags: 64 });

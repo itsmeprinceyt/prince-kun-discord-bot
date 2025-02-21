@@ -13,7 +13,7 @@ const adminId = rolePerms_1.RolesPerms[5].roleId;
 exports.ResetData = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("reset-data")
-        .setDescription("Reset all user data fields to 0.")
+        .setDescription("Reset all user data fields to 0, including SPV.")
         .addUserOption(option => option.setName("user").setDescription("Select the user").setRequired(true)),
     execute: async function (interaction) {
         if (!interaction.guild && interaction.user.id !== adminId) {
@@ -32,12 +32,12 @@ exports.ResetData = {
         const user = interaction.options.getUser("user", true);
         const [userData] = await db_1.default.query("SELECT user_id FROM users WHERE user_id = ?", [user.id]);
         if (!userData.length) {
-            await interaction.reply({ content: "❌ User is not registered!", flags: 64, });
+            await interaction.reply({ content: "❌ User is not registered!", flags: 64 });
             return;
         }
-        await db_1.default.query("UPDATE users SET pp_cash = 0, refer_tickets = 0, total_purchases = 0, total_referred = 0 WHERE user_id = ?", [user.id]);
-        (0, logger_custom_1.logger_custom)("ADMIN", "reset-data", `Reset all stats for user ${user.id} to 0`);
-        const responseMessage = `✅ Successfully reset all stats for <@${user.id}> to 0.`;
+        await db_1.default.query("UPDATE users SET pp_cash = 0, refer_tickets = 0, total_purchases = 0, total_referred = 0, spv = 0.00 WHERE user_id = ?", [user.id]);
+        (0, logger_custom_1.logger_custom)("ADMIN", "reset-data", `Reset all stats for user ${user.id} to 0 (SPV included)`);
+        const responseMessage = `✅ Successfully reset all stats for <@${user.id}> to 0, including SPV.`;
         await interaction.reply({
             content: responseMessage,
             flags: 64

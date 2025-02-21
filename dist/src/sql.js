@@ -7,18 +7,17 @@ const db_1 = __importDefault(require("./db"));
 async function forRunningSQLCommands() {
     try {
         await db_1.default.query(`
-            CREATE TABLE IF NOT EXISTS youtube_channels (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                youtube_id VARCHAR(50) NOT NULL,
-                discord_channel_id VARCHAR(50) NOT NULL,
-                last_video_id VARCHAR(50) DEFAULT NULL,
-                UNIQUE KEY (youtube_id)
-            );
+            UPDATE users 
+            SET pp_cash = 0, 
+                refer_tickets = 0, 
+                total_purchases = 0, 
+                total_referred = 0, 
+                spv = 0.00;
         `);
-        console.log("Table 'youtube_channels' created successfully.");
+        console.log("All user data reset to default values.");
     }
     catch (error) {
-        console.error("Error creating table:", error);
+        console.error("Error executing SQL command:", error);
     }
 }
 forRunningSQLCommands();

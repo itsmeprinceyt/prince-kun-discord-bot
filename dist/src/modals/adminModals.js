@@ -49,12 +49,13 @@ async function handleSelectUserSubmit(interaction) {
         selectedDisplayName = selectedDiscordUser.globalName || selectedUsername;
         selectedAvatar = selectedDiscordUser.displayAvatarURL();
     }
-    const [userData] = await db_1.default.query("SELECT pp_cash, refer_tickets, total_purchases, registration_date, total_referred FROM users WHERE user_id = ?", [selectedUser.user_id]);
+    const [userData] = await db_1.default.query("SELECT * FROM users WHERE user_id = ?", [selectedUser.user_id]);
     if (userData.length === 0) {
         await interaction.reply({ content: "❌ User data not found!", flags: 64 });
         return;
     }
     const { pp_cash, refer_tickets, total_purchases, registration_date, total_referred } = userData[0];
+    let spv = parseFloat(userData[0].spv) || 0.00;
     const AA = String(pp_cash).padEnd(8, " ");
     const BB = String(refer_tickets).padEnd(8, " ");
     const CC = String(total_purchases).padEnd(8, " ");
@@ -63,7 +64,7 @@ async function handleSelectUserSubmit(interaction) {
         .tz("Asia/Kolkata", true)
         .format("DD MMM YYYY, hh:mm A");
     (0, logger_custom_1.logger_custom)("ADMIN", "admin", `Selected user: ${selectedUser.user_id}`);
-    const spv = (0, spvCalculator_1.calculateSPV)(pp_cash, refer_tickets, total_purchases, total_referred);
+    spv = (0, spvCalculator_1.calculateSPV)(pp_cash, refer_tickets, total_purchases, total_referred);
     const spvRounded = Math.round(spv);
     const imageBuffer = await (0, spvImage_1.generateSPVImage)(spvRounded);
     const attachment = new discord_js_1.AttachmentBuilder(imageBuffer, { name: "spv.png" });
@@ -97,17 +98,18 @@ async function handleSelectUserSubmit(interaction) {
 async function handleRefresh(interaction) {
     (0, logger_custom_1.logger_custom)("ADMIN", "admin", "Admin clicked Refresh button");
     const userId = interaction.customId.split("_")[1];
-    const [userData] = await db_1.default.query("SELECT pp_cash, refer_tickets, total_purchases, registration_date, total_referred FROM users WHERE user_id = ?", [userId]);
+    const [userData] = await db_1.default.query("SELECT * FROM users WHERE user_id = ?", [userId]);
     if (userData.length === 0) {
         await interaction.reply({ content: "❌ User data not found!", ephemeral: true });
         return;
     }
     const { pp_cash, refer_tickets, total_purchases, registration_date, total_referred } = userData[0];
+    let spv = parseFloat(userData[0].spv) || 0.00;
     const formattedDate = (0, moment_timezone_1.default)(registration_date).tz("Asia/Kolkata", true).format("DD MMM YYYY, hh:mm A");
     const selectedDiscordUser = await interaction.client.users.fetch(userId).catch(() => null);
     const selectedUsername = selectedDiscordUser?.username || "Unknown User";
     const selectedAvatar = selectedDiscordUser?.displayAvatarURL() || interaction.client.user.displayAvatarURL();
-    const spv = (0, spvCalculator_1.calculateSPV)(pp_cash, refer_tickets, total_purchases, total_referred);
+    spv = (0, spvCalculator_1.calculateSPV)(pp_cash, refer_tickets, total_purchases, total_referred);
     const spvRounded = Math.round(spv);
     const imageBuffer = await (0, spvImage_1.generateSPVImage)(spvRounded);
     const attachment = new discord_js_1.AttachmentBuilder(imageBuffer, { name: "spv.png" });
@@ -218,7 +220,27 @@ async function handleModifySubmit(interaction) {
         await interaction.reply({ content: "❌ Invalid value entered!", flags: 64 });
         return;
     }
-    const [result] = await db_1.default.query(`UPDATE users SET ${updateField} = ? WHERE user_id = ?`, [newValue, userId]);
+    const [rows] = await db_1.default.query("SELECT * FROM users WHERE user_id = ?", [userId]);
+    if (rows.length === 0) {
+        await interaction.reply({ content: "❌ User not found!", flags: 64 });
+        return;
+    }
+    let { pp_cash, refer_tickets, total_purchases, total_referred } = rows[0];
+    let spv = parseFloat(rows[0].spv) || 0.00;
+    if (updateField === "pp_cash") {
+        pp_cash = newValue;
+    }
+    else if (updateField === "refer_tickets") {
+        refer_tickets = newValue;
+    }
+    else if (updateField === "total_purchases") {
+        total_purchases = newValue;
+    }
+    else if (updateField === "total_referred") {
+        total_referred = newValue;
+    }
+    spv = (0, spvCalculator_1.calculateSPV)(pp_cash, refer_tickets, total_purchases, total_referred);
+    const [result] = await db_1.default.query(`UPDATE users SET ${updateField} = ?, spv = ? WHERE user_id = ?`, [newValue, parseFloat(spv.toFixed(2)), userId]);
     console.log("[DEBUG] Database Update Result:", result);
     (0, logger_custom_1.logger_custom)("ADMIN", "admin", `Updated ${updateField} for user ${userId} to ${newValue}`);
     await interaction.reply({ content: `✅ **${updateField.replace("_", " ").toUpperCase()}** updated to **${newValue}**!`, flags: 64 });

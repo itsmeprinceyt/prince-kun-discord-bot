@@ -4,6 +4,7 @@ import { Command } from "../types/Command";
 import { logger_custom } from "../utility/logger-custom";
 import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
 import { RolesPerms } from "../utility/rolePerms";
+import { calculateSPV } from "../utility/spvCalculator";
 const adminId = RolesPerms[5].roleId;
 
 export const Modifydata: Command = {
@@ -51,31 +52,51 @@ export const Modifydata: Command = {
         const amount = interaction.options.getInteger("amount", true);
 
         if (!Number.isInteger(amount)) {
-            await interaction.reply({ content: "❌ Amount must be an integer!", flags: 64,});
+            await interaction.reply({ content: "❌ Amount must be an integer!", flags: 64, });
             return;
         }
 
-        const [userData]: any = await pool.query(
-            "SELECT user_id, ?? AS field_value FROM users WHERE user_id = ?",
-            [field, user.id]
+        const [rows]: any = await pool.query("SELECT * FROM users WHERE user_id = ?", [user.id]);
+
+        if (rows.length === 0) {
+            await interaction.reply({ content: "❌ User is not registered!", flags: 64, });
+            return;
+        }
+
+        let { pp_cash, refer_tickets, total_purchases, total_referred } = rows[0];
+        let spv = parseFloat(rows[0].spv) || 0.00;
+        let newValue = 0;
+        switch (field) {
+            case "pp_cash":
+                pp_cash += amount;
+                newValue = pp_cash;
+                break;
+            case "refer_tickets":
+                refer_tickets += amount;
+                newValue = refer_tickets;
+                break;
+            case "total_purchases":
+                total_purchases += amount;
+                newValue = refer_tickets;
+                break;
+            case "total_referred":
+                total_referred += amount;
+                newValue = refer_tickets;
+                break;
+        }
+        spv = calculateSPV(pp_cash, refer_tickets, total_purchases, total_referred);
+
+        await pool.query(
+            "UPDATE users SET pp_cash = ?, refer_tickets = ?, total_purchases = ?, total_referred = ?, spv = ? WHERE user_id = ?",
+            [pp_cash, refer_tickets, total_purchases, total_referred, parseFloat(spv.toFixed(2)), user.id]
         );
-
-        if (!userData.length) {
-            await interaction.reply({ content: "❌ User is not registered!",flags: 64,});
-            return;
-        }
-
-        const currentValue = userData[0].field_value || 0;
-        const newValue = currentValue + amount;
-
-        await pool.query("UPDATE users SET ?? = ? WHERE user_id = ?", [field, newValue, user.id]);
-        logger_custom("ADMIN", "modify-user", `Modified ${field} for user ${user.id} to ${newValue}`);
 
         const action = amount > 0 ? "added" : "removed";
         const formattedField = field.replace("_", " ").toUpperCase();
         const responseMessage = `✅ Successfully ${action} **${Math.abs(amount)} ${formattedField}** ${amount > 0 ? "to" : "from"
             } <@${user.id}>'s inventory. \`New Value: ${newValue}\``;
 
+        logger_custom("ADMIN", "modify-data", `Modified ${field} for user ${user.id} by ${amount}, new value: ${newValue}, recalculated SPV: ${spv.toFixed(2)}`);
         await interaction.reply({
             content: `${responseMessage}`,
             flags: 64

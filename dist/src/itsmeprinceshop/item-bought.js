@@ -8,6 +8,7 @@ const db_1 = __importDefault(require("../db"));
 const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
 const logger_custom_1 = require("../utility/logger-custom");
 const text_channels_1 = require("../utility/text-channels");
+const spvCalculator_1 = require("../utility/spvCalculator");
 const rolePerms_1 = require("../utility/rolePerms");
 const PREDEFINED_SERVER_ID = "310675536340844544";
 const ORDER_LOG_CHANNEL_ID = text_channels_1.TextChannels[1].roleId;
@@ -121,7 +122,11 @@ const itemBoughtCommand = {
             (0, logger_custom_1.logger_custom)("ADMIN", "item-bought", logMessage);
             return;
         }
-        await db_1.default.query("UPDATE users SET total_purchases = total_purchases + 1 WHERE user_id = ?", [targetUserId]);
+        const { pp_cash, refer_tickets, total_purchases, registration_date, total_referred } = rows[0];
+        let spv = parseFloat(rows[0].spv) || 0.00;
+        const updatedTotalPurchases = total_purchases + 1;
+        spv = (0, spvCalculator_1.calculateSPV)(pp_cash, refer_tickets, updatedTotalPurchases, total_referred);
+        await db_1.default.query("UPDATE users SET total_purchases = ?, spv = ? WHERE user_id = ?", [updatedTotalPurchases, parseFloat(spv.toFixed(2)), targetUserId]);
         const referralTickets = Math.floor(price / 300);
         let finalEmbed = ``;
         let DiscordUserRegisteredBut300Below = `
@@ -139,7 +144,11 @@ const itemBoughtCommand = {
         To know more, type \`.?shoprules\``;
         finalEmbed = DiscordUserRegisteredBut300Below;
         if (price >= 300) {
-            await db_1.default.query("UPDATE users SET refer_tickets = refer_tickets + ? WHERE user_id = ?", [referralTickets, targetUserId]);
+            const { pp_cash, refer_tickets, total_purchases, total_referred } = rows[0];
+            let spv = parseFloat(rows[0].spv) || 0.00;
+            const updatedReferTickets = refer_tickets + referralTickets;
+            spv = (0, spvCalculator_1.calculateSPV)(pp_cash, updatedReferTickets, total_purchases, total_referred);
+            await db_1.default.query("UPDATE users SET refer_tickets = ?, spv = ? WHERE user_id = ?", [updatedReferTickets, parseFloat(spv.toFixed(2)), targetUserId]);
             finalEmbed = DiscordUserRegisteredBut300Above;
         }
         const embed = new discord_js_1.EmbedBuilder()

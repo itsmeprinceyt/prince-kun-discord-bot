@@ -9,6 +9,7 @@ const db_1 = __importDefault(require("../db"));
 const logger_custom_1 = require("../utility/logger-custom");
 const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
 const rolePerms_1 = require("../utility/rolePerms");
+const spvCalculator_1 = require("../utility/spvCalculator");
 const adminId = rolePerms_1.RolesPerms[5].roleId;
 exports.UpdateData = {
     data: new discord_js_1.SlashCommandBuilder()
@@ -40,18 +41,35 @@ exports.UpdateData = {
         const field = interaction.options.getString("option", true);
         const newValue = interaction.options.getInteger("amount", true);
         if (!Number.isInteger(newValue) || newValue < 0) {
-            await interaction.reply({ content: "❌ Amount must be an integer and 0 or above!", flags: 64, });
+            await interaction.reply({ content: "❌ Amount must be an integer and 0 or above!", flags: 64 });
             return;
         }
-        const [userData] = await db_1.default.query("SELECT user_id FROM users WHERE user_id = ?", [user.id]);
-        if (!userData.length) {
-            await interaction.reply({ content: "❌ User is not registered!", flags: 64, });
+        const [rows] = await db_1.default.query("SELECT * FROM users WHERE user_id = ?", [user.id]);
+        if (rows.length === 0) {
+            await interaction.reply({ content: "❌ User is not registered!", flags: 64 });
             return;
         }
-        await db_1.default.query("UPDATE users SET ?? = ? WHERE user_id = ?", [field, newValue, user.id]);
-        (0, logger_custom_1.logger_custom)("ADMIN", "update-data", `Set ${field} for user ${user.id} to ${newValue}`);
+        let { pp_cash, refer_tickets, total_purchases, total_referred } = rows[0];
+        let spv = parseFloat(rows[0].spv) || 0.00;
+        switch (field) {
+            case "pp_cash":
+                pp_cash = newValue;
+                break;
+            case "refer_tickets":
+                refer_tickets = newValue;
+                break;
+            case "total_purchases":
+                total_purchases = newValue;
+                break;
+            case "total_referred":
+                total_referred = newValue;
+                break;
+        }
+        spv = (0, spvCalculator_1.calculateSPV)(pp_cash, refer_tickets, total_purchases, total_referred);
+        await db_1.default.query("UPDATE users SET pp_cash = ?, refer_tickets = ?, total_purchases = ?, total_referred = ?, spv = ? WHERE user_id = ?", [pp_cash, refer_tickets, total_purchases, total_referred, parseFloat(spv.toFixed(2)), user.id]);
+        (0, logger_custom_1.logger_custom)("ADMIN", "update-data", `Updated ${field} for user ${user.id} to ${newValue}, recalculated SPV: ${spv.toFixed(2)}`);
         const formattedField = field.replace("_", " ").toUpperCase();
-        const responseMessage = `✅ Successfully set **${formattedField}** to **${newValue}** for <@${user.id}>.`;
+        const responseMessage = `✅ Successfully set **${formattedField}** to **${newValue}** for <@${user.id}>. \`New SPV: ${spv.toFixed(2)}\``;
         await interaction.reply({
             content: responseMessage,
             flags: 64

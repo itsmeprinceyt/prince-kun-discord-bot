@@ -16,7 +16,6 @@ import pool from "../db";
 import { Command } from "../types/Command";
 import { logger_custom } from "../utility/logger-custom";
 import { ItsMePrinceRules } from "../utility/itsmeprince-rules";
-import { calculateSPV } from "../utility/spvCalculator";
 import { generateSPVImage } from "../utility/spvImage";
 import { EMOTES } from "../utility/emotes";
 const GC = EMOTES[0].roleId;
@@ -52,13 +51,14 @@ const profileCommand: Command = {
       }
     }
     const [rows]: any = await pool.query(
-      "SELECT pp_cash, refer_tickets, total_purchases, registration_date, total_referred FROM users WHERE user_id = ?",
+      "SELECT pp_cash, refer_tickets, total_purchases, registration_date, total_referred, spv FROM users WHERE user_id = ?",
       [targetUserId]
-    );
+  );
 
     if (rows.length > 0) {
 
-      const { pp_cash, refer_tickets, total_purchases, registration_date, total_referred } = rows[0];
+      const { pp_cash, refer_tickets, total_purchases, registration_date, total_referred} = rows[0];
+      const spv = parseFloat(rows[0].spv) || 0.00;
       const AA = String(pp_cash).padEnd(8, " ");
       const BB = String(refer_tickets).padEnd(8, " ");
       const CC = String(total_purchases).padEnd(8, " ");
@@ -69,7 +69,6 @@ const profileCommand: Command = {
       const avatarURL = mentionedUser && rows.length > 0
         ? mentionedUser.displayAvatarURL()
         : interaction.user.displayAvatarURL();
-      const spv = calculateSPV(pp_cash, refer_tickets, total_purchases, total_referred);
       const spvRounded = Math.round(spv);
       const imageBuffer = await generateSPVImage(spvRounded);
       const attachment = new AttachmentBuilder(imageBuffer, { name: "spv.png" });

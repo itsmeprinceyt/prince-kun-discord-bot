@@ -10,6 +10,7 @@ import { Command } from "../types/Command";
 import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
 import { logger_custom } from "../utility/logger-custom";
 import { TextChannels } from "../utility/text-channels";
+import { calculateSPV } from "../utility/spvCalculator";
 import { RolesPerms } from "../utility/rolePerms";
 
 const PREDEFINED_SERVER_ID = "310675536340844544";
@@ -85,20 +86,20 @@ const itemBoughtCommand: Command = {
         let targetUsername: string = mentionedUser ? mentionedUser.username : usernameInput || "Unknown";
         let targetAvatar: string = mentionedUser ? mentionedUser.displayAvatarURL() : "";
         let imageUrl = ``;
-        let boughtText =``;
+        let boughtText = ``;
 
         if (game === "genshin") {
             imageUrl = DefaultImageGenshin;
-            boughtText =`Genshin Impact - `;
+            boughtText = `Genshin Impact - `;
         } else if (game === "hsr") {
             imageUrl = DefaultImageHSR;
-            boughtText =`Honkai Star Rail - `;
+            boughtText = `Honkai Star Rail - `;
         } else if (game === "wuwa") {
             imageUrl = DefaultImageWuwa;
-            boughtText =`Wuthering Waves - `;
+            boughtText = `Wuthering Waves - `;
         } else if (game === "zzz") {
             imageUrl = DefaultImageZZZ;
-            boughtText =`Zenless Zone Zero - `;
+            boughtText = `Zenless Zone Zero - `;
         }
 
         if (!targetUserId && !usernameInput) {
@@ -149,7 +150,15 @@ const itemBoughtCommand: Command = {
             return;
         }
 
-        await pool.query("UPDATE users SET total_purchases = total_purchases + 1 WHERE user_id = ?", [targetUserId]);
+        const { pp_cash, refer_tickets, total_purchases, registration_date, total_referred } = rows[0];
+        let spv = parseFloat(rows[0].spv) || 0.00;
+        const updatedTotalPurchases = total_purchases + 1;
+        spv = calculateSPV(pp_cash, refer_tickets, updatedTotalPurchases, total_referred);
+        await pool.query(
+            "UPDATE users SET total_purchases = ?, spv = ? WHERE user_id = ?",
+            [updatedTotalPurchases, parseFloat(spv.toFixed(2)), targetUserId]
+        );
+
         const referralTickets = Math.floor(price / 300);
         let finalEmbed = ``;
 
@@ -171,7 +180,14 @@ const itemBoughtCommand: Command = {
 
         finalEmbed = DiscordUserRegisteredBut300Below;
         if (price >= 300) {
-            await pool.query("UPDATE users SET refer_tickets = refer_tickets + ? WHERE user_id = ?", [referralTickets, targetUserId]);
+            const { pp_cash, refer_tickets, total_purchases, total_referred } = rows[0];
+            let spv = parseFloat(rows[0].spv) || 0.00;
+            const updatedReferTickets = refer_tickets + referralTickets;
+            spv = calculateSPV(pp_cash, updatedReferTickets, total_purchases, total_referred);
+            await pool.query(
+                "UPDATE users SET refer_tickets = ?, spv = ? WHERE user_id = ?",
+                [updatedReferTickets, parseFloat(spv.toFixed(2)), targetUserId]
+            );
             finalEmbed = DiscordUserRegisteredBut300Above;
         }
         const embed = new EmbedBuilder()
