@@ -157,7 +157,7 @@ const referring = {
                     Referred: <@${referred.id}>
                     Bought: ${boughtText} **${item}**
                     Price: **${price}**\n
-                    **Rewards:**\n<@${referrer.id}> used **1 Referral Ticket🎟️** got **10 PP Cash💵** which you can use when purchasing any item from the shop!!\n\n`
+                    **Rewards:**\n<@${referrer.id}> used **1 Referral Ticket🎟️** and got **10 PP Cash💵** which you can use when purchasing any item from the shop!!\n\n`
             + rewardText + `
                     Check your profile using \`/profile\`
                     To know more, type \`.?shoprules\``)
