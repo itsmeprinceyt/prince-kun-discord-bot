@@ -59,7 +59,7 @@ export const leaderboard: Command = {
                 )
                 .join('\n');
 
-            let RTTitle = `\`SN  \` \`🎟️ \` \`User   \``;
+            let RTTitle = `\`SN  \` \`🎟️  \` \`User   \``;
             let RT = rows
                 .map((user: any, index: number) =>
                     `\`${index + 1}   \` \`${String(user.refer_tickets).padEnd(4, " ")}\` <@${user.user_id}>`
