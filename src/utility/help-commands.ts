@@ -32,11 +32,12 @@ export const HelpDescription =
     `> **📌 \`.?upi         \`** • Sends UPI for donation\n\n` +
 
     `**🚀 ItsMe Prince Shop Commands!**\n` +
-    `> **📌 \`.?shoprules   \`** • Sends ItsMe Prince Shop rules\n` +
-    `> **📌 \`.?profile     \`** • View your ItsMe Prince Shop Profile\n` +
-    `> **📌 \`/profile      \`** • View your ItsMe Prince Shop Profile\n` +
-    `> **📌 \`.?register    \`** • Register in ItsMe Prince Shop\n` +
-    `> **📌 \`/register     \`** • Register in ItsMe Prince Shop\n\n`;
+    `> **📌 \`.?shop-leaderboard\`** • Sends ItsMe Prince Shop leaderboard\n` +
+    `> **📌 \`.?shoprules       \`** • Sends ItsMe Prince Shop rules\n` +
+    `> **📌 \`.?profile         \`** • View your ItsMe Prince Shop Profile\n` +
+    `> **📌 \`/profile          \`** • View your ItsMe Prince Shop Profile\n` +
+    `> **📌 \`.?register        \`** • Register in ItsMe Prince Shop\n` +
+    `> **📌 \`/register         \`** • Register in ItsMe Prince Shop\n\n`;
 
     `**🚀 Slash Commands!**\n` +
     `> **📌 \`/ping         \`** • Replies with Pong\n`;
