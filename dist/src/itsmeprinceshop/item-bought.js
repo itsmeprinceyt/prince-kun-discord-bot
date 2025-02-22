@@ -36,6 +36,12 @@ const itemBoughtCommand = {
         .setRequired(false))
         .addStringOption(option => option.setName("username")
         .setDescription("Enter the username (if the user is not in Discord).")
+        .setRequired(false))
+        .addBooleanOption(option => option.setName("use_pp_cash")
+        .setDescription("Use PP Cash for discount (only for registered users).")
+        .setRequired(false))
+        .addIntegerOption(option => option.setName("pp_scale")
+        .setDescription("How much PP Cash to use (1-20 scale).")
         .setRequired(false)),
     async execute(interaction) {
         if (interaction.guild) {
@@ -57,7 +63,13 @@ const itemBoughtCommand = {
         const mentionedUser = interaction.options.getUser("user");
         const usernameInput = interaction.options.getString("username");
         const item = interaction.options.getString("item", true);
-        const price = interaction.options.getInteger("price", true);
+        let price = interaction.options.getInteger("price", true);
+        const usePPCash = interaction.options.getBoolean("use_pp_cash") || false;
+        const ppScale = interaction.options.getInteger("pp_scale") || 0;
+        if (usePPCash && (ppScale < 1 || ppScale > 20)) {
+            await interaction.reply({ content: "❌ PP Scale must be between 1 and 20.", flags: 64 });
+            return;
+        }
         let targetUserId = mentionedUser ? mentionedUser.id : null;
         let targetUsername = mentionedUser ? mentionedUser.username : usernameInput || "Unknown";
         let targetAvatar = mentionedUser ? mentionedUser.displayAvatarURL() : "";
@@ -122,11 +134,6 @@ const itemBoughtCommand = {
             (0, logger_custom_1.logger_custom)("ADMIN", "item-bought", logMessage);
             return;
         }
-        const { pp_cash, refer_tickets, total_purchases, registration_date, total_referred } = rows[0];
-        let spv = parseFloat(rows[0].spv) || 0.00;
-        const updatedTotalPurchases = total_purchases + 1;
-        spv = (0, spvCalculator_1.calculateSPV)(pp_cash, refer_tickets, updatedTotalPurchases, total_referred);
-        await db_1.default.query("UPDATE users SET total_purchases = ?, spv = ? WHERE user_id = ?", [updatedTotalPurchases, parseFloat(spv.toFixed(2)), targetUserId]);
         const referralTickets = Math.floor(price / 300);
         let finalEmbed = ``;
         let DiscordUserRegisteredBut300Below = `
@@ -142,13 +149,42 @@ const itemBoughtCommand = {
         Reward: **You got \`${referralTickets}\` ${referralText} which you can convert to 💵 PP Cash by referring your friend!**\n
         Check your profile using \`/profile\`
         To know more, type \`.?shoprules\``;
+        let DiscordUserRegisteredBut300Above_UsingPPCASH = `
+        Ordered by: <@${targetUserId}>
+        Bought: ${boughtText} **${item}**
+        Original Price: **${price}**
+        Discounted Price: **${price - ppScale}**\n
+        Reward: **You used \`${ppScale} PP Cash💵\` and got \`₹${ppScale}\` discount and \`${referralTickets}\` ${referralText} ! If you want to earn more \`PP Cash💵\` then make sure to refer to your friends!**\n
+        Check your profile using \`/profile\`
+        To know more, type \`.?shoprules\``;
         finalEmbed = DiscordUserRegisteredBut300Below;
-        if (price >= 300) {
+        if (usePPCash && price > 400) {
+            if (usePPCash && (ppScale < 1 || ppScale > 20)) {
+                await interaction.reply({ content: "❌ PP Scale must be between 1 and 20.", flags: 64 });
+                return;
+            }
+            let { pp_cash, refer_tickets, total_purchases, total_referred } = rows[0];
+            let spv = parseFloat(rows[0].spv) || 0.00;
+            let ppToDeduct = ppScale;
+            if (pp_cash < ppToDeduct) {
+                await interaction.reply({ content: "❌ Not enough PP Cash to use this scale.", flags: 64 });
+                return;
+            }
+            pp_cash -= ppToDeduct;
+            price -= ppToDeduct;
+            const updatedReferTickets = refer_tickets + referralTickets;
+            const updatedTotalPurchases = total_purchases + 1;
+            spv = (0, spvCalculator_1.calculateSPV)(pp_cash, updatedReferTickets, updatedTotalPurchases, total_referred);
+            await db_1.default.query("UPDATE users SET pp_cash = ? , refer_tickets = ? , total_purchases = ? , spv = ? WHERE user_id = ?", [pp_cash, updatedReferTickets, updatedTotalPurchases, spv.toFixed(2), targetUserId]);
+            finalEmbed = DiscordUserRegisteredBut300Above_UsingPPCASH;
+        }
+        else if (price >= 300) {
             const { pp_cash, refer_tickets, total_purchases, total_referred } = rows[0];
             let spv = parseFloat(rows[0].spv) || 0.00;
+            const updatedTotalPurchases = total_purchases + 1;
             const updatedReferTickets = refer_tickets + referralTickets;
-            spv = (0, spvCalculator_1.calculateSPV)(pp_cash, updatedReferTickets, total_purchases, total_referred);
-            await db_1.default.query("UPDATE users SET refer_tickets = ?, spv = ? WHERE user_id = ?", [updatedReferTickets, parseFloat(spv.toFixed(2)), targetUserId]);
+            spv = (0, spvCalculator_1.calculateSPV)(pp_cash, updatedReferTickets, updatedTotalPurchases, total_referred);
+            await db_1.default.query("UPDATE users SET total_purchases = ? , refer_tickets = ?, spv = ? WHERE user_id = ?", [updatedTotalPurchases, updatedReferTickets, parseFloat(spv.toFixed(2)), targetUserId]);
             finalEmbed = DiscordUserRegisteredBut300Above;
         }
         const embed = new discord_js_1.EmbedBuilder()
