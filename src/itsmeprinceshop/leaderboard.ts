@@ -1,8 +1,7 @@
-import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction,GuildMember } from 'discord.js';
 import pool from '../db';
 import { Command } from "../types/Command";
 import { logger_custom } from "../utility/logger-custom";
-import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
 
 const DefaultThumbnail = "https://media.discordapp.net/attachments/1336322293437038602/1342641235017339103/Shop.png";
 
@@ -86,7 +85,7 @@ export const leaderboard: Command = {
                 case "pp_cash":
                     finalDescription = CASH;
                     finalTitle = CASHTitle;
-                        break;
+                    break;
                 case "refer_tickets":
                     finalDescription = RT;
                     finalTitle = RTTitle;
@@ -115,6 +114,12 @@ export const leaderboard: Command = {
                 .setTimestamp();
             await interaction.reply({ embeds: [embed] });
 
+            const targetUser = interaction.user;
+            const targetUserId = targetUser.id;
+            let targetDisplayName = targetUser.username;
+            const MessageString = ` User ${targetDisplayName} (${targetUserId}) used /shop-leaderboard-${sortBy}`;
+            
+            logger_custom(targetDisplayName, "shop-leaderboard", MessageString);
         } catch (error) {
             console.error('Error fetching leaderboard:', error);
             await interaction.reply({ content: '❌ An error occurred while fetching the leaderboard.', flags: 64 });

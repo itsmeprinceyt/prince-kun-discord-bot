@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.leaderboard = void 0;
 const discord_js_1 = require("discord.js");
 const db_1 = __importDefault(require("../db"));
+const logger_custom_1 = require("../utility/logger-custom");
 const DefaultThumbnail = "https://media.discordapp.net/attachments/1336322293437038602/1342641235017339103/Shop.png";
 exports.leaderboard = {
     data: new discord_js_1.SlashCommandBuilder()
@@ -85,6 +86,11 @@ exports.leaderboard = {
                 + finalDescription)
                 .setTimestamp();
             await interaction.reply({ embeds: [embed] });
+            const targetUser = interaction.user;
+            const targetUserId = targetUser.id;
+            let targetDisplayName = targetUser.username;
+            const MessageString = ` User ${targetDisplayName} (${targetUserId}) used /shop-leaderboard-${sortBy}`;
+            (0, logger_custom_1.logger_custom)(targetDisplayName, "shop-leaderboard", MessageString);
         }
         catch (error) {
             console.error('Error fetching leaderboard:', error);
