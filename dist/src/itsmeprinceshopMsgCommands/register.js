@@ -29,7 +29,7 @@ const registerCommand = {
             .setTitle("ItsMe Prince Shop - Profile Registration")
             .setThumbnail(message.author.displayAvatarURL())
             .setDescription(itsmeprince_rules_1.ItsMePrinceRules +
-            `\n**By registering, you agree to follow the rules and accept any future changes. It is your responsibility to stay updated.**`)
+            `\n**You accept the rules by registering and you also agree to any future updates or changes in the value of PP CASH. It is your responsibility to stay updated with the latest rules.**`)
             .setFooter({ text: `${userName}`, iconURL: message.author.displayAvatarURL() })
             .setTimestamp();
         const embed2 = new discord_js_1.EmbedBuilder()

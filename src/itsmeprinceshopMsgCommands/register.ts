@@ -30,7 +30,7 @@ const registerCommand = {
             .setThumbnail(message.author.displayAvatarURL())
             .setDescription(
                 ItsMePrinceRules +
-                `\n**By registering, you agree to follow the rules and accept any future changes. It is your responsibility to stay updated.**`)
+                `\n**You accept the rules by registering and you also agree to any future updates or changes in the value of PP CASH. It is your responsibility to stay updated with the latest rules.**`)
             .setFooter({ text: `${userName}`, iconURL: message.author.displayAvatarURL() })
             .setTimestamp();
 
