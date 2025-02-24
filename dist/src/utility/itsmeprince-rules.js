@@ -18,4 +18,4 @@ exports.ItsMePrinceRules = `__**Rules**__\n` +
     `> ${YC} **Step 3:** Upon a successful purchase by your friend, your referral ticket will be converted into \`PP CASH💵\`, and your friend will receive \`1x Referral Ticket🎟️\` if they are registered.\n` +
     `> ${YC} **Step 4:** If your total purchase exceeds \`400 INR\`, you can use up to \`20 PP CASH💵\`. Based on the current value of PP CASH, you'll receive a \`🤑FLAT DISCOUNT🤑\`.\n\n` +
     `__**What is Shop Point Value (SPV) ?**__\n` +
-    `> ${GC} **SPV represents a user's total engagement in the shop system. It tracks their total purchases, PP Cash balance, referral earnings, and overall spending. SPV serves as a measure of how much a user has supported the shop, SPV is used for leaderboard so we'll know who's the top supporter.**\n\n`;
+    `> ${GC} **SPV** represents a user's total engagement in the shop system. It tracks their **PP Cash**, **referral tickets**, **total purchases** and **total referrals**. SPV serves as a measure of how much a user has **supported the shop**, SPV is used for leaderboard so we'll know who's the **top supporter**.\n\n`;
