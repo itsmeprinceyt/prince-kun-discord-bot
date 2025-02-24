@@ -77,7 +77,7 @@ exports.leaderboard = {
                 .setColor(0x00ff00)
                 .setTitle(`🏆 Leaderboard ${fieldNames[sortBy]}`)
                 .setAuthor({
-                name: "Prince-Kun • Profile Info",
+                name: "Prince-Kun • ItsMe Prince Shop Leaderboard",
                 iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
             })
                 .setDescription(finalTitle
