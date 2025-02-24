@@ -143,21 +143,21 @@ const itemBoughtCommand: Command = {
                     .setDescription(`
                         Ordered by: <@${targetUserId}>
                         Bought: ${boughtText} **${item}**
-                        Price: **${price}**\n
+                        Price: **${price} INR/-**\n
                         Register today using \`/register\`
                         To know more, type \`.?shoprules\``
                     )
                     .setFooter({ text: targetUsername, iconURL: targetAvatar })
                     .setTimestamp();
-                logMessage = `User ${mentionedUser.username} (ID: ${mentionedUser.id}) bought ${item} for ${price}, but is not registered.`;
+                logMessage = `User ${mentionedUser.username} (ID: ${mentionedUser.id}) bought ${item} for ${price} INR/- , but is not registered.`;
             } else {
                 embed = new EmbedBuilder()
                     .setColor(0x00ff00)
                     .setTitle("Purchase Successful")
                     .setThumbnail(imageUrl)
-                    .setDescription(`Ordered by: **${targetUsername}**\nBought: ${boughtText} **${item}**\nPrice: **${price}**`)
+                    .setDescription(`Ordered by: **${targetUsername}**\nBought: ${boughtText} **${item}**\nPrice: **${price} INR/-**`)
                     .setTimestamp();
-                logMessage = `Unregistered user ${targetUsername} bought ${item} for ${price}.`;
+                logMessage = `Unregistered user ${targetUsername} bought ${item} for ${price} INR/-`;
             }
             if (orderLogChannel?.isTextBased()) {
                 await orderLogChannel.send({ embeds: [embed] });
@@ -173,14 +173,14 @@ const itemBoughtCommand: Command = {
         let DiscordUserRegisteredBut300Below = `
         Ordered by: <@${targetUserId}>
         Bought: ${boughtText} **${item}**
-        Price: **${price}**\n
+        Price: **${price} INR/-**\n
         To know more, type \`.?shoprules\``;
 
         let referralText = referralTickets === 1 ? "Referral Ticket 🎟️" : "Referral Tickets 🎟️";
         let DiscordUserRegisteredBut300Above = `
         Ordered by: <@${targetUserId}>
         Bought: ${boughtText} **${item}**
-        Price: **${price}**\n
+        Price: **${price} INR/-**\n
         Reward: **You got \`${referralTickets}\` ${referralText} which you can convert to 💵 PP Cash by referring your friend!**\n
         Check your profile using \`/profile\`
         To know more, type \`.?shoprules\``;
@@ -188,8 +188,8 @@ const itemBoughtCommand: Command = {
         let DiscordUserRegisteredBut300Above_UsingPPCASH = `
         Ordered by: <@${targetUserId}>
         Bought: ${boughtText} **${item}**
-        Original Price: **${price}**
-        Discounted Price: **${price - ppScale}**\n
+        Original Price: **${price} INR/-**
+        Discounted Price: **${price - ppScale} INR/-**\n
         Reward: **You used \`${ppScale} PP Cash💵\` and got \`₹${ppScale}\` discount and \`${referralTickets}\` ${referralText} ! If you want to earn more \`PP Cash💵\` then make sure to refer to your friends!**\n
         Check your profile using \`/profile\`
         To know more, type \`.?shoprules\``;
@@ -250,7 +250,7 @@ const itemBoughtCommand: Command = {
             await interaction.reply({ embeds: [embed] });
         }
 
-        logger_custom("ADMIN", "item-bought", `User ${targetUsername} bought ${item} for ${price}.`);
+        logger_custom("ADMIN", "item-bought", `User ${targetUsername} bought ${item} for ${price} INR/-`);
     }
 };
 

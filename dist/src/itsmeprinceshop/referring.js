@@ -91,12 +91,12 @@ const referring = {
                 .setDescription(`Referral: <@${referrer.id}>
                     Referred: <@${referred.id}>
                     Bought: ${boughtText} **${item}**
-                    Price: **${price}**\n
+                    Price: **${price} INR/-**\n
                     <@${referrer.id}> register today using \`/register\`
                     To know more, type \`.?shoprules\``)
                 .setFooter({ text: referrer_username, iconURL: referrer_avatar })
                 .setTimestamp();
-            logMessage = `User ${referred.username} (ID: ${referred.id}) bought ${item} for ${price}, but is not registered.`;
+            logMessage = `User ${referred.username} (ID: ${referred.id}) bought ${item} for ${price} INR/- , but is not registered.`;
             (0, logger_custom_1.logger_custom)("ADMIN", "item-bought", logMessage);
             await interaction.reply({ content: `✅ Order logged but, ❌ the referrer <@${referrer.id}> is not registered! Check: <#${ORDER_LOG_CHANNEL_ID}>`, flags: 64 });
             if (orderLogChannel?.isTextBased()) {
@@ -127,7 +127,7 @@ const referring = {
                 .setDescription(`Referral: <@${referrer.id}>
                     Referred: <@${referred.id}>
                     Bought: ${boughtText} **${item}**
-                    Price: **${price}**\n
+                    Price: **${price} INR/-**\n
                     **Reward:**\n<@${referrer.id}> used **1 Referral Ticket🎟️** and got **10 PP Cash💵** which you can use when purchasing any item from the shop!!\n
                     Hey <@${referred.id}>, you should probably register using \`/register\`\n
                     Check your profile using \`/profile\`
@@ -138,7 +138,7 @@ const referring = {
                 content: `✅Order Logged, but the referred user <@${referred.id}> is not registered,❌ so they did not receive any referred rewards. Check: <#${ORDER_LOG_CHANNEL_ID}>`,
                 flags: 64
             });
-            logMessage = `User ${referrer.username} (ID: ${referrer.id}) referred ${referred.username} (ID: ${referred.id}) who bought ${item} for ${price}, but is not registered.`;
+            logMessage = `User ${referrer.username} (ID: ${referrer.id}) referred ${referred.username} (ID: ${referred.id}) who bought ${item} for ${price} INR/- , but is not registered.`;
             (0, logger_custom_1.logger_custom)("ADMIN", "item-bought", logMessage);
             if (orderLogChannel?.isTextBased()) {
                 await orderLogChannel.send({ embeds: [embed] });
@@ -171,14 +171,14 @@ const referring = {
             .setDescription(`Referral: <@${referrer.id}>
                     Referred: <@${referred.id}>
                     Bought: ${boughtText} **${item}**
-                    Price: **${price}**\n
+                    Price: **${price} INR/-**\n
                     **Rewards:**\n<@${referrer.id}> used **1 Referral Ticket🎟️** and got **10 PP Cash💵** which you can use when purchasing any item from the shop!!\n\n`
             + rewardText + `
                     Check your profile using \`/profile\`
                     To know more, type \`.?shoprules\``)
             .setFooter({ text: `${referrer_username} referred ${referred_username}`, iconURL: referrer_avatar })
             .setTimestamp();
-        logMessage = `User ${referrer.username} (ID: ${referrer.id}) referred ${referred.username} (ID: ${referred.id}) who bought ${item} for ${price}`;
+        logMessage = `User ${referrer.username} (ID: ${referrer.id}) referred ${referred.username} (ID: ${referred.id}) who bought ${item} for ${price} INR/-`;
         (0, logger_custom_1.logger_custom)("ADMIN", "item-bought", logMessage);
         await interaction.reply({ content: `✅ Purchase logged in the order log channel! Check: <#${ORDER_LOG_CHANNEL_ID}>`, flags: 64 });
         if (orderLogChannel?.isTextBased()) {
