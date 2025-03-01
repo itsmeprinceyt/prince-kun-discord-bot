@@ -40,4 +40,5 @@ export const HelpDescription =
     `> **📌 \`/register         \`** • Register in ItsMe Prince Shop\n\n`;
 
     `**🚀 Slash Commands!**\n` +
-    `> **📌 \`/ping         \`** • Replies with Pong\n`;
+    `> **📌 \`/ping             \`** • Replies with Pong\n`+
+    `> **📌 \`/export-commands  \`** • Exports all available commands\n`;
