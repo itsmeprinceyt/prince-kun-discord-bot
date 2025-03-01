@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SPECS = void 0;
 exports.SPECS = `
 \`CPU           \` - Ryzen 5 3600
-\`RAM           \` - A-Data XPG DDR4 (8GBx2)
+\`RAM           \` - A-Data XPG DDR4 (8GBx4)
 \`Motherboard   \` - MSI B450 Pro-VDH-Max
 \`Graphic Card  \` - Inno3D Geforce RTX 3060 X2 OC
 \`PSU           \` - Antec 550 Watt 80 Plus

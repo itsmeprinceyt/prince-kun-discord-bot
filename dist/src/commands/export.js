@@ -8,6 +8,7 @@ const db_1 = __importDefault(require("../db"));
 const exceljs_1 = __importDefault(require("exceljs"));
 const rolePerms_1 = require("../utility/rolePerms");
 const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
+const logger_custom_1 = require("../utility/logger-custom");
 const adminId = rolePerms_1.RolesPerms[5].roleId;
 const ExportCommand = {
     data: new discord_js_1.SlashCommandBuilder()
@@ -40,6 +41,7 @@ const ExportCommand = {
             }
         }
         const tableName = interaction.options.getString("table")?.trim();
+        const userName = interaction.user.username;
         try {
             if (!tableName) {
                 const [tables] = await db_1.default.query("SHOW TABLES");
@@ -52,6 +54,7 @@ const ExportCommand = {
                     content: `📋 **Available tables:**\n${tableNames.join("\n")}\n`,
                     flags: 64
                 });
+                (0, logger_custom_1.logger_custom)(userName, "export", `${userName} fetched all database tables`);
                 return;
             }
             const [rows] = await db_1.default.query(`SELECT * FROM \`${tableName}\``);
@@ -70,6 +73,7 @@ const ExportCommand = {
             const buffer = Buffer.from(await workbook.xlsx.writeBuffer());
             const attachment = new discord_js_1.AttachmentBuilder(buffer, { name: `${tableName}_export.xlsx` });
             await interaction.reply({ content: `✅ Export complete for table \`${tableName}\`!`, files: [attachment] });
+            (0, logger_custom_1.logger_custom)(userName, "export", `${userName} exported database table: ${tableName} in excel.`);
         }
         catch (error) {
             console.error("❌ Error exporting database:", error);

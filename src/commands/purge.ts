@@ -87,24 +87,29 @@ const PurgeCommand: Command = {
         }
 
         try {
-            await interaction.deferReply({flags:64, });
-
-            let fetched: Collection<string, Message>;
-            let messagesToDelete: Collection<string, Message>;
-
-            do {
-                fetched = await channel.messages.fetch({ limit: 100 });
-                messagesToDelete = fetched.filter(msg =>
-                    timeLimit === 0 || msg.createdTimestamp >= timeLimit
-                );
-
+            await interaction.deferReply({ flags: 64 });
+        
+            let lastMessageId: string | undefined;
+            let messagesDeleted = 0;
+        
+            while (true) {
+                const fetchOptions: { limit: number; before?: string } = { limit: 100 };
+                if (lastMessageId) fetchOptions.before = lastMessageId;
+        
+                const messagesFetched = await channel.messages.fetch(fetchOptions);
+                if (messagesFetched.size === 0) break;
+                const messagesToDelete = messagesFetched.filter(msg => msg.createdTimestamp >= timeLimit);
+        
                 if (messagesToDelete.size > 0) {
                     await channel.bulkDelete(messagesToDelete, true);
                     messagesDeleted += messagesToDelete.size;
                 }
-            } while (fetched.size > 0 && messagesToDelete.size > 0);
-
-
+        
+                lastMessageId = messagesFetched.last()?.id;
+                if (messagesFetched.every(msg => msg.createdTimestamp < timeLimit)) break;
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+        
             if (messagesDeleted === 0) {
                 await interaction.editReply({
                     content: "❌ No messages were found within the selected time range!",
@@ -113,7 +118,7 @@ const PurgeCommand: Command = {
                 await interaction.editReply({
                     content: `✅ Successfully deleted **${messagesDeleted}** messages!`,
                 });
-
+        
                 const userName = member.displayName || interaction.user.username;
                 logger_custom(userName, "purge", `Deleted ${messagesDeleted} messages in #${channel.name} (Range: ${deleteOption})`);
             }
@@ -123,6 +128,7 @@ const PurgeCommand: Command = {
                 content: "❌ An error occurred while deleting messages!",
             });
         }
+        
     },
 };
 

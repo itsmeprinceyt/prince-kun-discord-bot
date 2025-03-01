@@ -170,29 +170,29 @@ const itemBoughtCommand: Command = {
         const referralTickets = Math.floor(price / 300);
         let finalEmbed = ``;
 
-        let DiscordUserRegisteredBut300Below = `
-        Ordered by: <@${targetUserId}>
-        Bought: ${boughtText} **${item}**
-        Price: **${price} INR/-**\n
-        To know more, type \`.?shoprules\``;
+let DiscordUserRegisteredBut300Below = `
+Ordered by: <@${targetUserId}>
+Bought: ${boughtText} **${item}**
+Price: **${price} INR/-**\n
+To know more, type \`.?shoprules\``;
 
-        let referralText = referralTickets === 1 ? "Referral Ticket 🎟️" : "Referral Tickets 🎟️";
-        let DiscordUserRegisteredBut300Above = `
-        Ordered by: <@${targetUserId}>
-        Bought: ${boughtText} **${item}**
-        Price: **${price} INR/-**\n
-        Reward: **You got \`${referralTickets}\` ${referralText} which you can convert to 💵 PP Cash by referring your friend!**\n
-        Check your profile using \`/profile\`
-        To know more, type \`.?shoprules\``;
+let referralText = referralTickets === 1 ? "Referral Ticket 🎟️" : "Referral Tickets 🎟️";
+let DiscordUserRegisteredBut300Above = `
+Ordered by: <@${targetUserId}>
+Bought: ${boughtText} **${item}**
+Price: **${price} INR/-**\n
+Reward: **You got \`${referralTickets}\` ${referralText} which you can convert to 💵 PP Cash by referring your friend!**\n
+Check your profile using \`/profile\`
+To know more, type \`.?shoprules\``;
 
-        let DiscordUserRegisteredBut300Above_UsingPPCASH = `
-        Ordered by: <@${targetUserId}>
-        Bought: ${boughtText} **${item}**
-        Original Price: **${price} INR/-**
-        Discounted Price: **${price - ppScale} INR/-**\n
-        Reward: **You used \`${ppScale} PP Cash💵\` and got \`₹${ppScale}\` discount and \`${referralTickets}\` ${referralText} ! If you want to earn more \`PP Cash💵\` then make sure to refer to your friends!**\n
-        Check your profile using \`/profile\`
-        To know more, type \`.?shoprules\``;
+let DiscordUserRegisteredBut300Above_UsingPPCASH = `
+Ordered by: <@${targetUserId}>
+Bought: ${boughtText} **${item}**
+Original Price: **${price} INR/-**
+Discounted Price: **${price - ppScale} INR/-**\n
+Reward: **You used \`${ppScale} PP Cash💵\` and got \`₹${ppScale}\` discount and \`${referralTickets}\` ${referralText} ! If you want to earn more \`PP Cash💵\` then make sure to refer to your friends!**\n
+Check your profile using \`/profile\`
+To know more, type \`.?shoprules\``;
 
         finalEmbed = DiscordUserRegisteredBut300Below;
         if (usePPCash && price > 400) {

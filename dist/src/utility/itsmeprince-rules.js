@@ -7,7 +7,7 @@ const YC = emotes_1.EMOTES[1].roleId;
 const RC = emotes_1.EMOTES[2].roleId;
 const BC = emotes_1.EMOTES[3].roleId;
 const PC = emotes_1.EMOTES[4].roleId;
-exports.ItsMePrinceRules = `__**Rules**__\n` +
+exports.ItsMePrinceRules = `__**Rules**__ (If you don’t want to read, watch this [YouTube video](https://www.youtube.com/watch?v=fLheG3qV3xU))\n` +
     `> ${PC} If your account is found to be stolen, changed, or sold, your profile will be deleted.\n` +
     `> ${PC} You can only use up to \`20 PP CASH💵\` per purchase.\n` +
     `> ${PC} The only way to obtain \`PP CASH💵\` is through referrals.\n` +

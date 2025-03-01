@@ -4,6 +4,7 @@ export const HelpDescriptionAdmin =
     `> 🔸 \`.?bot                       \`\n` +
     `> 🔸 \`/bot-updates                \`\n` +
     `> 🔸 \`/export                     \`\n` +
+    `> 🔸 \`/export-commands            \`\n` +
     `> 🔸 \`.?help-force                \`\n` +
     `> 🔸 \`/server-updates             \`\n\n` +
 

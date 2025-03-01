@@ -7,6 +7,7 @@ import pool from "../db";
 import ExcelJS from "exceljs";
 import { RolesPerms } from "../utility/rolePerms";
 import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/logger-custom";
 const adminId = RolesPerms[5].roleId;
 
 const ExportCommand = {
@@ -43,6 +44,7 @@ const ExportCommand = {
         }
 
         const tableName = interaction.options.getString("table")?.trim();
+        const userName = interaction.user.username;
 
         try {
             if (!tableName) {
@@ -59,6 +61,7 @@ const ExportCommand = {
                     content: `📋 **Available tables:**\n${tableNames.join("\n")}\n`,
                     flags: 64
                 });
+                logger_custom(userName, "export", `${userName} fetched all database tables`);
                 return;
             }
 
@@ -82,6 +85,8 @@ const ExportCommand = {
             const attachment = new AttachmentBuilder(buffer, { name: `${tableName}_export.xlsx` });
 
             await interaction.reply({ content: `✅ Export complete for table \`${tableName}\`!`, files: [attachment] });
+            logger_custom(userName, "export", `${userName} exported database table: ${tableName} in excel.`);
+
         } catch (error) {
             console.error("❌ Error exporting database:", error);
             await interaction.reply({ content: `❌ Failed to export table \`${tableName}\`. Check if the table exists.`, flags: 64 });
