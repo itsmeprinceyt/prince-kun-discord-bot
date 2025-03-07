@@ -71,8 +71,7 @@ async function startBot() {
                 });
             }
             catch (error) {
-                console.log(chalk_1.default.cyan(`[ INFO ] Setting 'over y'all souls' as default activity as Member's information didn't arrived at time from the Guild.`));
-                console.log("\n");
+                console.log(chalk_1.default.cyan(`\n[ INFO ] Setting 'over y'all souls' as default activity as Member's information didn't arrive on time from the Guild.\n`));
                 c.user.setPresence({
                     status: "dnd",
                     activities: [
