@@ -22,6 +22,7 @@ const modalHandlers = new Map([
     ["select_user", adminModals_1.handleSelectUserSubmit],
     ["modify_points", adminModals_1.handleModifySubmit],
     ["botUpdatesModal", bot_updates_1.handleModalSubmit],
+    ["broadcastYouTubeModal", bot_updates_1.handleModalSubmit],
     ["serverUpdatesModal", server_updates_1.handleServerModalSubmit],
     ["shopUpdateModal", shop_updates_1.handleShopModalSubmit],
     ["newRedeemsModal", new_redeems_1.handleRedeemModalSubmit],

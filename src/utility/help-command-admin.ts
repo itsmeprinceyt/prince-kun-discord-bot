@@ -5,6 +5,7 @@ export const HelpDescriptionAdmin =
     `> 🔸 \`/bot-updates                \`\n` +
     `> 🔸 \`/export                     \`\n` +
     `> 🔸 \`.?help-force                \`\n` +
+    `> 🔸 \`/sending-dm                 \`\n` +
     `> 🔸 \`/server-updates             \`\n\n` +
 
     `**🚀 Moderation Commands!**\n` +

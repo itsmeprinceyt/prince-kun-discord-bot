@@ -20,6 +20,7 @@ const ExportCommands = {
                 { name: "/export", access: "Admins Only", scope: "Guild & DM", type: "Slash" },
                 { name: "/export-commands", access: "Admins Only", scope: "Guild Only", type: "Slash" },
                 { name: "/server-updates", access: "Admins Only", scope: "Guild Only", type: "Slash" },
+                { name: "/sending-dm", access: "Admins", scope: "Guild Only & DM", type: "Slash" },
                 { name: "/ban", access: "Moderators & Admins", scope: "Guild Only", type: "Slash" },
                 { name: "/kick", access: "Moderators & Admins", scope: "Guild Only", type: "Slash" },
                 { name: "/purge", access: "Moderators & Admins", scope: "Guild Only", type: "Slash" },
