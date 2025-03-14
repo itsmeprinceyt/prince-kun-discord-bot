@@ -7,7 +7,6 @@ exports.HelpDescriptionAdmin = `**🚀 Bot & Admin Commands!**\n` +
     `> 🔸 \`/bot-updates                \`\n` +
     `> 🔸 \`/export                     \`\n` +
     `> 🔸 \`.?help-force                \`\n` +
-    `> 🔸 \`/sending-dm                 \`\n` +
     `> 🔸 \`/server-updates             \`\n\n` +
     `**🚀 Moderation Commands!**\n` +
     `> 🔹 \`/ban                        \`\n` +

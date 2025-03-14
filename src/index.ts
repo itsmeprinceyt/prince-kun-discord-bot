@@ -35,7 +35,6 @@ const modalHandlers = new Map<string, (interaction: ModalSubmitInteraction) => P
     ["select_user", handleSelectUserSubmit],
     ["modify_points", handleModifySubmit],
     ["botUpdatesModal", handleBotModalSubmit],
-    ["broadcastYouTubeModal", handleBotModalSubmit],
     ["serverUpdatesModal", handleServerModalSubmit],
     ["shopUpdateModal", handleShopModalSubmit],
     ["newRedeemsModal",handleRedeemModalSubmit],
