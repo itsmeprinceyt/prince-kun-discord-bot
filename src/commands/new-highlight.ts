@@ -15,7 +15,7 @@ const PREDEFINED_SERVER_ID = "310675536340844544";
 const HIGHLIGHT_CHANNEL_ID = TextChannels[0].roleId;
 const adminId = RolesPerms[5].roleId;
 
-const GameCode: Command = {
+const newHighlight: Command = {
     data: new SlashCommandBuilder()
         .setName("new-highlight")
         .setDescription("Sends a new highlight image.")
@@ -94,4 +94,4 @@ const GameCode: Command = {
     }
 }
 
-export default GameCode;
+export default newHighlight;

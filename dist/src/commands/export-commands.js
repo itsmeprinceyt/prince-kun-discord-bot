@@ -23,6 +23,7 @@ const ExportCommands = {
                 { name: "/ban", access: "Moderators & Admins", scope: "Guild Only", type: "Slash" },
                 { name: "/kick", access: "Moderators & Admins", scope: "Guild Only", type: "Slash" },
                 { name: "/purge", access: "Moderators & Admins", scope: "Guild Only", type: "Slash" },
+                { name: "/purchase-done", access: "Admins", scope: "Guild Only & DM", type: "Slash" },
                 { name: "/mega-purge", access: "Admins Only", scope: "Guild Only", type: "Slash" },
                 { name: "/set-bot-tester", access: "Admins Only", scope: "Guild Only", type: "Slash" },
                 { name: "/set-client", access: "Admins Only", scope: "Guild Only", type: "Slash" },

@@ -8,7 +8,7 @@ const rolePerms_1 = require("../utility/rolePerms");
 const PREDEFINED_SERVER_ID = "310675536340844544";
 const HIGHLIGHT_CHANNEL_ID = text_channels_1.TextChannels[0].roleId;
 const adminId = rolePerms_1.RolesPerms[5].roleId;
-const GameCode = {
+const newHighlight = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("new-highlight")
         .setDescription("Sends a new highlight image.")
@@ -72,4 +72,4 @@ const GameCode = {
         (0, logger_custom_1.logger_custom)(interaction.user.username, "image-url", `new highlight image sent to ${HIGHLIGHT_CHANNEL_ID}: ${sanitizedImageUrl}`);
     }
 };
-exports.default = GameCode;
+exports.default = newHighlight;
