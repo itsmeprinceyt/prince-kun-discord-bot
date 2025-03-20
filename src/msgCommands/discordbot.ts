@@ -11,7 +11,7 @@ export default {
             });
         }
 
-        const inviteLink = "https://discord.com/oauth2/authorize?client_id=1335342572758892615&permissions=1927098263638&integration_type=0&scope=bot";
+        const inviteLink = "https://discord.com/oauth2/authorize?client_id=1352287323177619516&permissions=1101927803990&integration_type=0&scope=bot+applications.commands";
 
         const embed = new EmbedBuilder()
             .setColor(0xc200ff)
@@ -23,8 +23,8 @@ export default {
             .setTitle("Invite 'Prince-kun' Bot in your Server")
             .setDescription(
                 `You can invite my bot in your server! 🌟🌻\n\n` +
-                `**Shareable Link:** https://rebrand.ly/discord-prince-kun\n\n` +
-                `[Click Here To Invite!](https://discord.com/oauth2/authorize?client_id=1335342572758892615&permissions=1927098263638&integration_type=0&scope=bot)`
+                `**Shareable Link:** https://rebrand.ly/prince-kun\n\n` +
+                `[Click Here To Invite!](${inviteLink})`
             )
             .setImage(
                 "https://media.discordapp.net/attachments/1336322293437038602/1337038357565276160/Discord.png"

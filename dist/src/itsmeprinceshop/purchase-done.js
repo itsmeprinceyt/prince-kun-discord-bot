@@ -24,15 +24,17 @@ const PurchaseDone = {
         }
         const mentionedUser = interaction.options.getUser("user", true);
         try {
-            await mentionedUser.send({
-                content: `Thank you for your purchase, ${mentionedUser}!\n`
-            });
-            await mentionedUser.send({
-                content: `-# Check your profile using \`/profile\` or reigster using \`/register\` if you haven't!`
-            });
-            await mentionedUser.send({
-                content: `${predefinedImage}`
-            });
+            await Promise.all([
+                mentionedUser.send({
+                    content: `Thank you for your purchase, ${mentionedUser}!\n`
+                }),
+                mentionedUser.send({
+                    content: `-# Check your profile using \`/profile\` or register using \`/register\` if you haven't!`
+                }),
+                mentionedUser.send({
+                    content: `${predefinedImage}`
+                })
+            ]);
             await interaction.reply({
                 content: `✅ Purchase confirmation sent to ${mentionedUser} via DM!`,
                 flags: 64,

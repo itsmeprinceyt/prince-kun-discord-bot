@@ -24,6 +24,8 @@ const ExportCommands = {
                 { name: "/export-commands", access: "Admins Only", scope: "Guild Only", type: "Slash" },
                 { name: "/server-updates", access: "Admins Only", scope: "Guild Only", type: "Slash" },
                 { name: "/ban", access: "Moderators & Admins", scope: "Guild Only", type: "Slash" },
+                { name: ".?help", access: "Everyone", scope: "Guild & DM", type: "Message" },
+                { name: "/help", access: "Everyone", scope: "Guild & DM", type: "Slash" },
                 { name: "/kick", access: "Moderators & Admins", scope: "Guild Only", type: "Slash" },
                 { name: "/purge", access: "Moderators & Admins", scope: "Guild Only", type: "Slash" },
                 { name: "/purchase-done", access: "Admins", scope: "Guild Only & DM", type: "Slash" },

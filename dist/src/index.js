@@ -87,8 +87,23 @@ async function startBot() {
         setInterval(updatePresence, 15000);
         console.log(chalk_1.default.green(`[ ${c.user.username} ] 💚 IS ONLINE (DND Mode) !`));
     });
+    const cooldowns = new Map();
+    const cooldownTime = 3000;
     client.on("interactionCreate", async (interaction) => {
+        const userId = interaction.user.id;
+        const now = Date.now();
         if (interaction.isChatInputCommand()) {
+            const commandName = interaction.commandName;
+            const lastUsed = cooldowns.get(`${userId}-${commandName}`) || 0;
+            if (now - lastUsed < cooldownTime) {
+                const remaining = ((lastUsed + cooldownTime) - now) / 1000;
+                await interaction.reply({
+                    content: `⏳ Please wait \`${remaining.toFixed(1)} seconds\` before using **/${commandName}** again.`,
+                    flags: 64
+                });
+                return;
+            }
+            cooldowns.set(`${userId}-${commandName}`, now);
             const command = commandHandler_1.default.get(interaction.commandName) || itsmeprinceshopCommandHandler_1.default.get(interaction.commandName);
             if (!command)
                 return;
@@ -99,7 +114,7 @@ async function startBot() {
                 console.error(error);
                 await interaction.reply({
                     content: "[ ERROR ] There was an error executing this command!",
-                    ephemeral: true,
+                    flags: 64,
                 });
             }
         }
@@ -182,6 +197,15 @@ async function startBot() {
             .sort((a, b) => b.triggers[0].length - a.triggers[0].length)
             .find(cmd => cmd.triggers.some(trigger => message.content.startsWith(trigger)));
         if (command) {
+            const userId = message.author.id;
+            const now = Date.now();
+            const lastUsed = cooldowns.get(userId) || 0;
+            if (now - lastUsed < cooldownTime) {
+                const remaining = ((lastUsed + cooldownTime) - now) / 1000;
+                await message.reply(`⏳ Please wait ${remaining.toFixed(1)} seconds before using commands again.`);
+                return;
+            }
+            cooldowns.set(userId, now);
             console.log(chalk_1.default.underline(`[ INFO ]`) +
                 "\n" +
                 chalk_1.default.yellow(`User: ${message.member?.displayName || message.author.username}`) +

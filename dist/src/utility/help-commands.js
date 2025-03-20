@@ -7,6 +7,8 @@ exports.HelpDescription = `**🚀 Utility Commands!**\n` +
     `> **📌 \`.?delete      \`** • Can be used to delete bot message\n` +
     `> **📌 \`.?pcspecs     \`** • Sends my setup specifications\n` +
     `> **📌 \`.?math        \`** • Solves Math-related problems\n` +
+    `> **📌 \`.?help        \`** • Sends you list of commands\n` +
+    `> **📌 \`/help         \`** • Sends you list of commands\n` +
     `> **📌 \`.?life        \`** • Wakes you up from reality!\n` +
     `> **📌 \`.?sofi-guides \`** • Sends Sofi Guides\n` +
     `> **📌 \`.?scan        \`** • Scans the Job Board for healthy cards\n` +

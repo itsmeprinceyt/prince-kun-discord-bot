@@ -17,16 +17,16 @@ import { getFormattedIST } from "./utility/time";
 import { handleModalSubmit as handleBotModalSubmit } from "./commands/bot-updates";
 import { handleServerModalSubmit } from "./commands/server-updates";
 import { handleShopModalSubmit } from "./commands/shop-updates";
-import { 
-    handleSelectUser, 
-    handleSelectUserSubmit, 
+import {
+    handleSelectUser,
+    handleSelectUserSubmit,
     handleModifyPP,
     handleModifyReferral,
     handleModifyPurchases,
     handleModifyReferred,
     handleRefresh,
-    handleModifySubmit, 
-    handleDeleteUser 
+    handleModifySubmit,
+    handleDeleteUser
 } from "./modals/adminModals";
 import { handleRedeemModalSubmit } from "./commands/new-redeems";
 import { initDB } from "./db";
@@ -37,7 +37,7 @@ const modalHandlers = new Map<string, (interaction: ModalSubmitInteraction) => P
     ["botUpdatesModal", handleBotModalSubmit],
     ["serverUpdatesModal", handleServerModalSubmit],
     ["shopUpdateModal", handleShopModalSubmit],
-    ["newRedeemsModal",handleRedeemModalSubmit],
+    ["newRedeemsModal", handleRedeemModalSubmit],
 ]);
 
 const client = new Client({
@@ -107,22 +107,41 @@ async function startBot() {
         console.log(chalk.green(`[ ${c.user.username} ] 💚 IS ONLINE (DND Mode) !`))
     });
 
+    const cooldowns = new Map<string, number>();
+    const cooldownTime = 3000;
 
     client.on("interactionCreate", async (interaction) => {
+        const userId = interaction.user.id;
+        const now = Date.now();
+
         if (interaction.isChatInputCommand()) {
+            const commandName = interaction.commandName;
+            const lastUsed = cooldowns.get(`${userId}-${commandName}`) || 0;
+
+            if (now - lastUsed < cooldownTime) {
+                const remaining = ((lastUsed + cooldownTime) - now) / 1000;
+                await interaction.reply({
+                    content: `⏳ Please wait \`${remaining.toFixed(1)} seconds\` before using **/${commandName}** again.`,
+                    flags: 64
+                });
+                return;
+            }
+
+            cooldowns.set(`${userId}-${commandName}`, now);
+
             const command = commands.get(interaction.commandName) || itsmeprinceshopCommands.get(interaction.commandName);
             if (!command) return;
-    
+
             try {
                 await command.execute(interaction);
             } catch (error) {
                 console.error(error);
                 await interaction.reply({
                     content: "[ ERROR ] There was an error executing this command!",
-                    ephemeral: true,
+                    flags: 64,
                 });
             }
-        } 
+        }
         else if (interaction.isButton()) {
             if (interaction.customId.startsWith("select_user")) {
                 await handleSelectUser(interaction);
@@ -132,14 +151,14 @@ async function startBot() {
                 await handleModifyPP(interaction);
             } else if (interaction.customId.startsWith("modify_referral_")) {
                 await handleModifyReferral(interaction);
-            } else if(interaction.customId.startsWith("modify_purchases_")) {
+            } else if (interaction.customId.startsWith("modify_purchases_")) {
                 await handleModifyPurchases(interaction);
-            } else if(interaction.customId.startsWith("modify_referred_")) {
+            } else if (interaction.customId.startsWith("modify_referred_")) {
                 await handleModifyReferred(interaction);
-            } else if(interaction.customId.startsWith("refresh_")) {
+            } else if (interaction.customId.startsWith("refresh_")) {
                 await handleRefresh(interaction);
             }
-        } 
+        }
         else if (interaction.isModalSubmit()) {
             const customId = interaction.customId;
             if (customId === "select_user") {
@@ -156,10 +175,8 @@ async function startBot() {
                 }
             }
         }
-        
+
     });
-    
-    
 
     client.on("messageCreate", async (message) => {
         if (message.author.bot) return;
@@ -192,9 +209,6 @@ async function startBot() {
             return;
         }
 
-
-
-
         const content = message.content.toLowerCase();
         const args = message.content.split(" ").slice(1).join(" ");
         const command = [...msgCommands.values()]
@@ -202,6 +216,17 @@ async function startBot() {
             .find(cmd => cmd.triggers.some(trigger => message.content.startsWith(trigger)));
 
         if (command) {
+            const userId = message.author.id;
+            const now = Date.now();
+            const lastUsed = cooldowns.get(userId) || 0;
+
+            if (now - lastUsed < cooldownTime) {
+                const remaining = ((lastUsed + cooldownTime) - now) / 1000;
+                await message.reply(`⏳ Please wait ${remaining.toFixed(1)} seconds before using commands again.`);
+                return;
+            }
+            cooldowns.set(userId, now);
+
             console.log(
                 chalk.underline(`[ INFO ]`) +
                 "\n" +
