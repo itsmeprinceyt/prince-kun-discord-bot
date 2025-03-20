@@ -121,8 +121,7 @@ async function startBot() {
             if (now - lastUsed < cooldownTime) {
                 const remaining = ((lastUsed + cooldownTime) - now) / 1000;
                 await interaction.reply({
-                    content: `⏳ Please wait \`${remaining.toFixed(1)} seconds\` before using **/${commandName}** again.`,
-                    flags: 64
+                    content: `<@${userId}>, ⏳Please wait \`${remaining.toFixed(1)} seconds\` before using \`/${commandName}\` again.`
                 });
                 return;
             }
@@ -214,15 +213,15 @@ async function startBot() {
         const command = [...msgCommands.values()]
             .sort((a, b) => b.triggers[0].length - a.triggers[0].length)
             .find(cmd => cmd.triggers.some(trigger => message.content.startsWith(trigger)));
-
+        
         if (command) {
             const userId = message.author.id;
             const now = Date.now();
             const lastUsed = cooldowns.get(userId) || 0;
-
+            const commandName = command.triggers[0];
             if (now - lastUsed < cooldownTime) {
                 const remaining = ((lastUsed + cooldownTime) - now) / 1000;
-                await message.reply(`⏳ Please wait ${remaining.toFixed(1)} seconds before using commands again.`);
+                await message.reply(`<@${userId}>,⏳Please wait \`${remaining.toFixed(1)} seconds\` before using \`${commandName}\` again.`);
                 return;
             }
             cooldowns.set(userId, now);
