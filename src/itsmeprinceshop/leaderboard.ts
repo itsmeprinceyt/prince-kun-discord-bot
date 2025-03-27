@@ -36,7 +36,7 @@ export const leaderboard: Command = {
         try {
             const [rows]: any = await pool.query(
                 `SELECT user_id, pp_cash, refer_tickets, total_purchases, total_referred, spv 
-                FROM users ORDER BY ${sortBy} DESC LIMIT 25`
+                FROM users ORDER BY ${sortBy} DESC LIMIT 15`
             );
 
             if (!Array.isArray(rows) || rows.length === 0) {
