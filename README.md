@@ -14,5 +14,5 @@ npm run dev for production
 
 
 
-# TO DO
-- help-admin make it what others can use or what is restricted to owner only
+# Note
+- just do `tsc` and then `npm run build` and push along with the `/dist` folder
