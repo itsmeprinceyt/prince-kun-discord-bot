@@ -9,7 +9,7 @@ const fs_1 = __importDefault(require("fs"));
 exports.default = {
     triggers: [".?artwork"],
     async execute(message) {
-        const logoPath = path_1.default.join(__dirname, "../public/DiscordBotLogo.jpg");
+        const logoPath = path_1.default.join(__dirname, "../public/DiscordBotLogo2.png");
         if (!fs_1.default.existsSync(logoPath)) {
             return message.reply("The artwork image could not be found.");
         }
