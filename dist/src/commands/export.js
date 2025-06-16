@@ -63,7 +63,7 @@ const ExportCommand = {
                     .setTimestamp();
                 await interaction.reply({
                     embeds: [tableListEmbed],
-                    ephemeral: true
+                    flags: 64,
                 });
                 (0, logger_custom_1.logger_custom)(userName, "export", `${userName} fetched all database tables`);
                 return;
