@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
-const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
-const logger_custom_1 = require("../utility/logger-custom");
-const rolePerms_1 = require("../utility/rolePerms");
-const Moderator = rolePerms_1.RolesPerms[2].roleId;
+const logger_NoDM_NoAdmin_1 = require("../utility/loggers/logger-NoDM-NoAdmin");
+const logger_custom_1 = require("../utility/loggers/logger-custom");
+const RolesPerms_1 = require("../utility/uuid/RolesPerms");
+const Moderator = RolesPerms_1.RolesPerms[2].roleId;
 const PurgeCommand = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("purge")
@@ -37,7 +37,6 @@ const PurgeCommand = {
         }
         const channel = interaction.channel;
         const deleteOption = interaction.options.getString("deletemessages", true);
-        let messagesDeleted = 0;
         const now = Date.now();
         let timeLimit = 0;
         switch (deleteOption) {

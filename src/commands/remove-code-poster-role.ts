@@ -4,11 +4,11 @@ import {
     GuildMember 
 } from "discord.js";
 
-import { Command } from "../types/Command";
-import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
-import { logger_custom } from "../utility/logger-custom";
+import { Command } from "../types/Command.type";
+import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/loggers/logger-custom";
 
-import { RolesPerms } from "../utility/rolePerms";
+import { RolesPerms } from "../utility/uuid/RolesPerms";
 const CodePoster = RolesPerms[0].roleId;
 
 const removeCodePosterRole: Command = {
@@ -33,7 +33,7 @@ const removeCodePosterRole: Command = {
         }
 
         const executor = interaction.member as GuildMember;
-        const ownerId = interaction.guild.ownerId;
+        const ownerId: string = interaction.guild.ownerId;
 
         if (executor.id !== ownerId && !executor.permissions.has("Administrator")) {
             await interaction.reply({

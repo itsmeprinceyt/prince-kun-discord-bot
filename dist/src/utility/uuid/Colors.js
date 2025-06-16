@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.GOLDEN_EMBED = exports.YELLOW_EMBED = exports.PEACE_EMBED = exports.ORANGE_EMBED = exports.BLUE_EMBED = exports.COLOR_WHITE = exports.COLOR_FALSE = exports.COLOR_TRUE = exports.COLOR_PRIMARY = void 0;
+exports.COLOR_PRIMARY = 0xc200ff;
+exports.COLOR_TRUE = 0x00ff00;
+exports.COLOR_FALSE = 0xff0000;
+exports.COLOR_WHITE = 0xffffff;
+exports.BLUE_EMBED = 0x006eff;
+exports.ORANGE_EMBED = 0xFFA500;
+exports.PEACE_EMBED = 0xff6767;
+exports.YELLOW_EMBED = 0xeeff00;
+exports.GOLDEN_EMBED = 0xffa300;

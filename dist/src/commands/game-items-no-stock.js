@@ -1,10 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
-const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
-const logger_custom_1 = require("../utility/logger-custom");
-const rolePerms_1 = require("../utility/rolePerms");
-const ShopManager = rolePerms_1.RolesPerms[1].roleId;
+const logger_NoDM_NoAdmin_1 = require("../utility/loggers/logger-NoDM-NoAdmin");
+const logger_custom_1 = require("../utility/loggers/logger-custom");
+const RolesPerms_1 = require("../utility/uuid/RolesPerms");
+const Colors_1 = require("../utility/uuid/Colors");
+const utils_1 = require("../utility/utils");
+const ShopManager = RolesPerms_1.RolesPerms[1].roleId;
+const Admin = RolesPerms_1.RolesPerms[5].roleId;
 const ShopItemsNoStock = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("game-items-no-stock")
@@ -33,49 +36,49 @@ const ShopItemsNoStock = {
         }
         const item = interaction.options.getString("item", true);
         const welkin = new discord_js_1.EmbedBuilder()
-            .setColor(0xff0000)
+            .setColor(Colors_1.COLOR_FALSE)
             .setAuthor({
             name: "Prince-Kun • Genshin Impact",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: utils_1.ProfileAuthorPicture,
         })
             .setTitle("Blessing of the Welkin Moon is out of Stock!")
             .setDescription("```GENSHIN IMPACT - BLESSING OF THE WELKIN MOON```")
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171003356221461/Blessing_of_the_Welkin.png")
+            .setImage(utils_1.BLESSING_OF_THE_WELKIN_MOON)
             .setTimestamp();
         const express_pass = new discord_js_1.EmbedBuilder()
-            .setColor(0xff0000)
+            .setColor(Colors_1.COLOR_FALSE)
             .setAuthor({
             name: "Prince-Kun • Honkai Star Rail",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: utils_1.ProfileAuthorPicture,
         })
             .setTitle("Express Pass is out of Stock!")
             .setDescription("```HONKAI STAR RAIL - EXPRESS PASS```")
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171003843018893/Express_Supply_Pass.png")
+            .setImage(utils_1.EXPRESS_PASS)
             .setTimestamp();
         const lunite_subscription = new discord_js_1.EmbedBuilder()
-            .setColor(0xff0000)
+            .setColor(Colors_1.COLOR_FALSE)
             .setAuthor({
             name: "Prince-Kun • Wuthering Waves",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: utils_1.ProfileAuthorPicture,
         })
             .setTitle("Lunite Subscription is out of Stock!")
             .setDescription("```WUTHERING WAVES - LUNITE SUBSCRIPTION```")
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171011216605297/Lunite_Subscription.png")
+            .setImage(utils_1.LUNITE_SUBSCRIPTION)
             .setTimestamp();
         const inter_knot_membership = new discord_js_1.EmbedBuilder()
-            .setColor(0xff0000)
+            .setColor(Colors_1.COLOR_FALSE)
             .setAuthor({
             name: "Prince-Kun • Zenless Zone Zero",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: utils_1.ProfileAuthorPicture,
         })
             .setTitle("Inter-Knot Membership is out of Stock!")
             .setDescription("```ZENLESS ZONE ZERO - INTER-KNOT MEMBERSHIP```")
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171008834113546/Inter-Knot_Membership.png")
+            .setImage(utils_1.INTER_NOT_SUBSCRIPTION)
             .setTimestamp();
         const bottomEmbed = new discord_js_1.EmbedBuilder()
-            .setColor(0xff0000)
+            .setColor(Colors_1.COLOR_FALSE)
             .setTitle("Note")
-            .setDescription(`You can message <@310672946316181514> to ask for more information!`);
+            .setDescription(`You can message <@${Admin}> to ask for more information!`);
         const embedsMap = {
             "welkin": [welkin, bottomEmbed],
             "express-pass": [express_pass, bottomEmbed],

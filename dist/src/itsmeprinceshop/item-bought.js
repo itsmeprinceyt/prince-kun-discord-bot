@@ -5,18 +5,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const db_1 = __importDefault(require("../db"));
-const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
-const logger_custom_1 = require("../utility/logger-custom");
-const text_channels_1 = require("../utility/text-channels");
-const spvCalculator_1 = require("../utility/spvCalculator");
-const rolePerms_1 = require("../utility/rolePerms");
-const PREDEFINED_SERVER_ID = "310675536340844544";
-const ORDER_LOG_CHANNEL_ID = text_channels_1.TextChannels[1].roleId;
-const adminId = rolePerms_1.RolesPerms[5].roleId;
-const DefaultImageGenshin = "https://media.discordapp.net/attachments/1336322293437038602/1342230984464138392/gi-logo.png";
-const DefaultImageHSR = "https://media.discordapp.net/attachments/1336322293437038602/1342230984728252498/hsr-logo.png";
-const DefaultImageWuwa = "https://media.discordapp.net/attachments/1336322293437038602/1342230985034567761/www-logo.png";
-const DefaultImageZZZ = "https://media.discordapp.net/attachments/1336322293437038602/1342230985579823206/zzz-logo.png";
+const logger_NoDM_NoAdmin_1 = require("../utility/loggers/logger-NoDM-NoAdmin");
+const logger_custom_1 = require("../utility/loggers/logger-custom");
+const TextChannels_1 = require("../utility/uuid/TextChannels");
+const spvCalculator_1 = require("../utility/spv/spvCalculator");
+const RolesPerms_1 = require("../utility/uuid/RolesPerms");
+const utils_1 = require("../utility/utils");
+const Colors_1 = require("../utility/uuid/Colors");
+const ORDER_LOG_CHANNEL_ID = TextChannels_1.TextChannels[1].roleId;
+const adminId = RolesPerms_1.RolesPerms[5].roleId;
 const itemBoughtCommand = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("item-bought")
@@ -76,19 +73,19 @@ const itemBoughtCommand = {
         let imageUrl = ``;
         let boughtText = ``;
         if (game === "genshin") {
-            imageUrl = DefaultImageGenshin;
+            imageUrl = utils_1.LOGO_GENSHIN;
             boughtText = `Genshin Impact - `;
         }
         else if (game === "hsr") {
-            imageUrl = DefaultImageHSR;
+            imageUrl = utils_1.LOGO_HSR;
             boughtText = `Honkai Star Rail - `;
         }
         else if (game === "wuwa") {
-            imageUrl = DefaultImageWuwa;
+            imageUrl = utils_1.LOGO_Wuwa;
             boughtText = `Wuthering Waves - `;
         }
         else if (game === "zzz") {
-            imageUrl = DefaultImageZZZ;
+            imageUrl = utils_1.LOGO_ZZZ;
             boughtText = `Zenless Zone Zero - `;
         }
         if (!targetUserId && !usernameInput) {
@@ -99,13 +96,13 @@ const itemBoughtCommand = {
             ? await db_1.default.query("SELECT * FROM users WHERE user_id = ?", [targetUserId])
             : [[]];
         if (!rows || rows.length === 0) {
-            const botGuild = await interaction.client.guilds.fetch(PREDEFINED_SERVER_ID);
+            const botGuild = await interaction.client.guilds.fetch(utils_1.SERVER_ID);
             const orderLogChannel = await botGuild.channels.fetch(ORDER_LOG_CHANNEL_ID);
             let embed;
             let logMessage;
             if (mentionedUser) {
                 embed = new discord_js_1.EmbedBuilder()
-                    .setColor(0x00ff00)
+                    .setColor(Colors_1.COLOR_TRUE)
                     .setTitle("Purchase Successful")
                     .setThumbnail(imageUrl)
                     .setDescription(`Ordered by: <@${targetUserId}>\nBought: ${boughtText} **${item}**\nPrice: **${price} INR/-**\n\nRegister today using \`/register\`\nTo know more, type \`.?shoprules\``)
@@ -115,7 +112,7 @@ const itemBoughtCommand = {
             }
             else {
                 embed = new discord_js_1.EmbedBuilder()
-                    .setColor(0x00ff00)
+                    .setColor(Colors_1.COLOR_TRUE)
                     .setTitle("Purchase Successful")
                     .setThumbnail(imageUrl)
                     .setDescription(`Ordered by: **${targetUsername}**\nBought: ${boughtText} **${item}**\nPrice: **${price} INR/-**`)
@@ -166,14 +163,14 @@ const itemBoughtCommand = {
             finalEmbed = DiscordUserRegisteredBut300Above;
         }
         const embed = new discord_js_1.EmbedBuilder()
-            .setColor(0x00ff00)
+            .setColor(Colors_1.COLOR_TRUE)
             .setTitle("Purchase Successful")
             .setThumbnail(imageUrl)
             .setDescription(finalEmbed)
             .setFooter({ text: targetUsername, iconURL: targetAvatar })
             .setTimestamp();
         if (!interaction.guild) {
-            const botGuild = await interaction.client.guilds.fetch(PREDEFINED_SERVER_ID);
+            const botGuild = await interaction.client.guilds.fetch(utils_1.SERVER_ID);
             const orderLogChannel = await botGuild.channels.fetch(ORDER_LOG_CHANNEL_ID);
             if (orderLogChannel?.isTextBased()) {
                 await orderLogChannel.send({ embeds: [embed] });

@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const botId_1 = require("../utility/botId");
-const allowedBotIds = [botId_1.BOT_ID[0].roleId, botId_1.BOT_ID[1].roleId, botId_1.BOT_ID[2].roleId, botId_1.BOT_ID[3].roleId];
-const Mazoku = botId_1.BOT_ID[2].roleId;
-const Lumina = botId_1.BOT_ID[3].roleId;
+const Bot_ID_1 = require("../utility/uuid/Bot-ID");
+const allowedBotIds = [Bot_ID_1.BOT_ID[0].roleId, Bot_ID_1.BOT_ID[1].roleId, Bot_ID_1.BOT_ID[2].roleId, Bot_ID_1.BOT_ID[3].roleId];
+const Mazoku = Bot_ID_1.BOT_ID[2].roleId;
+const Lumina = Bot_ID_1.BOT_ID[3].roleId;
 exports.default = {
     triggers: [".?delete"],
     async execute(message) {

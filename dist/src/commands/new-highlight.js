@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
-const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
-const logger_custom_1 = require("../utility/logger-custom");
-const text_channels_1 = require("../utility/text-channels");
-const rolePerms_1 = require("../utility/rolePerms");
+const logger_NoDM_NoAdmin_1 = require("../utility/loggers/logger-NoDM-NoAdmin");
+const logger_custom_1 = require("../utility/loggers/logger-custom");
+const TextChannels_1 = require("../utility/uuid/TextChannels");
+const RolesPerms_1 = require("../utility/uuid/RolesPerms");
 const PREDEFINED_SERVER_ID = "310675536340844544";
-const HIGHLIGHT_CHANNEL_ID = text_channels_1.TextChannels[0].roleId;
-const adminId = rolePerms_1.RolesPerms[5].roleId;
+const HIGHLIGHT_CHANNEL_ID = TextChannels_1.TextChannels[0].roleId;
+const adminId = RolesPerms_1.RolesPerms[5].roleId;
 const newHighlight = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("new-highlight")

@@ -6,10 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const db_1 = __importDefault(require("../db"));
-const logger_custom_1 = require("../utility/logger-custom");
-const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
-const rolePerms_1 = require("../utility/rolePerms");
-const adminId = rolePerms_1.RolesPerms[5].roleId;
+const logger_NoDM_NoAdmin_1 = require("../utility/loggers/logger-NoDM-NoAdmin");
+const logger_custom_1 = require("../utility/loggers/logger-custom");
+const RolesPerms_1 = require("../utility/uuid/RolesPerms");
+const register_done_1 = require("../utility/embeds/register-done");
+const adminId = RolesPerms_1.RolesPerms[5].roleId;
 const registerUserCommand = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("register-user")
@@ -47,13 +48,7 @@ const registerUserCommand = {
         await db_1.default.query("INSERT INTO users (user_id, pp_cash, refer_tickets, total_purchases, registration_date, total_referred) VALUES (?, ?, ?, ?, ?, ?)", [selectedUser.id, 0, 0, 0, istTime, 0]);
         const logMessage = `[ DATABASE ] User ${userName} (${selectedUser.id}) registered by Admin ${interaction.user.username}`;
         (0, logger_custom_1.logger_custom)(userName, "register", logMessage);
-        const embed = new discord_js_1.EmbedBuilder()
-            .setColor(0x00ff00)
-            .setTitle("Registration Successful !")
-            .setThumbnail(selectedUser.displayAvatarURL())
-            .setDescription(`Well then, <@${selectedUser.id}>, you're registered!\n Use \`/profile\` to check your inventory!\n\n**Current Marketplace:** https://discord.com/channels/310675536340844544/1177928471951966339/1179354261365211218`)
-            .setTimestamp();
-        await interaction.reply({ embeds: [embed] });
+        await interaction.reply({ embeds: [(0, register_done_1.getRegistrationSuccessEmbed)(selectedUser)] });
     }
 };
 exports.default = registerUserCommand;

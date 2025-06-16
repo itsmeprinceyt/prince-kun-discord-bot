@@ -2,7 +2,7 @@ import { REST, Routes } from "discord.js";
 import { readdirSync } from "fs";
 import { join } from "path";
 import "dotenv/config";
-import { Command } from "./types/Command";
+import { Command } from "./types/Command.type";
 import itsmeprinceshopCommands from "./itsmeprinceshopCommandHandler";
 
 async function deployCommands() {

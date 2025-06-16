@@ -1,21 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
+const utils_1 = require("../utility/utils");
+const Colors_1 = require("../utility/uuid/Colors");
 exports.default = {
     triggers: [".?discord", ".?dc"],
     async execute(message) {
-        const inviteLink = "https://discord.gg/HgXNs4p5cx";
         const embed = new discord_js_1.EmbedBuilder()
-            .setColor(0xc200ff)
+            .setColor(Colors_1.COLOR_PRIMARY)
             .setAuthor({
             name: "Prince-Kun • Discord",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: utils_1.ProfileAuthorPicture
         })
             .setTitle("ItsMe Prince Official Discord Server")
             .setDescription(`You can join my Official Discord Server! 🌟🌻\n\n` +
-            `**Shareable Link:** ${inviteLink}\n` +
-            `[Click Here To Join!](https://discord.gg/HgXNs4p5cx)`)
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337038357565276160/Discord.png")
+            `**Shareable Link:** ${utils_1.DiscordServerLink}\n\n` +
+            `[Click Here To Join!](${utils_1.DiscordServerLink})`)
+            .setImage(utils_1.Discord)
             .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
             .setTimestamp();
         const row = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder()
@@ -36,7 +37,7 @@ exports.default = {
                     });
                 }
                 await interaction.reply({
-                    content: `${inviteLink}`,
+                    content: `${utils_1.DiscordServerLink}`,
                     flags: 64,
                 });
             }

@@ -2,11 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleServerModalSubmit = handleServerModalSubmit;
 const discord_js_1 = require("discord.js");
-const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
-const logger_command_sent_1 = require("../utility/logger-command-sent");
-const logger_custom_1 = require("../utility/logger-custom");
-const roles_1 = require("../utility/roles");
-const changesRoleId = roles_1.Roles[0].roleId;
+const logger_command_sent_1 = require("../utility/loggers/logger-command-sent");
+const logger_NoDM_NoAdmin_1 = require("../utility/loggers/logger-NoDM-NoAdmin");
+const logger_custom_1 = require("../utility/loggers/logger-custom");
+const PingRoles_1 = require("../utility/uuid/PingRoles");
+const Colors_1 = require("../utility/uuid/Colors");
+const utils_1 = require("../utility/utils");
+const changesRoleId = PingRoles_1.PING_Roles[0].roleId;
 const userCache = new Map();
 const serverUpdatesCommand = {
     data: new discord_js_1.SlashCommandBuilder()
@@ -53,15 +55,14 @@ async function handleServerModalSubmit(interaction) {
     const username = userInfo?.username || "Unknown User";
     const avatarURL = userInfo?.avatarURL || interaction.user.displayAvatarURL();
     const embed = new discord_js_1.EmbedBuilder()
-        .setColor(0xffffff)
+        .setColor(Colors_1.COLOR_PRIMARY)
         .setAuthor({
         name: "Prince-Kun • Server Update",
-        iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+        iconURL: utils_1.ProfileAuthorPicture,
     })
         .setTitle("📢 Latest Server Changes & Improvements!")
         .setDescription(messageContent)
-        .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337156724628525127/Server_Changes.png")
-        .setFooter({ text: `${username}`, iconURL: avatarURL })
+        .setImage(utils_1.ServerUpdates)
         .setTimestamp();
     await interaction.reply({
         content: "✅ Server update message sent!",

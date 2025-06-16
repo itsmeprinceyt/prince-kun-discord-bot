@@ -5,8 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const path_1 = __importDefault(require("path"));
-const botId_1 = require("../utility/botId");
-const Karuta = botId_1.BOT_ID[0].roleId;
+const Bot_ID_1 = require("../utility/uuid/Bot-ID");
+const karuta_work_1 = require("../utility/embeds/karuta-work");
+const Karuta = Bot_ID_1.BOT_ID[0].roleId;
 const jobBoardHealthyCards = [];
 exports.default = {
     triggers: [".?scan", ".?work"],
@@ -26,7 +27,7 @@ exports.default = {
             }
         }
         if (!triggeredByUser) {
-            await message.reply("⚠️ You can only use the command on the embed message triggered by you.");
+            await message.reply({ embeds: [(0, karuta_work_1.NotTriggeredByYou)()] });
             return;
         }
         const embed = repliedTo.embeds[0];
@@ -50,7 +51,7 @@ exports.default = {
                 const gifPath = path_1.default.join(__dirname, "../public/GIF/silly-cat-silly-car.gif");
                 const gif = new discord_js_1.AttachmentBuilder(gifPath);
                 await message.reply({
-                    content: "⚠️ No Job Board found. Make sure you're replying to the correct embed.",
+                    embeds: [(0, karuta_work_1.NoJobBoardFound)()],
                     files: [gif]
                 });
                 return;
@@ -59,19 +60,20 @@ exports.default = {
                 const hasCards = lines.some(line => line.match(/^(🇦|🇧|🇨|🇩|🇪)\s(.+?)\s·\s\*\*(\d+)\*\*\sEffort\s·\s`(Injured)`/));
                 if (hasCards) { }
                 else {
-                    await message.reply("⚠️ The Job Board appears to be empty or no valid cards were found.");
+                    await message.reply({
+                        embeds: [(0, karuta_work_1.EmptyJobBoard)()]
+                    });
                     return;
                 }
             }
             const count = jobBoardHealthyCards.length;
             if (count === 5) {
-                await message.reply("✅ All cards are already healthy in the Job Board.");
+                await message.reply({ embeds: [(0, karuta_work_1.AllCardsHealthyEmbed)()] });
                 return;
             }
             const healthyCount = jobBoardHealthyCards.length;
             const injuredCount = lines.filter(line => line.match(/^(🇦|🇧|🇨|🇩|🇪)\s(.+?)\s·\s\*\*(\d+)\*\*\sEffort\s·\s`Injured`/)).length;
-            const cardText = `✅ I've learned that there ${healthyCount === 1 ? "is" : "are"} ${healthyCount} healthy ${healthyCount === 1 ? "card" : "cards"} and ${injuredCount} injured ${injuredCount === 1 ? "card" : "cards"} in the Job Board.\n Type \`kc o:eff\` and reply your collection with \`.?work\`\n`;
-            await message.reply(cardText + `-# This command will not run as expected if you have any card's alias setup.`);
+            await message.reply({ embeds: [(0, karuta_work_1.JobBoardSummary)(healthyCount, injuredCount)] });
         }
         if (message.content.startsWith(".?work")) {
             const availableCards = [...embed.description.matchAll(/\*\*`([^`]+)`\*\*.*\*\*(.+?)\*\*$/gm)].map((match) => ({
@@ -79,7 +81,7 @@ exports.default = {
                 name: match[2].trim(),
             }));
             if (availableCards.length === 0) {
-                await message.reply("⚠️ No card codes found in kc o:eff.");
+                await message.reply({ embeds: [(0, karuta_work_1.NoCardsFound)()] });
                 return;
             }
             const allLabels = ["A", "B", "C", "D", "E"];
@@ -107,7 +109,7 @@ exports.default = {
                 }
             }
             if (labelIndex === 0) {
-                await message.reply("✅ All cards are already healthy in the Job Board.");
+                await message.reply({ embeds: [(0, karuta_work_1.AllCardsHealthyEmbed)()] });
             }
         }
     },

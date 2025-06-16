@@ -5,18 +5,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const db_1 = __importDefault(require("../db"));
-const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
-const logger_custom_1 = require("../utility/logger-custom");
-const text_channels_1 = require("../utility/text-channels");
-const spvCalculator_1 = require("../utility/spvCalculator");
-const rolePerms_1 = require("../utility/rolePerms");
-const PREDEFINED_SERVER_ID = "310675536340844544";
-const ORDER_LOG_CHANNEL_ID = text_channels_1.TextChannels[1].roleId;
-const adminId = rolePerms_1.RolesPerms[5].roleId;
-const DefaultImageGenshin = "https://media.discordapp.net/attachments/1336322293437038602/1342230984464138392/gi-logo.png";
-const DefaultImageHSR = "https://media.discordapp.net/attachments/1336322293437038602/1342230984728252498/hsr-logo.png";
-const DefaultImageWuwa = "https://media.discordapp.net/attachments/1336322293437038602/1342230985034567761/www-logo.png";
-const DefaultImageZZZ = "https://media.discordapp.net/attachments/1336322293437038602/1342230985579823206/zzz-logo.png";
+const logger_NoDM_NoAdmin_1 = require("../utility/loggers/logger-NoDM-NoAdmin");
+const logger_custom_1 = require("../utility/loggers/logger-custom");
+const TextChannels_1 = require("../utility/uuid/TextChannels");
+const spvCalculator_1 = require("../utility/spv/spvCalculator");
+const RolesPerms_1 = require("../utility/uuid/RolesPerms");
+const utils_1 = require("../utility/utils");
+const Colors_1 = require("../utility/uuid/Colors");
+const ORDER_LOG_CHANNEL_ID = TextChannels_1.TextChannels[1].roleId;
+const adminId = RolesPerms_1.RolesPerms[5].roleId;
 const referring = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("referring")
@@ -53,7 +50,7 @@ const referring = {
             (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
             return;
         }
-        const botGuild = await interaction.client.guilds.fetch(PREDEFINED_SERVER_ID);
+        const botGuild = await interaction.client.guilds.fetch(utils_1.SERVER_ID);
         const orderLogChannel = await botGuild.channels.fetch(ORDER_LOG_CHANNEL_ID);
         const referrer = interaction.options.getUser("referrer", true);
         const referred = interaction.options.getUser("referred", true);
@@ -67,25 +64,25 @@ const referring = {
         let boughtText = ``;
         let logMessage;
         if (game === "genshin") {
-            imageUrl = DefaultImageGenshin;
+            imageUrl = utils_1.LOGO_GENSHIN;
             boughtText = `Genshin Impact - `;
         }
         else if (game === "hsr") {
-            imageUrl = DefaultImageHSR;
+            imageUrl = utils_1.LOGO_HSR;
             boughtText = `Honkai Star Rail - `;
         }
         else if (game === "wuwa") {
-            imageUrl = DefaultImageWuwa;
+            imageUrl = utils_1.LOGO_Wuwa;
             boughtText = `Wuthering Waves - `;
         }
         else if (game === "zzz") {
-            imageUrl = DefaultImageZZZ;
+            imageUrl = utils_1.LOGO_ZZZ;
             boughtText = `Zenless Zone Zero - `;
         }
         const [referrerRows] = await db_1.default.query("SELECT * FROM users WHERE user_id = ?", [referrer.id]);
         if (!referrerRows || referrerRows.length === 0) {
             const embed = new discord_js_1.EmbedBuilder()
-                .setColor(0x00ff00)
+                .setColor(Colors_1.COLOR_TRUE)
                 .setTitle("Referral Processed Successfully")
                 .setThumbnail(imageUrl)
                 .setDescription(`Referral: <@${referrer.id}>
@@ -121,7 +118,7 @@ const referring = {
         const [referredRows] = await db_1.default.query("SELECT * FROM users WHERE user_id = ?", [referred.id]);
         if (!referredRows || referredRows.length === 0) {
             const embed = new discord_js_1.EmbedBuilder()
-                .setColor(0x00ff00)
+                .setColor(Colors_1.COLOR_TRUE)
                 .setTitle("Referral Processed Successfully")
                 .setThumbnail(imageUrl)
                 .setDescription(`Referral: <@${referrer.id}>
@@ -145,7 +142,6 @@ const referring = {
             }
             return;
         }
-        const referredData = referredRows[0];
         let rewardText = ``;
         if (price >= 300) {
             const referralTicketsEarned = Math.floor(price / 300);
@@ -165,7 +161,7 @@ const referring = {
             await db_1.default.query("UPDATE users SET total_purchases = ?, spv = ? WHERE user_id = ?", [total_purchases, parseFloat(spv.toFixed(2)), referred.id]);
         }
         const embed = new discord_js_1.EmbedBuilder()
-            .setColor(0x00ff00)
+            .setColor(Colors_1.COLOR_TRUE)
             .setTitle("Referral Processed Successfully")
             .setThumbnail(imageUrl)
             .setDescription(`Referral: <@${referrer.id}>

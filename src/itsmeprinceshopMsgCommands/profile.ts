@@ -1,17 +1,24 @@
 import {
     Message,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
     EmbedBuilder,
     AttachmentBuilder
 } from "discord.js";
 import moment from "moment-timezone";
 import pool from "../db";
-import { generateSPVImage } from "../utility/spvImage";
-import { EMOTES } from "../utility/emotes";
+import { generateSPVImage } from "../utility/spv/spvImage";
+import { EMOTES } from "../utility/uuid/Emotes";
+import { WebsiteLink } from '../utility/utils';
 const GC = EMOTES[0].roleId;
 const YC = EMOTES[1].roleId;
 const RC = EMOTES[2].roleId;
 const BC = EMOTES[3].roleId;
 const PC = EMOTES[4].roleId;
+
+import { YELLOW_EMBED } from "../utility/uuid/Colors";
+import { ProfileAuthorPicture } from "../utility/utils";
 
 const profileCommand = {
     triggers: [".?profile"],
@@ -21,9 +28,9 @@ const profileCommand = {
         }
 
         const targetUser = message.mentions.users.first() || message.author;
-        const targetUserId = targetUser.id;
-        const targetUsername = targetUser.username;
-        const avatarURL = targetUser.displayAvatarURL();
+        const targetUserId: string = targetUser.id;
+        const targetUsername: string = targetUser.username;
+        const avatarURL: string = targetUser.displayAvatarURL();
 
         const [rows]: any = await pool.query(
             "SELECT pp_cash, refer_tickets, total_purchases, registration_date, total_referred, spv FROM users WHERE user_id = ?",
@@ -49,10 +56,10 @@ const profileCommand = {
             const attachment = new AttachmentBuilder(imageBuffer, { name: "spv.png" });
 
             const embed = new EmbedBuilder()
-                .setColor(0xeeff00)
+                .setColor(YELLOW_EMBED)
                 .setAuthor({
                     name: "Prince-Kun • Profile Info",
-                    iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                    iconURL: ProfileAuthorPicture,
                 })
                 .setThumbnail("attachment://spv.png")
                 .setTitle("ItsMe Prince Shop")
@@ -72,8 +79,15 @@ const profileCommand = {
                     `${GC} To know rules & information, type \`.?shoprules\``)
                 .setFooter({ text: `${targetUsername}`, iconURL: avatarURL })
                 .setTimestamp();
-                
-            await (message.channel as any).send({ embeds: [embed], files: [attachment] });
+
+            const websiteButton = new ButtonBuilder()
+                .setLabel("Visit Shop Website")
+                .setStyle(ButtonStyle.Link)
+                .setURL(WebsiteLink);
+
+            const row = new ActionRowBuilder<ButtonBuilder>().addComponents(websiteButton);
+
+            await (message.channel as any).send({ embeds: [embed], components: [row], files: [attachment] });
             return;
         }
     }

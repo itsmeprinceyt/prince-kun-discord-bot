@@ -5,11 +5,11 @@ import {
     Client,
 } from "discord.js";
 
-import { Command } from "../types/Command";
-import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
-import { logger_custom } from "../utility/logger-custom";
-import { TextChannels } from "../utility/text-channels";
-import { RolesPerms } from "../utility/rolePerms";
+import { Command } from "../types/Command.type";
+import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/loggers/logger-custom";
+import { TextChannels } from "../utility/uuid/TextChannels";
+import { RolesPerms } from "../utility/uuid/RolesPerms";
 
 const PREDEFINED_SERVER_ID = "310675536340844544";
 const HIGHLIGHT_CHANNEL_ID = TextChannels[0].roleId;
@@ -75,9 +75,9 @@ const newHighlight: Command = {
             return;
         }
 
-        const imageUrl = interaction.options.getString("image-url", true).trim();
-        const sanitizedImageUrl = imageUrl.replace(/\?.*$/, "");
-        const textMessage = interaction.options.getString("text")?.trim();
+        const imageUrl: string = interaction.options.getString("image-url", true).trim();
+        const sanitizedImageUrl: string = imageUrl.replace(/\?.*$/, "");
+        const textMessage: string | undefined = interaction.options.getString("text")?.trim();
 
         if (textMessage) {
             await highlightChannel.send(textMessage);

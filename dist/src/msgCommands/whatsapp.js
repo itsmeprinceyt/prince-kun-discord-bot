@@ -1,21 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
+const utils_1 = require("../utility/utils");
+const Colors_1 = require("../utility/uuid/Colors");
 exports.default = {
     triggers: [".?whatsapp"],
     async execute(message) {
-        const phoneNumber = "+919793798778";
         const embed = new discord_js_1.EmbedBuilder()
-            .setColor(0xc200ff)
+            .setColor(Colors_1.COLOR_PRIMARY)
             .setAuthor({
             name: "Prince-Kun • Whatsapp",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: utils_1.ProfileAuthorPicture,
         })
             .setTitle("Broadcast Channel")
             .setDescription(`Find all the channel updates right from your Whatsapp App! Join my Broadcast channel from the link below or message me on my WhatsApp number and say "Hi!"\n\n` +
-            `**WhatsApp Number:** \`${phoneNumber}\`\n` +
-            `[Click here to join my WhatsApp Broadcast Channel!](https://www.whatsapp.com/channel/0029Va5MEeX2UPBIHUMyQY2z)`)
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337051063504867398/Whatsapp.png")
+            `**WhatsApp Number:** \`${utils_1.phoneNumber}\`\n` +
+            `[Click here to join my WhatsApp Broadcast Channel!](${utils_1.WhatsappBroadcast})`)
+            .setImage(utils_1.Whatsapp)
             .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
             .setTimestamp();
         const row = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder()
@@ -36,7 +37,7 @@ exports.default = {
                     });
                 }
                 await interaction.reply({
-                    content: `${phoneNumber}`,
+                    content: `${utils_1.phoneNumber}`,
                     flags: 64,
                 });
             }

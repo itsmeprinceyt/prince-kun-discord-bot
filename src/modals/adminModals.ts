@@ -13,15 +13,17 @@ import {
 } from "discord.js";
 import pool from "../db";
 import moment from "moment-timezone";
-import { logger_custom } from "../utility/logger-custom";
-import { calculateSPV } from "../utility/spvCalculator";
-import { generateSPVImage } from "../utility/spvImage";
-import { EMOTES } from "../utility/emotes";
+import { logger_custom } from "../utility//loggers/logger-custom";
+import { calculateSPV } from "../utility/spv/spvCalculator";
+import { generateSPVImage } from "../utility/spv/spvImage";
+import { EMOTES } from "../utility/uuid/Emotes";
 const GC = EMOTES[0].roleId;
 const YC = EMOTES[1].roleId;
 const RC = EMOTES[2].roleId;
 const BC = EMOTES[3].roleId;
 const PC = EMOTES[4].roleId;
+import { ProfileAuthorPicture } from "../utility/utils";
+import { BLUE_EMBED, YELLOW_EMBED } from "../utility/uuid/Colors";
 
 export async function handleSelectUser(interaction: ButtonInteraction) {
     logger_custom("ADMIN", "admin", "Admin clicked select user button");
@@ -84,10 +86,10 @@ export async function handleSelectUserSubmit(interaction: ModalSubmitInteraction
     const attachment = new AttachmentBuilder(imageBuffer, { name: "spv.png" });
 
     const userEmbed = new EmbedBuilder()
-        .setColor(0xeeff00)
+        .setColor(BLUE_EMBED)
         .setAuthor({
             name: "Prince-Kun • Profile Info",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: ProfileAuthorPicture,
         })
         .setThumbnail("attachment://spv.png")
         .setTitle("ItsMe Prince Shop")
@@ -148,10 +150,10 @@ export async function handleRefresh(interaction: ButtonInteraction) {
     const attachment = new AttachmentBuilder(imageBuffer, { name: "spv.png" });
 
     const userEmbed = new EmbedBuilder()
-        .setColor(0xeeff00)
+        .setColor(YELLOW_EMBED)
         .setAuthor({
             name: "Prince-Kun • Profile Info",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: ProfileAuthorPicture,
         })
         .setThumbnail("attachment://spv.png")
         .setTitle("ItsMe Prince Shop")

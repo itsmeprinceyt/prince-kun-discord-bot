@@ -6,8 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.leaderboard = void 0;
 const discord_js_1 = require("discord.js");
 const db_1 = __importDefault(require("../db"));
-const logger_custom_1 = require("../utility/logger-custom");
-const DefaultThumbnail = "https://media.discordapp.net/attachments/1336322293437038602/1342641235017339103/Shop.png";
+const logger_custom_1 = require("../utility/loggers/logger-custom");
+const Colors_1 = require("../utility/uuid/Colors");
+const utils_1 = require("../utility/utils");
 exports.leaderboard = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName('shop-leaderboard')
@@ -33,25 +34,53 @@ exports.leaderboard = {
                 await interaction.reply({ content: '❌ No data found!', flags: 64 });
                 return;
             }
-            let leaderboardTitle = `\`SN  \` \`💵  \` \`🎟️ \` \`🛒  \` \`👥  \` \`SPV    \` \`User   \``;
+            let leaderboardTitle = `\`${"ID ".padEnd(4)}\` ` +
+                `\`${"💵".padEnd(5)}\` ` +
+                `\`${"🎟️".padEnd(5)}\` ` +
+                `\`${"🛒".padEnd(5)}\` ` +
+                `\`${"👥".padEnd(5)}\` ` +
+                `\`${"SPV".padEnd(6)}\` ` +
+                `\`User\` `;
             let leaderboard = rows
-                .map((user, index) => `\`${index + 1}   \` \`${String(user.pp_cash).padEnd(4, " ")}\` \`${String(user.refer_tickets).padEnd(4, " ")}\` \`${String(user.total_purchases).padEnd(4, " ")}\` \`${String(user.total_referred).padEnd(4, " ")}\` \`${String((parseFloat(user.spv) || 0).toFixed(2)).padEnd(7, " ")}\` <@${user.user_id}>`)
+                .map((user, index) => `\`${String(index + 1).padEnd(4)}\` ` +
+                `\`${String(user.pp_cash).padEnd(5)}\` ` +
+                `\`${String(user.refer_tickets).padEnd(5)}\` ` +
+                `\`${String(user.total_purchases).padEnd(5)}\` ` +
+                `\`${String(user.total_referred).padEnd(5)}\` ` +
+                `\`${String((parseFloat(user.spv) || 0).toFixed(2)).padEnd(6)}\` ` +
+                `<@${user.user_id}>`)
                 .join('\n');
-            let CASHTitle = `\`SN  \` \`💵  \` \`User   \``;
+            let CASHTitle = `\`${"ID".padEnd(4)}\` ` +
+                `\`${"💵".padEnd(5)}\` ` +
+                `\`User\` `;
             let CASH = rows
-                .map((user, index) => `\`${index + 1}   \` \`${String(user.pp_cash).padEnd(4, " ")}\` <@${user.user_id}>`)
+                .map((user, index) => `\`${String(index + 1).padEnd(4)}\` ` +
+                `\`${String(user.pp_cash).padEnd(5)}\` ` +
+                `<@${user.user_id}>`)
                 .join('\n');
-            let RTTitle = `\`SN  \` \`🎟️  \` \`User   \``;
+            let RTTitle = `\`${"ID".padEnd(4)}\` ` +
+                `\`${"🎟️".padEnd(5)}\` ` +
+                `\`User\` `;
             let RT = rows
-                .map((user, index) => `\`${index + 1}   \` \`${String(user.refer_tickets).padEnd(4, " ")}\` <@${user.user_id}>`)
+                .map((user, index) => `\`${String(index + 1).padEnd(4)}\` ` +
+                `\`${String(user.refer_tickets).padEnd(5)}\` ` +
+                `<@${user.user_id}>`)
                 .join('\n');
-            let TPTitle = `\`SN  \` \`🛒  \` \`User   \``;
+            let TPTitle = `\`${"ID".padEnd(4)}\` ` +
+                `\`${"🛒".padEnd(5)}\` ` +
+                `\`User\` `;
             let TP = rows
-                .map((user, index) => `\`${index + 1}   \` \`${String(user.total_purchases).padEnd(4, " ")}\` <@${user.user_id}>`)
+                .map((user, index) => `\`${String(index + 1).padEnd(4)}\` ` +
+                `\`${String(user.total_purchases).padEnd(5)}\` ` +
+                `<@${user.user_id}>`)
                 .join('\n');
-            let TRTitle = `\`SN  \` \`👥  \` \`User   \``;
+            let TRTitle = `\`${"ID".padEnd(4)}\` ` +
+                `\`${"👥".padEnd(5)}\` ` +
+                `\`User\` `;
             let TR = rows
-                .map((user, index) => `\`${index + 1}   \` \`${String(user.total_referred).padEnd(4, " ")}\` <@${user.user_id}>`)
+                .map((user, index) => `\`${String(index + 1).padEnd(4)}\` ` +
+                `\`${String(user.total_referred).padEnd(5)}\` ` +
+                `<@${user.user_id}>`)
                 .join('\n');
             let finalDescription = leaderboard;
             let finalTitle = leaderboardTitle;
@@ -74,11 +103,11 @@ exports.leaderboard = {
                     break;
             }
             const embed = new discord_js_1.EmbedBuilder()
-                .setColor(0x00ff00)
+                .setColor(Colors_1.COLOR_TRUE)
                 .setTitle(`🏆 Leaderboard ${fieldNames[sortBy]}`)
                 .setAuthor({
                 name: "Prince-Kun • ItsMe Prince Shop Leaderboard",
-                iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                iconURL: utils_1.ProfileAuthorPicture,
             })
                 .setDescription(finalTitle
                 +

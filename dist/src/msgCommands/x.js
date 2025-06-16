@@ -1,20 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
+const Colors_1 = require("../utility/uuid/Colors");
+const utils_1 = require("../utility/utils");
 exports.default = {
     triggers: [".?x", ".?twitter"],
     async execute(message) {
-        const X = "https://x.com/itsmeprinceyt";
         const embed = new discord_js_1.EmbedBuilder()
-            .setColor(0xc200ff)
+            .setColor(Colors_1.COLOR_PRIMARY)
             .setAuthor({
             name: "Prince-Kun • X",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: utils_1.ProfileAuthorPicture
         })
             .setTitle("@itsmeprinceyt")
             .setDescription(`You can follow me on X 🌟🌻\n\n` +
-            `[Click Here To Follow !](${X})`)
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337027227598196778/X.png")
+            `[Click Here To Follow !](${utils_1.X})`)
+            .setImage(utils_1.XImage)
             .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
             .setTimestamp();
         const row = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder()
@@ -35,7 +36,7 @@ exports.default = {
                     });
                 }
                 await interaction.reply({
-                    content: `${X}`,
+                    content: `${utils_1.X}`,
                     flags: 64,
                 });
             }

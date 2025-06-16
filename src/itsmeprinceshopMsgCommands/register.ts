@@ -1,8 +1,11 @@
 import { Message, EmbedBuilder, TextChannel } from "discord.js";
 import moment from "moment-timezone";
 import pool from "../db";
-import { logger_custom } from "../utility/logger-custom";
-import { ItsMePrinceRules } from "../utility/itsmeprince-rules";
+import { logger_custom } from "../utility/loggers/logger-custom";
+import { ItsMePrinceRules } from "../utility/commands/rules/itsmeprince-rules";
+import { getRegistrationSuccessEmbed } from '../utility/embeds/register-done';
+import { COLOR_PRIMARY } from "../utility/uuid/Colors";
+import { ProfileAuthorPicture } from "../utility/utils";
 
 const registerCommand = {
     triggers: [".?register"],
@@ -21,18 +24,16 @@ const registerCommand = {
         }
 
         const embed1 = new EmbedBuilder()
-            .setColor(0xc200ff)
+            .setColor(COLOR_PRIMARY)
             .setAuthor({
                 name: "Prince-Kun • ItsMe Prince Shop",
-                iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                iconURL: ProfileAuthorPicture,
             })
             .setTitle("ItsMe Prince Shop - Profile Registration")
             .setThumbnail(message.author.displayAvatarURL())
             .setDescription(
                 ItsMePrinceRules +
-                `\n**You accept the rules by registering and you also agree to any future updates or changes in the value of PP CASH. It is your responsibility to stay updated with the latest rules.**`)
-            .setFooter({ text: `${userName}`, iconURL: message.author.displayAvatarURL() })
-            .setTimestamp();
+                `\n**You accept the rules by registering and you also agree to any future updates or changes in the value of PP CASH. It is your responsibility to stay updated with the latest rules.**`);
 
         const embed2 = new EmbedBuilder()
             .setColor(0x00ff00)
@@ -73,16 +74,7 @@ const registerCommand = {
                     logger_custom(userName, "register", logMessage);
 
                     await msg.channel.send({
-                        embeds: [
-                            new EmbedBuilder()
-                                .setColor(0x00ff00)
-                                .setTitle("Registration Successful!")
-                                .setThumbnail(message.author.displayAvatarURL())
-                                .setDescription(
-                                    `Well then, <@${userId}>, you're registered!\nUse \`/profile\` or \`.?profile\` to check your inventory!\n\n**Current Marketplace:** https://discord.com/channels/310675536340844544/1177928471951966339/1179354261365211218`
-                                )
-                                .setTimestamp()
-                        ]
+                        embeds: [getRegistrationSuccessEmbed(message.author)],
                     });
 
                     collector.stop();

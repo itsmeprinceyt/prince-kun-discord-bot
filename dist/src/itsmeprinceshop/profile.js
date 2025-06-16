@@ -6,15 +6,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const db_1 = __importDefault(require("../db"));
-const logger_custom_1 = require("../utility/logger-custom");
-const itsmeprince_rules_1 = require("../utility/itsmeprince-rules");
-const spvImage_1 = require("../utility/spvImage");
-const emotes_1 = require("../utility/emotes");
-const GC = emotes_1.EMOTES[0].roleId;
-const YC = emotes_1.EMOTES[1].roleId;
-const RC = emotes_1.EMOTES[2].roleId;
-const BC = emotes_1.EMOTES[3].roleId;
-const PC = emotes_1.EMOTES[4].roleId;
+const logger_custom_1 = require("../utility/loggers/logger-custom");
+const itsmeprince_rules_1 = require("../utility/commands/rules/itsmeprince-rules");
+const spvImage_1 = require("../utility/spv/spvImage");
+const Emotes_1 = require("../utility/uuid/Emotes");
+const utils_1 = require("../utility/utils");
+const GC = Emotes_1.EMOTES[0].roleId;
+const YC = Emotes_1.EMOTES[1].roleId;
+const RC = Emotes_1.EMOTES[2].roleId;
+const BC = Emotes_1.EMOTES[3].roleId;
+const PC = Emotes_1.EMOTES[4].roleId;
+const Colors_1 = require("../utility/uuid/Colors");
+const utils_2 = require("../utility/utils");
+const register_done_1 = require("../utility/embeds/register-done");
 const profileCommand = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("profile")
@@ -56,10 +60,10 @@ const profileCommand = {
             const imageBuffer = await (0, spvImage_1.generateSPVImage)(spvRounded);
             const attachment = new discord_js_1.AttachmentBuilder(imageBuffer, { name: "spv.png" });
             const embed = new discord_js_1.EmbedBuilder()
-                .setColor(0xeeff00)
+                .setColor(Colors_1.YELLOW_EMBED)
                 .setAuthor({
                 name: "Prince-Kun • Profile Info",
-                iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                iconURL: utils_2.ProfileAuthorPicture,
             })
                 .setThumbnail("attachment://spv.png")
                 .setTitle("ItsMe Prince Shop")
@@ -78,16 +82,25 @@ const profileCommand = {
                 `${GC} To know rules & information, type \`.?shoprules\``)
                 .setFooter({ text: `${targetUsername}`, iconURL: avatarURL })
                 .setTimestamp();
-            await interaction.reply({ embeds: [embed], files: [attachment] });
+            const websiteButton = new discord_js_1.ButtonBuilder()
+                .setLabel("Visit Shop Website")
+                .setStyle(discord_js_1.ButtonStyle.Link)
+                .setURL(utils_1.WebsiteLink);
+            const row = new discord_js_1.ActionRowBuilder().addComponents(websiteButton);
+            await interaction.reply({
+                embeds: [embed],
+                components: [row],
+                files: [attachment]
+            });
             const MessageString = `[ DATABASE ] User ${targetDisplayName} (${targetUserId}) fetched profile`;
             (0, logger_custom_1.logger_custom)(targetDisplayName, "profile", MessageString);
             return;
         }
         const embed = new discord_js_1.EmbedBuilder()
-            .setColor(0xc200ff)
+            .setColor(Colors_1.COLOR_PRIMARY)
             .setAuthor({
             name: "Prince-Kun • ItsMe Prince Shop",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: utils_2.ProfileAuthorPicture,
         })
             .setTitle("Rules & Information")
             .setThumbnail(interaction.user.displayAvatarURL())
@@ -120,13 +133,7 @@ const profileCommand = {
                 const MessageString = `[ DATABASE ] User ${targetDisplayName} (${targetUserId}) registered`;
                 (0, logger_custom_1.logger_custom)(targetDisplayName, "profile", MessageString);
                 await buttonInteraction.update({
-                    embeds: [
-                        new discord_js_1.EmbedBuilder()
-                            .setTitle("Registration Successful!")
-                            .setThumbnail(interaction.user.displayAvatarURL())
-                            .setDescription("Well, you're registered!\n Use \`/profile\` to check your inventory!\n\n**Current Marketplace:** https://discord.com/channels/310675536340844544/1177928471951966339/1179354261365211218")
-                            .setColor(0x00ff00)
-                    ],
+                    embeds: [(0, register_done_1.getRegistrationSuccessEmbed)(interaction.user)],
                     components: []
                 });
             }

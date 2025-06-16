@@ -15,15 +15,17 @@ exports.handleDeleteUser = handleDeleteUser;
 const discord_js_1 = require("discord.js");
 const db_1 = __importDefault(require("../db"));
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
-const logger_custom_1 = require("../utility/logger-custom");
-const spvCalculator_1 = require("../utility/spvCalculator");
-const spvImage_1 = require("../utility/spvImage");
-const emotes_1 = require("../utility/emotes");
-const GC = emotes_1.EMOTES[0].roleId;
-const YC = emotes_1.EMOTES[1].roleId;
-const RC = emotes_1.EMOTES[2].roleId;
-const BC = emotes_1.EMOTES[3].roleId;
-const PC = emotes_1.EMOTES[4].roleId;
+const logger_custom_1 = require("../utility//loggers/logger-custom");
+const spvCalculator_1 = require("../utility/spv/spvCalculator");
+const spvImage_1 = require("../utility/spv/spvImage");
+const Emotes_1 = require("../utility/uuid/Emotes");
+const GC = Emotes_1.EMOTES[0].roleId;
+const YC = Emotes_1.EMOTES[1].roleId;
+const RC = Emotes_1.EMOTES[2].roleId;
+const BC = Emotes_1.EMOTES[3].roleId;
+const PC = Emotes_1.EMOTES[4].roleId;
+const utils_1 = require("../utility/utils");
+const Colors_1 = require("../utility/uuid/Colors");
 async function handleSelectUser(interaction) {
     (0, logger_custom_1.logger_custom)("ADMIN", "admin", "Admin clicked select user button");
     const modal = new discord_js_1.ModalBuilder().setCustomId("select_user").setTitle("Select User")
@@ -69,10 +71,10 @@ async function handleSelectUserSubmit(interaction) {
     const imageBuffer = await (0, spvImage_1.generateSPVImage)(spvRounded);
     const attachment = new discord_js_1.AttachmentBuilder(imageBuffer, { name: "spv.png" });
     const userEmbed = new discord_js_1.EmbedBuilder()
-        .setColor(0xeeff00)
+        .setColor(Colors_1.BLUE_EMBED)
         .setAuthor({
         name: "Prince-Kun • Profile Info",
-        iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+        iconURL: utils_1.ProfileAuthorPicture,
     })
         .setThumbnail("attachment://spv.png")
         .setTitle("ItsMe Prince Shop")
@@ -114,10 +116,10 @@ async function handleRefresh(interaction) {
     const imageBuffer = await (0, spvImage_1.generateSPVImage)(spvRounded);
     const attachment = new discord_js_1.AttachmentBuilder(imageBuffer, { name: "spv.png" });
     const userEmbed = new discord_js_1.EmbedBuilder()
-        .setColor(0xeeff00)
+        .setColor(Colors_1.YELLOW_EMBED)
         .setAuthor({
         name: "Prince-Kun • Profile Info",
-        iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+        iconURL: utils_1.ProfileAuthorPicture,
     })
         .setThumbnail("attachment://spv.png")
         .setTitle("ItsMe Prince Shop")

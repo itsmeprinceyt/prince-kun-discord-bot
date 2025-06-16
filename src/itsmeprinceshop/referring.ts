@@ -7,21 +7,17 @@ import {
     TextChannel
 } from "discord.js";
 import pool from "../db";
-import { Command } from "../types/Command";
-import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
-import { logger_custom } from "../utility/logger-custom";
-import { TextChannels } from "../utility/text-channels";
-import { calculateSPV } from "../utility/spvCalculator";
-import { RolesPerms } from "../utility/rolePerms";
+import { Command } from "../types/Command.type";
+import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/loggers/logger-custom";
+import { TextChannels } from "../utility/uuid/TextChannels";
+import { calculateSPV } from "../utility/spv/spvCalculator";
+import { RolesPerms } from "../utility/uuid/RolesPerms";
+import { SERVER_ID, LOGO_GENSHIN, LOGO_HSR, LOGO_Wuwa, LOGO_ZZZ } from "../utility/utils";
+import { COLOR_TRUE } from "../utility/uuid/Colors";
 
-const PREDEFINED_SERVER_ID = "310675536340844544";
 const ORDER_LOG_CHANNEL_ID = TextChannels[1].roleId;
 const adminId = RolesPerms[5].roleId;
-
-const DefaultImageGenshin = "https://media.discordapp.net/attachments/1336322293437038602/1342230984464138392/gi-logo.png";
-const DefaultImageHSR = "https://media.discordapp.net/attachments/1336322293437038602/1342230984728252498/hsr-logo.png";
-const DefaultImageWuwa = "https://media.discordapp.net/attachments/1336322293437038602/1342230985034567761/www-logo.png";
-const DefaultImageZZZ = "https://media.discordapp.net/attachments/1336322293437038602/1342230985579823206/zzz-logo.png";
 
 const referring: Command = {
     data: new SlashCommandBuilder()
@@ -75,33 +71,33 @@ const referring: Command = {
             return;
         }
 
-        const botGuild = await interaction.client.guilds.fetch(PREDEFINED_SERVER_ID);
+        const botGuild = await interaction.client.guilds.fetch(SERVER_ID);
         const orderLogChannel = await botGuild.channels.fetch(ORDER_LOG_CHANNEL_ID);
 
         const referrer: User = interaction.options.getUser("referrer", true);
         const referred: User = interaction.options.getUser("referred", true);
-        const game = interaction.options.getString("game", true);
-        const item = interaction.options.getString("item", true);
-        const price = interaction.options.getInteger("price", true);
+        const game: string = interaction.options.getString("game", true);
+        const item: string = interaction.options.getString("item", true);
+        const price: number = interaction.options.getInteger("price", true);
 
         let referrer_username: string = referrer.username;
         let referrer_avatar: string = referrer.displayAvatarURL();
         let referred_username: string = referred.username;
-        let imageUrl = ``;
-        let boughtText = ``;
+        let imageUrl: string = ``;
+        let boughtText: string = ``;
         let logMessage: string;
 
         if (game === "genshin") {
-            imageUrl = DefaultImageGenshin;
+            imageUrl = LOGO_GENSHIN;
             boughtText = `Genshin Impact - `;
         } else if (game === "hsr") {
-            imageUrl = DefaultImageHSR;
+            imageUrl = LOGO_HSR;
             boughtText = `Honkai Star Rail - `;
         } else if (game === "wuwa") {
-            imageUrl = DefaultImageWuwa;
+            imageUrl = LOGO_Wuwa;
             boughtText = `Wuthering Waves - `;
         } else if (game === "zzz") {
-            imageUrl = DefaultImageZZZ;
+            imageUrl = LOGO_ZZZ;
             boughtText = `Zenless Zone Zero - `;
         }
 
@@ -109,7 +105,7 @@ const referring: Command = {
         if (!referrerRows || referrerRows.length === 0) {
 
             const embed = new EmbedBuilder()
-                .setColor(0x00ff00)
+                .setColor(COLOR_TRUE)
                 .setTitle("Referral Processed Successfully")
                 .setThumbnail(imageUrl)
                 .setDescription(`Referral: <@${referrer.id}>
@@ -159,7 +155,7 @@ const referring: Command = {
 
 
             const embed = new EmbedBuilder()
-                .setColor(0x00ff00)
+                .setColor(COLOR_TRUE)
                 .setTitle("Referral Processed Successfully")
                 .setThumbnail(imageUrl)
                 .setDescription(`Referral: <@${referrer.id}>
@@ -187,11 +183,10 @@ const referring: Command = {
             return;
         }
 
-        const referredData = referredRows[0];
-        let rewardText = ``;
+        let rewardText: string = ``;
 
         if (price >= 300) {
-            const referralTicketsEarned = Math.floor(price / 300);
+            const referralTicketsEarned: number = Math.floor(price / 300);
 
             let { pp_cash, refer_tickets, total_purchases, total_referred } = referredRows[0];
             let spv = parseFloat(referredRows[0].spv) || 0.00;
@@ -219,7 +214,7 @@ const referring: Command = {
         }
 
         const embed = new EmbedBuilder()
-            .setColor(0x00ff00)
+            .setColor(COLOR_TRUE)
             .setTitle("Referral Processed Successfully")
             .setThumbnail(imageUrl)
             .setDescription(`Referral: <@${referrer.id}>

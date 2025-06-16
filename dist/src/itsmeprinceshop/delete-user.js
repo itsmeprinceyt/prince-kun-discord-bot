@@ -5,10 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const db_1 = __importDefault(require("../db"));
-const logger_custom_1 = require("../utility/logger-custom");
-const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
-const rolePerms_1 = require("../utility/rolePerms");
-const adminId = rolePerms_1.RolesPerms[5].roleId;
+const logger_NoDM_NoAdmin_1 = require("../utility/loggers/logger-NoDM-NoAdmin");
+const logger_custom_1 = require("../utility/loggers/logger-custom");
+const RolesPerms_1 = require("../utility/uuid/RolesPerms");
+const Colors_1 = require("../utility/uuid/Colors");
+const adminId = RolesPerms_1.RolesPerms[5].roleId;
 const deleteUserCommand = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("delete-user")
@@ -44,10 +45,10 @@ const deleteUserCommand = {
         const logMessage = `[ DATABASE ] User ${selectedUser.username} (${selectedUser.id}) deleted by Admin ${interaction.user.username}`;
         (0, logger_custom_1.logger_custom)(selectedUser.username, "delete-user", logMessage);
         const embed = new discord_js_1.EmbedBuilder()
-            .setColor(0xff0000)
+            .setColor(Colors_1.COLOR_FALSE)
             .setTitle("User Deleted")
             .setThumbnail(selectedUser.displayAvatarURL())
-            .setDescription(`User <@${selectedUser.id}> has been removed from the database.`)
+            .setDescription(`Profile of <@${selectedUser.id}> has been deleted.`)
             .setTimestamp();
         await interaction.reply({ embeds: [embed] });
     }

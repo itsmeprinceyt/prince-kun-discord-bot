@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResetData = void 0;
 const discord_js_1 = require("discord.js");
 const db_1 = __importDefault(require("../db"));
-const logger_custom_1 = require("../utility/logger-custom");
-const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
-const rolePerms_1 = require("../utility/rolePerms");
-const adminId = rolePerms_1.RolesPerms[5].roleId;
+const logger_NoDM_NoAdmin_1 = require("../utility/loggers/logger-NoDM-NoAdmin");
+const logger_custom_1 = require("../utility/loggers/logger-custom");
+const RolesPerms_1 = require("../utility/uuid/RolesPerms");
+const adminId = RolesPerms_1.RolesPerms[5].roleId;
 exports.ResetData = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("reset-data")

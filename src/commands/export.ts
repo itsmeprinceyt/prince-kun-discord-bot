@@ -1,19 +1,23 @@
 import {
     SlashCommandBuilder,
     ChatInputCommandInteraction,
-    AttachmentBuilder
+    AttachmentBuilder,
+    EmbedBuilder
 } from "discord.js";
 import pool from "../db";
-import ExcelJS from "exceljs";
-import { RolesPerms } from "../utility/rolePerms";
-import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
-import { logger_custom } from "../utility/logger-custom";
+import { RowDataPacket, FieldPacket } from "mysql2";
+import { RolesPerms } from "../utility/uuid/RolesPerms";
+import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/loggers/logger-custom";
+import { COLOR_PRIMARY } from '../utility/uuid/Colors';
+import { ProfileAuthorPicture, DiscordBotProfilePicture } from '../utility/utils';
+
 const adminId = RolesPerms[5].roleId;
 
 const ExportCommand = {
     data: new SlashCommandBuilder()
         .setName("export")
-        .setDescription("Exports the database data to an Excel file. (Admins Only)")
+        .setDescription("Exports the database data to a CSV file. (Admins Only)")
         .addStringOption(option =>
             option.setName("table")
                 .setDescription("Enter the table name to export (leave empty to list tables)")
@@ -22,6 +26,10 @@ const ExportCommand = {
 
     async execute(interaction: ChatInputCommandInteraction) {
         const isDM = !interaction.guild;
+        const userName = interaction.user.username;
+        const tableName = interaction.options.getString("table")?.trim();
+
+        // Permission checks
         if (isDM) {
             if (interaction.user.id !== adminId) {
                 await interaction.reply({
@@ -43,9 +51,6 @@ const ExportCommand = {
             }
         }
 
-        const tableName = interaction.options.getString("table")?.trim();
-        const userName = interaction.user.username;
-
         try {
             if (!tableName) {
                 const [tables] = await pool.query("SHOW TABLES");
@@ -57,39 +62,71 @@ const ExportCommand = {
 
                 const tableNames = tables.map((row, index) => `${index + 1}. \`${Object.values(row)[0]}\``);
 
+                const tableListEmbed = new EmbedBuilder()
+                    .setAuthor({
+                        name: "Prince-Kun • Tables",
+                        iconURL: ProfileAuthorPicture,
+                    })
+                    .setTitle("📋 Available Tables")
+                    .setColor(COLOR_PRIMARY)
+                    .setDescription(tableNames.join("\n"))
+                    .setTimestamp();
+
                 await interaction.reply({
-                    content: `📋 **Available tables:**\n${tableNames.join("\n")}\n`,
-                    flags: 64
+                    embeds: [tableListEmbed],
+                    flags: 64,
                 });
                 logger_custom(userName, "export", `${userName} fetched all database tables`);
                 return;
             }
+            type AnyRow = RowDataPacket & Record<string, any>;
+            const [rows, fields]: [AnyRow[], FieldPacket[]] = await pool.query(`SELECT * FROM \`${tableName}\``);
 
-            const [rows] = await pool.query(`SELECT * FROM \`${tableName}\``);
-            if (!Array.isArray(rows) || rows.length === 0) {
+
+            if (!rows || rows.length === 0) {
                 await interaction.reply({ content: `❌ No data found in table \`${tableName}\`!`, flags: 64 });
                 return;
             }
 
-            const workbook = new ExcelJS.Workbook();
-            const worksheet = workbook.addWorksheet("Data Export");
+            const headers = Object.keys(rows[0]);
+            const csvRows = [
+                headers.map(h => `"${h}"`).join(","),
+                ...rows.map(row =>
+                    headers.map(key => {
+                        let value = row[key];
 
-            worksheet.columns = Object.keys(rows[0]).map(key => ({
-                header: key,
-                key: key,
-                width: 20
-            }));
+                        if (value instanceof Date) {
+                            value = value.toISOString().split("T")[0];
+                        }
 
-            rows.forEach(row => worksheet.addRow(row));
-            const buffer = Buffer.from(await workbook.xlsx.writeBuffer());
-            const attachment = new AttachmentBuilder(buffer, { name: `${tableName}_export.xlsx` });
+                        if (value === null || value === undefined) {
+                            return '""';
+                        }
 
-            await interaction.reply({ content: `✅ Export complete for table \`${tableName}\`!`, files: [attachment] });
-            logger_custom(userName, "export", `${userName} exported database table: ${tableName} in excel.`);
+                        return `"${String(value).replace(/"/g, '""')}"`;
+                    }).join(",")
+                )
+            ];
 
+
+            const buffer = Buffer.from(csvRows.join("\n"), "utf-8");
+            const attachment = new AttachmentBuilder(buffer, {
+                name: `${tableName}_export.csv`,
+                description: `CSV Export of ${tableName}`
+            });
+
+            await interaction.reply({
+                content: `✅ Export complete for table \`${tableName}\`!`,
+                files: [attachment]
+            });
+
+            logger_custom(userName, "export", `${userName} exported database table: ${tableName} as CSV.`);
         } catch (error) {
             console.error("❌ Error exporting database:", error);
-            await interaction.reply({ content: `❌ Failed to export table \`${tableName}\`. Check if the table exists.`, flags: 64 });
+            await interaction.reply({
+                content: `❌ Failed to export table \`${tableName}\`. Check if the table exists.`,
+                flags: 64
+            });
         }
     }
 };

@@ -1,23 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
-const help_command_admin_1 = require("../utility/help-command-admin");
-const rolePerms_1 = require("../utility/rolePerms");
+const help_command_admin_1 = require("../utility/commands/help/help-command-admin");
+const RolesPerms_1 = require("../utility/uuid/RolesPerms");
+const utils_1 = require("../utility/utils");
+const Colors_1 = require("../utility/uuid/Colors");
 exports.default = {
     triggers: [".?help-admin", ".?admin"],
     async execute(message) {
         const embed = new discord_js_1.EmbedBuilder()
-            .setColor(0xc200ff)
+            .setColor(Colors_1.COLOR_PRIMARY)
             .setAuthor({
             name: "Prince-Kun • Commands",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: utils_1.ProfileAuthorPicture,
         })
             .setTitle("All Admin Commands!")
             .setDescription(help_command_admin_1.HelpDescriptionAdmin)
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1336708310904340572/Help.png")
+            .setImage(utils_1.Help)
             .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
             .setTimestamp();
-        const adminId = rolePerms_1.RolesPerms[5].roleId;
+        const adminId = RolesPerms_1.RolesPerms[5].roleId;
         if (!message.guild) {
             if (message.id !== adminId) {
                 await message.reply({ embeds: [embed] });
@@ -29,7 +31,7 @@ exports.default = {
             return;
         }
         const userRoles = message.member?.roles.cache.map(role => role.id) || [];
-        const allowedRoles = rolePerms_1.RolesPerms.map(role => role.roleId);
+        const allowedRoles = RolesPerms_1.RolesPerms.map(role => role.roleId);
         const hasPermission = userRoles.some(roleId => allowedRoles.includes(roleId)) || message.author.id === message.guild.ownerId;
         if (!hasPermission) {
             await message

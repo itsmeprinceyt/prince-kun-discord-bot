@@ -6,8 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const db_1 = __importDefault(require("../db"));
-const logger_custom_1 = require("../utility/logger-custom");
-const itsmeprince_rules_1 = require("../utility/itsmeprince-rules");
+const logger_custom_1 = require("../utility/loggers/logger-custom");
+const itsmeprince_rules_1 = require("../utility/commands/rules/itsmeprince-rules");
+const register_done_1 = require("../utility/embeds/register-done");
+const Colors_1 = require("../utility/uuid/Colors");
+const utils_1 = require("../utility/utils");
 const registerCommand = {
     triggers: [".?register"],
     async execute(message) {
@@ -21,17 +24,15 @@ const registerCommand = {
             return message.reply("❌ You are already registered!");
         }
         const embed1 = new discord_js_1.EmbedBuilder()
-            .setColor(0xc200ff)
+            .setColor(Colors_1.COLOR_PRIMARY)
             .setAuthor({
             name: "Prince-Kun • ItsMe Prince Shop",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: utils_1.ProfileAuthorPicture,
         })
             .setTitle("ItsMe Prince Shop - Profile Registration")
             .setThumbnail(message.author.displayAvatarURL())
             .setDescription(itsmeprince_rules_1.ItsMePrinceRules +
-            `\n**You accept the rules by registering and you also agree to any future updates or changes in the value of PP CASH. It is your responsibility to stay updated with the latest rules.**`)
-            .setFooter({ text: `${userName}`, iconURL: message.author.displayAvatarURL() })
-            .setTimestamp();
+            `\n**You accept the rules by registering and you also agree to any future updates or changes in the value of PP CASH. It is your responsibility to stay updated with the latest rules.**`);
         const embed2 = new discord_js_1.EmbedBuilder()
             .setColor(0x00ff00)
             .setTitle("Registration Instructions")
@@ -59,14 +60,7 @@ const registerCommand = {
                     const logMessage = `[ DATABASE ] User ${userName} (${userId}) registered`;
                     (0, logger_custom_1.logger_custom)(userName, "register", logMessage);
                     await msg.channel.send({
-                        embeds: [
-                            new discord_js_1.EmbedBuilder()
-                                .setColor(0x00ff00)
-                                .setTitle("Registration Successful!")
-                                .setThumbnail(message.author.displayAvatarURL())
-                                .setDescription(`Well then, <@${userId}>, you're registered!\nUse \`/profile\` or \`.?profile\` to check your inventory!\n\n**Current Marketplace:** https://discord.com/channels/310675536340844544/1177928471951966339/1179354261365211218`)
-                                .setTimestamp()
-                        ]
+                        embeds: [(0, register_done_1.getRegistrationSuccessEmbed)(message.author)],
                     });
                     collector.stop();
                 }

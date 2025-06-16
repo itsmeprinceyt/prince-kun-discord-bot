@@ -6,8 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const db_1 = __importDefault(require("../db"));
-const logger_custom_1 = require("../utility/logger-custom");
-const itsmeprince_rules_1 = require("../utility/itsmeprince-rules");
+const logger_custom_1 = require("../utility/loggers/logger-custom");
+const itsmeprince_rules_1 = require("../utility/commands/rules/itsmeprince-rules");
+const register_done_1 = require("../utility/embeds/register-done");
+const utils_1 = require("../utility/utils");
 const registerCommand = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("register")
@@ -28,7 +30,7 @@ const registerCommand = {
             .setColor(0xc200ff)
             .setAuthor({
             name: "Prince-Kun • ItsMe Prince Shop",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: utils_1.ProfileAuthorPicture,
         })
             .setTitle("Rules & Information")
             .setThumbnail(interaction.user.displayAvatarURL())
@@ -61,13 +63,7 @@ const registerCommand = {
                 const MessageString = `[ DATABASE ] User ${userName} (${userId}) registered`;
                 (0, logger_custom_1.logger_custom)(userName, "register", MessageString);
                 await buttonInteraction.update({
-                    embeds: [
-                        new discord_js_1.EmbedBuilder()
-                            .setColor(0x00ff00)
-                            .setTitle("Registration Successful !")
-                            .setThumbnail(interaction.user.displayAvatarURL())
-                            .setDescription(`Well then, <@${userId}>, you're registered!\n Use \`/profile\` or \`.?profile\` to check your inventory!\n\n**Current Marketplace:** https://discord.com/channels/310675536340844544/1177928471951966339/1179354261365211218`).setTimestamp()
-                    ],
+                    embeds: [(0, register_done_1.getRegistrationSuccessEmbed)(interaction.user)],
                     components: []
                 });
             }

@@ -1,9 +1,9 @@
-import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction,GuildMember } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, GuildMember } from 'discord.js';
 import pool from '../db';
-import { Command } from "../types/Command";
-import { logger_custom } from "../utility/logger-custom";
-
-const DefaultThumbnail = "https://media.discordapp.net/attachments/1336322293437038602/1342641235017339103/Shop.png";
+import { Command } from "../types/Command.type";
+import { logger_custom } from "../utility/loggers/logger-custom";
+import { COLOR_TRUE } from '../utility/uuid/Colors';
+import { ProfileAuthorPicture } from '../utility/utils';
 
 export const leaderboard: Command = {
     data: new SlashCommandBuilder()
@@ -22,8 +22,8 @@ export const leaderboard: Command = {
         ) as SlashCommandBuilder,
 
     execute: async function (interaction: ChatInputCommandInteraction) {
-        const option = interaction.options.getString('option');
-        const sortBy = option || 'spv';
+        const option: string | null = interaction.options.getString('option');
+        const sortBy: string = option || 'spv';
 
         const fieldNames: Record<string, string> = {
             'pp_cash': '- PP Cash',
@@ -44,40 +44,80 @@ export const leaderboard: Command = {
                 return;
             }
 
-            let leaderboardTitle = `\`SN  \` \`💵  \` \`🎟️ \` \`🛒  \` \`👥  \` \`SPV    \` \`User   \``;
+            let leaderboardTitle =
+                `\`${"ID ".padEnd(4)}\` ` +
+                `\`${"💵".padEnd(5)}\` ` +
+                `\`${"🎟️".padEnd(5)}\` ` +
+                `\`${"🛒".padEnd(5)}\` ` +
+                `\`${"👥".padEnd(5)}\` ` +
+                `\`${"SPV".padEnd(6)}\` ` +
+                `\`User\` `;
+
+
             let leaderboard = rows
                 .map((user: any, index: number) =>
-                    `\`${index + 1}   \` \`${String(user.pp_cash).padEnd(4, " ")}\` \`${String(user.refer_tickets).padEnd(4, " ")}\` \`${String(user.total_purchases).padEnd(4, " ")}\` \`${String(user.total_referred).padEnd(4, " ")}\` \`${String((parseFloat(user.spv) || 0).toFixed(2)).padEnd(7, " ")}\` <@${user.user_id}>`
+                    `\`${String(index + 1).padEnd(4)}\` ` +
+                    `\`${String(user.pp_cash).padEnd(5)}\` ` +
+                    `\`${String(user.refer_tickets).padEnd(5)}\` ` +
+                    `\`${String(user.total_purchases).padEnd(5)}\` ` +
+                    `\`${String(user.total_referred).padEnd(5)}\` ` +
+                    `\`${String((parseFloat(user.spv) || 0).toFixed(2)).padEnd(6)}\` ` +
+                    `<@${user.user_id}>`
                 )
                 .join('\n');
 
-            let CASHTitle = `\`SN  \` \`💵  \` \`User   \``;
+            let CASHTitle =
+                `\`${"ID".padEnd(4)}\` ` +
+                `\`${"💵".padEnd(5)}\` ` +
+                `\`User\` `;
+
             let CASH = rows
                 .map((user: any, index: number) =>
-                    `\`${index + 1}   \` \`${String(user.pp_cash).padEnd(4, " ")}\` <@${user.user_id}>`
+                    `\`${String(index + 1).padEnd(4)}\` ` +
+                    `\`${String(user.pp_cash).padEnd(5)}\` ` +
+                    `<@${user.user_id}>`
                 )
                 .join('\n');
 
-            let RTTitle = `\`SN  \` \`🎟️  \` \`User   \``;
+            let RTTitle =
+                `\`${"ID".padEnd(4)}\` ` +
+                `\`${"🎟️".padEnd(5)}\` ` +
+                `\`User\` `;
+
             let RT = rows
                 .map((user: any, index: number) =>
-                    `\`${index + 1}   \` \`${String(user.refer_tickets).padEnd(4, " ")}\` <@${user.user_id}>`
+                    `\`${String(index + 1).padEnd(4)}\` ` +
+                    `\`${String(user.refer_tickets).padEnd(5)}\` ` +
+                    `<@${user.user_id}>`
                 )
                 .join('\n');
 
-            let TPTitle = `\`SN  \` \`🛒  \` \`User   \``;
+            let TPTitle =
+                `\`${"ID".padEnd(4)}\` ` +
+                `\`${"🛒".padEnd(5)}\` ` +
+                `\`User\` `;
+
             let TP = rows
                 .map((user: any, index: number) =>
-                    `\`${index + 1}   \` \`${String(user.total_purchases).padEnd(4, " ")}\` <@${user.user_id}>`
+                    `\`${String(index + 1).padEnd(4)}\` ` +
+                    `\`${String(user.total_purchases).padEnd(5)}\` ` +
+                    `<@${user.user_id}>`
                 )
                 .join('\n');
 
-            let TRTitle = `\`SN  \` \`👥  \` \`User   \``;
+            let TRTitle =
+                `\`${"ID".padEnd(4)}\` ` +
+                `\`${"👥".padEnd(5)}\` ` +
+                `\`User\` `;
+
             let TR = rows
                 .map((user: any, index: number) =>
-                    `\`${index + 1}   \` \`${String(user.total_referred).padEnd(4, " ")}\` <@${user.user_id}>`
+                    `\`${String(index + 1).padEnd(4)}\` ` +
+                    `\`${String(user.total_referred).padEnd(5)}\` ` +
+                    `<@${user.user_id}>`
                 )
                 .join('\n');
+
 
             let finalDescription = leaderboard;
             let finalTitle = leaderboardTitle;
@@ -100,11 +140,11 @@ export const leaderboard: Command = {
                     break;
             }
             const embed = new EmbedBuilder()
-                .setColor(0x00ff00)
+                .setColor(COLOR_TRUE)
                 .setTitle(`🏆 Leaderboard ${fieldNames[sortBy]}`)
                 .setAuthor({
                     name: "Prince-Kun • ItsMe Prince Shop Leaderboard",
-                    iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                    iconURL: ProfileAuthorPicture,
                 })
                 .setDescription(
                     finalTitle
@@ -115,10 +155,10 @@ export const leaderboard: Command = {
             await interaction.reply({ embeds: [embed] });
 
             const targetUser = interaction.user;
-            const targetUserId = targetUser.id;
-            let targetDisplayName = targetUser.username;
-            const MessageString = ` User ${targetDisplayName} (${targetUserId}) used /shop-leaderboard-${sortBy}`;
-            
+            const targetUserId: string = targetUser.id;
+            let targetDisplayName: string = targetUser.username;
+            const MessageString: string = ` User ${targetDisplayName} (${targetUserId}) used /shop-leaderboard-${sortBy}`;
+
             logger_custom(targetDisplayName, "shop-leaderboard", MessageString);
         } catch (error) {
             console.error('Error fetching leaderboard:', error);

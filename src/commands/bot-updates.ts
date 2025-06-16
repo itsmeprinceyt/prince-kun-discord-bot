@@ -9,10 +9,11 @@ import {
     ModalSubmitInteraction,
     TextChannel
 } from "discord.js";
-import { Command } from "../types/Command";
-import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
-import { logger_command_sent } from "../utility/logger-command-sent";
-import { logger_custom } from "../utility/logger-custom";
+import { Command } from "../types/Command.type";
+import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
+import { logger_command_sent } from "../utility/loggers/logger-command-sent";
+import { logger_custom } from "../utility/loggers/logger-custom";
+import { ProfileAuthorPicture, BotUpdates } from '../utility/utils';
 
 const userCache = new Map<string, { username: string; avatarURL: string }>();
 
@@ -80,11 +81,11 @@ export async function handleModalSubmit(interaction: ModalSubmitInteraction) {
         .setColor(0xffffff)
         .setAuthor({
             name: "Prince-Kun • Bot Update",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: ProfileAuthorPicture,
         })
         .setTitle("🛠️ Changelog: Latest Updates & Improvements!")
         .setDescription(messageContent)
-        .setImage("https://media.discordapp.net/attachments/1336322293437038602/1336814350249365554/Bot_Updates.png")
+        .setImage(BotUpdates)
         .setFooter({ text: `${username}`, iconURL: avatarURL })
         .setTimestamp();
 

@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
+const utils_1 = require("../utility/utils");
+const Colors_1 = require("../utility/uuid/Colors");
 exports.default = {
     triggers: [".?prince-kun", ".?bot"],
     async execute(message) {
@@ -11,18 +13,18 @@ exports.default = {
                 setTimeout(() => msg.delete().catch(() => { }), 5000);
             });
         }
-        const inviteLink = "https://discord.com/oauth2/authorize?client_id=1352287323177619516&permissions=1101927803990&integration_type=0&scope=bot+applications.commands";
+        ;
         const embed = new discord_js_1.EmbedBuilder()
-            .setColor(0xc200ff)
+            .setColor(Colors_1.COLOR_PRIMARY)
             .setAuthor({
             name: "Prince-Kun • Prince-Kun",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: utils_1.ProfileAuthorPicture
         })
             .setTitle("Invite 'Prince-kun' Bot in your Server")
             .setDescription(`You can invite my bot in your server! 🌟🌻\n\n` +
-            `**Shareable Link:** https://rebrand.ly/prince-kun\n\n` +
-            `[Click Here To Invite!](${inviteLink})`)
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337038357565276160/Discord.png")
+            `**Shareable Link:** ${utils_1.DiscordBotInviteLinkShort}\n\n` +
+            `[Click Here To Invite!](${utils_1.DiscordBotInviteLink})`)
+            .setImage(utils_1.DiscordBotInvite)
             .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
             .setTimestamp();
         const row = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder()
@@ -43,7 +45,7 @@ exports.default = {
                     });
                 }
                 await interaction.reply({
-                    content: `${inviteLink}`,
+                    content: `${utils_1.DiscordBotInviteLink}`,
                     flags: 64,
                 });
             }

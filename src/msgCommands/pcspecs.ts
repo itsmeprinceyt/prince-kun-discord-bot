@@ -1,21 +1,20 @@
 import { Message, EmbedBuilder } from "discord.js";
-import { SPECS } from "../utility/pc-specs";
+import { SPECS } from "../utility/commands/pc-specs";
+import { COLOR_PRIMARY } from "../utility/uuid/Colors";
+import { PCSpecs, ProfileAuthorPicture } from "../utility/utils";
 
 export default {
     triggers: [".?pcspecs", ".?specs",".?specifications",".?pc",".?pppc"],
     async execute(message: Message) {
         const embed = new EmbedBuilder()
-            .setColor(0xc200ff)
+            .setColor(COLOR_PRIMARY)
             .setAuthor({
                 name: "Prince-Kun • PC Specs",
-                iconURL:
-                    "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                iconURL: ProfileAuthorPicture,
             })
             .setTitle("Setup Specifications")
             .setDescription(SPECS)
-            .setImage(
-                "https://media.discordapp.net/attachments/1336322293437038602/1337045537374867507/Pc_Specs.png"
-            )
+            .setImage(PCSpecs)
             .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
             .setTimestamp();
 

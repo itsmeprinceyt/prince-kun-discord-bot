@@ -2,9 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleModalSubmit = handleModalSubmit;
 const discord_js_1 = require("discord.js");
-const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
-const logger_command_sent_1 = require("../utility/logger-command-sent");
-const logger_custom_1 = require("../utility/logger-custom");
+const logger_NoDM_NoAdmin_1 = require("../utility/loggers/logger-NoDM-NoAdmin");
+const logger_command_sent_1 = require("../utility/loggers/logger-command-sent");
+const logger_custom_1 = require("../utility/loggers/logger-custom");
+const utils_1 = require("../utility/utils");
 const userCache = new Map();
 const botUpdatesCommand = {
     data: new discord_js_1.SlashCommandBuilder()
@@ -58,11 +59,11 @@ async function handleModalSubmit(interaction) {
         .setColor(0xffffff)
         .setAuthor({
         name: "Prince-Kun • Bot Update",
-        iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+        iconURL: utils_1.ProfileAuthorPicture,
     })
         .setTitle("🛠️ Changelog: Latest Updates & Improvements!")
         .setDescription(messageContent)
-        .setImage("https://media.discordapp.net/attachments/1336322293437038602/1336814350249365554/Bot_Updates.png")
+        .setImage(utils_1.BotUpdates)
         .setFooter({ text: `${username}`, iconURL: avatarURL })
         .setTimestamp();
     await interaction.reply({

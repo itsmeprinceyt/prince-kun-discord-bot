@@ -1,26 +1,23 @@
 import { Message, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import { ProfileAuthorPicture, Discord, DiscordServerLink } from "../utility/utils";
+import { COLOR_PRIMARY } from "../utility/uuid/Colors";
 
 export default {
     triggers: [".?discord", ".?dc"],
     async execute(message: Message) {
-        const inviteLink = "https://discord.gg/HgXNs4p5cx";
 
         const embed = new EmbedBuilder()
-            .setColor(0xc200ff)
+            .setColor(COLOR_PRIMARY)
             .setAuthor({
                 name: "Prince-Kun • Discord",
-                iconURL:
-                    "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
-            })
+                iconURL: ProfileAuthorPicture})
             .setTitle("ItsMe Prince Official Discord Server")
             .setDescription(
                 `You can join my Official Discord Server! 🌟🌻\n\n`+
-                `**Shareable Link:** ${inviteLink}\n`+
-                `[Click Here To Join!](https://discord.gg/HgXNs4p5cx)`
+                `**Shareable Link:** ${DiscordServerLink}\n\n`+
+                `[Click Here To Join!](${DiscordServerLink})`
             )
-            .setImage(
-                "https://media.discordapp.net/attachments/1336322293437038602/1337038357565276160/Discord.png"
-            )
+            .setImage(Discord)
             .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
             .setTimestamp();
 
@@ -47,7 +44,7 @@ export default {
                 }
 
                 await interaction.reply({
-                    content: `${inviteLink}`,
+                    content: `${DiscordServerLink}`,
                     flags: 64,
                 });
             }

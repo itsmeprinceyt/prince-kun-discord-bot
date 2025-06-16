@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
+const utils_1 = require("../utility/utils");
+const Colors_1 = require("../utility/uuid/Colors");
 exports.default = {
     triggers: [
         ".?hsr",
@@ -16,17 +18,17 @@ exports.default = {
     ],
     async execute(message) {
         const UIDs = {
-            hsr: "802581646",
-            wuwa: "900584281",
-            bgmi: "5651014966",
-            zzz: "1302186027",
-            genshin: "889406482",
+            hsr: utils_1.HSR_UUID,
+            wuwa: utils_1.WUWA_UUID,
+            bgmi: utils_1.BGMI_UUID,
+            zzz: utils_1.ZZZ_UUID,
+            genshin: utils_1.GENSHIN_UUID,
         };
         const embed = new discord_js_1.EmbedBuilder()
-            .setColor(0xc200ff)
+            .setColor(Colors_1.COLOR_PRIMARY)
             .setAuthor({
             name: "Prince-Kun • Game UIDs",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: utils_1.ProfileAuthorPicture,
         })
             .setTitle("Here you can all my UIDs")
             .setDescription(`\`Genshin UID:  \` - ${UIDs.genshin} [Server: ASIA]\n` +
@@ -34,7 +36,7 @@ exports.default = {
             `\`Wuwa UID:     \` - ${UIDs.wuwa} [Server: SEA]\n` +
             `\`BGMI UID:     \` - ${UIDs.bgmi}\n` +
             `\`ZZZ UID:      \` - ${UIDs.zzz} [Server: ASIA]`)
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337083370819162184/Game_User_Id.png")
+            .setImage(utils_1.GameUUID)
             .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
             .setTimestamp();
         const row = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder().setCustomId("copy_genshin").setLabel("Copy Genshin UID").setStyle(discord_js_1.ButtonStyle.Secondary).setEmoji("📋"), new discord_js_1.ButtonBuilder().setCustomId("copy_hsr").setLabel("Copy HSR UID").setStyle(discord_js_1.ButtonStyle.Secondary).setEmoji("📋"), new discord_js_1.ButtonBuilder().setCustomId("copy_wuwa").setLabel("Copy Wuwa UID").setStyle(discord_js_1.ButtonStyle.Secondary).setEmoji("📋"), new discord_js_1.ButtonBuilder().setCustomId("copy_bgmi").setLabel("Copy BGMI UID").setStyle(discord_js_1.ButtonStyle.Secondary).setEmoji("📋"), new discord_js_1.ButtonBuilder().setCustomId("copy_zzz").setLabel("Copy ZZZ UID").setStyle(discord_js_1.ButtonStyle.Secondary).setEmoji("📋"));

@@ -1,19 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
-const help_commands_1 = require("../utility/help-commands");
+const help_commands_1 = require("../utility/commands/help/help-commands");
+const utils_1 = require("../utility/utils");
+const Colors_1 = require("../utility/uuid/Colors");
 exports.default = {
     triggers: [".?help-force"],
     async execute(message) {
         const embed = new discord_js_1.EmbedBuilder()
-            .setColor(0xc200ff)
+            .setColor(Colors_1.COLOR_PRIMARY)
             .setAuthor({
             name: "Prince-Kun • Commands",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: utils_1.ProfileAuthorPicture,
         })
             .setTitle("Here are all the available commands which you can use!")
             .setDescription(help_commands_1.HelpDescription)
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1336708310904340572/Help.png")
+            .setImage(utils_1.Help)
             .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
             .setTimestamp();
         if (!message.guild) {

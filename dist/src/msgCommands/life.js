@@ -1,8 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const LifeQuotes_1 = require("../utility/LifeQuotes");
 exports.default = {
     triggers: [".?life"],
     async execute(message) {
-        await message.reply(`## 😔 Life Not Found. Error 420!`);
+        const randomQuote = LifeQuotes_1.lifeQuotes[Math.floor(Math.random() * LifeQuotes_1.lifeQuotes.length)];
+        await message.reply(`-# 💭 **So you've come . . . here's one of the truth:**\n> ${randomQuote}`);
     },
 };

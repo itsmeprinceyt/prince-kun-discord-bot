@@ -1,20 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
+const utils_1 = require("../utility/utils");
+const Colors_1 = require("../utility/uuid/Colors");
 exports.default = {
     triggers: [".?youtubeclips", ".?ytclips", ".?clips"],
     async execute(message) {
-        const YouTubeClips = "https://www.youtube.com/watch?v=U9CD1tFw1mg&list=PLiFooJ43_R5R2usnfqq4D1JkG2Bz1A8VB&index=1";
         const embed = new discord_js_1.EmbedBuilder()
-            .setColor(0xc200ff)
+            .setColor(Colors_1.COLOR_PRIMARY)
             .setAuthor({
             name: "Prince-Kun • YouTube Clips/Highlights",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: utils_1.ProfileAuthorPicture,
         })
             .setTitle("ItsMe Prince • Clips/Highlights")
             .setDescription(`Find all the amazing community-made clips or stream highlights right here!🌟🌻\n\n` +
-            `[Check out my Clips/Highlights !](${YouTubeClips})`)
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337031725762482278/YouTubeClips.png")
+            `[Check out my Clips/Highlights !](${utils_1.YouTubeClips})`)
+            .setImage(utils_1.YouTubeClipsImage)
             .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
             .setTimestamp();
         const row = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder()
@@ -35,7 +36,7 @@ exports.default = {
                     });
                 }
                 await interaction.reply({
-                    content: `${YouTubeClips}`,
+                    content: `${utils_1.YouTubeClips}`,
                     flags: 64,
                 });
             }

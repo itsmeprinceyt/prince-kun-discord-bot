@@ -1,21 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
+const Colors_1 = require("../utility/uuid/Colors");
+const utils_1 = require("../utility/utils");
 exports.default = {
     triggers: [".?kofi"],
     async execute(message) {
-        const KoFiLink = "https://ko-fi.com/itsmeprinceyt";
         const embed = new discord_js_1.EmbedBuilder()
-            .setColor(0xc200ff)
+            .setColor(Colors_1.COLOR_PRIMARY)
             .setAuthor({
             name: "Prince-Kun • Ko-Fi",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: utils_1.ProfileAuthorPicture,
         })
             .setTitle("Support Me on Ko-Fi")
             .setDescription(`As a streamer and developer, I am committed to delivering high-quality content for my audience to enjoy and creating cool projects for everyone to use. All donations will be reinvested to improve my overall quality of life, allowing me to provide better streams and coding projects.\n\n` +
             `I sincerely appreciate anyone who chooses to support me financially. Thank you for your generosity! 😊\n\n` +
-            `[Click here to support me on Ko-Fi !](${KoFiLink})`)
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337027679886774272/KoFi.png")
+            `[Click here to support me on Ko-Fi !](${utils_1.KoFi})`)
+            .setImage(utils_1.KofiImage)
             .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
             .setTimestamp();
         const row = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder()
@@ -36,7 +37,7 @@ exports.default = {
                     });
                 }
                 await interaction.reply({
-                    content: `${KoFiLink}`,
+                    content: `${utils_1.KoFi}`,
                     flags: 64,
                 });
             }

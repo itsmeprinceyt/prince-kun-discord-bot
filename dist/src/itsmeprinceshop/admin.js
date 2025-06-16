@@ -6,16 +6,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const db_1 = __importDefault(require("../db"));
 const adminModals_1 = require("../modals/adminModals");
-const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
-const logger_custom_1 = require("../utility/logger-custom");
-const rolePerms_1 = require("../utility/rolePerms");
-const ITEMS_PER_PAGE = 15;
+const logger_NoDM_NoAdmin_1 = require("../utility/loggers/logger-NoDM-NoAdmin");
+const logger_custom_1 = require("../utility/loggers/logger-custom");
+const RolesPerms_1 = require("../utility/uuid/RolesPerms");
+const utils_1 = require("../utility/utils");
 const adminCommand = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("admin")
         .setDescription("Manage registered users (Admins only)."),
     async execute(interaction) {
-        const adminId = rolePerms_1.RolesPerms[5].roleId;
+        const adminId = RolesPerms_1.RolesPerms[5].roleId;
         if (!interaction.guild) {
             if (interaction.user.id !== adminId) {
                 await interaction.reply({
@@ -47,21 +47,21 @@ const adminCommand = {
             return;
         }
         const generateEmbed = () => {
-            const start = page * ITEMS_PER_PAGE;
-            const end = start + ITEMS_PER_PAGE;
+            const start = page * utils_1.ADMIN_USERS_PER_PAGE;
+            const end = start + utils_1.ADMIN_USERS_PER_PAGE;
             const pageUsers = users.slice(start, end);
             return new discord_js_1.EmbedBuilder()
                 .setColor(0xeeff00)
                 .setAuthor({
                 name: "Prince-Kun • User Database",
-                iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                iconURL: utils_1.ProfileAuthorPicture,
             })
                 .setTitle("Registered Users")
-                .setDescription(`\`S.N  \` \`USERS\`\n` +
+                .setDescription(`\`ID  \` \`Users\`\n` +
                 pageUsers
-                    .map((user, index) => `\`${(start + index + 1).toString().padEnd(5)}\` <@${user.user_id}>`)
+                    .map((user, index) => `\`${(start + index + 1).toString().padEnd(4, ' ')}\` <@${user.user_id}>`)
                     .join("\n"))
-                .setFooter({ text: `Page ${page + 1} of ${Math.ceil(users.length / ITEMS_PER_PAGE)}` })
+                .setFooter({ text: `Page ${page + 1} of ${Math.ceil(users.length / utils_1.ADMIN_USERS_PER_PAGE)}` })
                 .setColor("Blue")
                 .setTimestamp();
         };
@@ -84,7 +84,7 @@ const adminCommand = {
                 page--;
                 (0, logger_custom_1.logger_custom)("ADMIN", "admin", "Admin clicked previous button");
             }
-            else if (buttonInteraction.customId === "next" && (page + 1) * ITEMS_PER_PAGE < users.length) {
+            else if (buttonInteraction.customId === "next" && (page + 1) * utils_1.ADMIN_USERS_PER_PAGE < users.length) {
                 page++;
                 (0, logger_custom_1.logger_custom)("ADMIN", "admin", "Admin clicked next button");
             }

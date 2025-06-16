@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
-const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
-const logger_custom_1 = require("../utility/logger-custom");
-const rolePerms_1 = require("../utility/rolePerms");
-const adminId = rolePerms_1.RolesPerms[5].roleId;
-const predefinedImage = "https://media.discordapp.net/attachments/1336322293437038602/1350143776999608390/Thank_You.png";
+const logger_NoDM_NoAdmin_1 = require("../utility/loggers/logger-NoDM-NoAdmin");
+const logger_custom_1 = require("../utility/loggers/logger-custom");
+const RolesPerms_1 = require("../utility/uuid/RolesPerms");
+const utils_1 = require("../utility/utils");
+const adminId = RolesPerms_1.RolesPerms[5].roleId;
 const PurchaseDone = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("purchase-done")
@@ -32,7 +32,7 @@ const PurchaseDone = {
                     content: `-# Check your profile using \`/profile\` or register using \`/register\` if you haven't!`
                 }),
                 mentionedUser.send({
-                    content: `${predefinedImage}`
+                    content: `${utils_1.ThankYouForPurchase}`
                 })
             ]);
             await interaction.reply({

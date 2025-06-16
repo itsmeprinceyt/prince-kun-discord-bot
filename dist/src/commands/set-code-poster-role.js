@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
-const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
-const logger_custom_1 = require("../utility/logger-custom");
-const rolePerms_1 = require("../utility/rolePerms");
-const CodePoster = rolePerms_1.RolesPerms[0].roleId;
+const logger_NoDM_NoAdmin_1 = require("../utility/loggers/logger-NoDM-NoAdmin");
+const logger_custom_1 = require("../utility/loggers/logger-custom");
+const RolesPerms_1 = require("../utility/uuid/RolesPerms");
+const CodePoster = RolesPerms_1.RolesPerms[0].roleId;
 const setCodePosterRole = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("set-code-poster-role")

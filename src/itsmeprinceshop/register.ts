@@ -10,9 +10,11 @@ import {
 } from "discord.js";
 import moment from "moment-timezone";
 import pool from "../db";
-import { Command } from "../types/Command";
-import { logger_custom } from "../utility/logger-custom";
-import { ItsMePrinceRules } from "../utility/itsmeprince-rules";
+import { Command } from "../types/Command.type";
+import { logger_custom } from "../utility/loggers/logger-custom";
+import { ItsMePrinceRules } from "../utility/commands/rules/itsmeprince-rules";
+import { getRegistrationSuccessEmbed } from '../utility/embeds/register-done';
+import { ProfileAuthorPicture } from "../utility/utils";
 
 const registerCommand: Command = {
     data: new SlashCommandBuilder()
@@ -20,9 +22,9 @@ const registerCommand: Command = {
         .setDescription("Register your profile for ItsMe Prince Shop."),
 
     async execute(interaction: ChatInputCommandInteraction) {
-        const userId = interaction.user.id;
+        const userId: string = interaction.user.id;
         const member = interaction.member as GuildMember;
-        const userName = member?.displayName || interaction.user.username;
+        const userName: string = member?.displayName || interaction.user.username;
 
         const [rows]: any = await pool.query("SELECT user_id FROM users WHERE user_id = ?", [userId]);
 
@@ -38,8 +40,7 @@ const registerCommand: Command = {
             .setColor(0xc200ff)
             .setAuthor({
                 name: "Prince-Kun • ItsMe Prince Shop",
-                iconURL:
-                    "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                iconURL: ProfileAuthorPicture,
             })
             .setTitle("Rules & Information")
             .setThumbnail(interaction.user.displayAvatarURL())
@@ -84,13 +85,7 @@ const registerCommand: Command = {
                 logger_custom(userName, "register", MessageString);
 
                 await buttonInteraction.update({
-                    embeds: [
-                        new EmbedBuilder()
-                            .setColor(0x00ff00)
-                            .setTitle("Registration Successful !")
-                            .setThumbnail(interaction.user.displayAvatarURL())
-                            .setDescription(`Well then, <@${userId}>, you're registered!\n Use \`/profile\` or \`.?profile\` to check your inventory!\n\n**Current Marketplace:** https://discord.com/channels/310675536340844544/1177928471951966339/1179354261365211218`).setTimestamp()
-                    ],
+                    embeds: [getRegistrationSuccessEmbed(interaction.user)],
                     components: []
                 });
             } else if (buttonInteraction.customId === `cancel_${userId}`) {

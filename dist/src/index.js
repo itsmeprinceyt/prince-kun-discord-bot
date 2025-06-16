@@ -3,21 +3,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// DOT ENV
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
+// PACKAGE
 const chalk_1 = __importDefault(require("chalk"));
 const discord_js_1 = require("discord.js");
+// COMMAND HANDLER
 const commandHandler_1 = __importDefault(require("./commandHandler"));
 const itsmeprinceshopCommandHandler_1 = __importDefault(require("./itsmeprinceshopCommandHandler"));
 const msgCommandHandler_1 = __importDefault(require("./msgCommandHandler"));
+// DEPLOY COMMANDS
 const deployCommands_1 = __importDefault(require("./deployCommands"));
-const time_1 = require("./utility/time");
+// LOGGER
+const time_1 = require("./utility/loggers/time");
+// MODALS
 const bot_updates_1 = require("./commands/bot-updates");
 const server_updates_1 = require("./commands/server-updates");
 const shop_updates_1 = require("./commands/shop-updates");
 const adminModals_1 = require("./modals/adminModals");
 const new_redeems_1 = require("./commands/new-redeems");
+// DATABASE CONNECTION
 const db_1 = require("./db");
+// UTILITY IMPORTS
+const RolesPerms_1 = require("./utility/uuid/RolesPerms");
+const utils_1 = require("./utility/utils");
 const modalHandlers = new Map([
     ["select_user", adminModals_1.handleSelectUserSubmit],
     ["modify_points", adminModals_1.handleModifySubmit],
@@ -88,22 +98,22 @@ async function startBot() {
         console.log(chalk_1.default.green(`[ ${c.user.username} ] 💚 IS ONLINE (DND Mode) !`));
     });
     const cooldowns = new Map();
-    const cooldownTime = 3000;
     client.on("interactionCreate", async (interaction) => {
         const userId = interaction.user.id;
         const now = Date.now();
         if (interaction.isChatInputCommand()) {
             const commandName = interaction.commandName;
             const lastUsed = cooldowns.get(`${userId}-${commandName}`) || 0;
-            if (now - lastUsed < cooldownTime) {
-                const remaining = ((lastUsed + cooldownTime) - now) / 1000;
+            if (now - lastUsed < utils_1.CooldownTime) {
+                const availableAt = Math.floor((lastUsed + utils_1.CooldownTime) / 1000);
                 await interaction.reply({
-                    content: `<@${userId}>, ⏳Please wait \`${remaining.toFixed(1)} seconds\` before using \`/${commandName}\` again.`
+                    content: `<@${userId}>, ⏳ You can use this command again <t:${availableAt}:R>.`,
+                    flags: 64
                 });
                 return;
             }
             cooldowns.set(`${userId}-${commandName}`, now);
-            const command = commandHandler_1.default.get(interaction.commandName) || itsmeprinceshopCommandHandler_1.default.get(interaction.commandName);
+            const command = commandHandler_1.default.get(commandName) || itsmeprinceshopCommandHandler_1.default.get(commandName);
             if (!command)
                 return;
             try {
@@ -175,10 +185,11 @@ async function startBot() {
                 if (!mentionedUser)
                     return;
                 const member = message.guild?.members.cache.get(mentionedUser.id);
+                const Lali = RolesPerms_1.RolesPerms.find(role => role.name === "Lali");
                 if (member?.id === message.guild?.ownerId) {
                     message.channel.send(`## **Nah, he's a good person 😎**`);
                 }
-                else if (member?.roles.cache.has("1039624778715250780")) {
+                else if (member?.id === Lali?.roleId) {
                     message.channel.send(`## **Nah, she's a good person 😊**`);
                 }
                 else {
@@ -199,10 +210,9 @@ async function startBot() {
             const userId = message.author.id;
             const now = Date.now();
             const lastUsed = cooldowns.get(userId) || 0;
-            const commandName = command.triggers[0];
-            if (now - lastUsed < cooldownTime) {
-                const remaining = ((lastUsed + cooldownTime) - now) / 1000;
-                await message.reply(`<@${userId}>,⏳Please wait \`${remaining.toFixed(1)} seconds\` before using \`${commandName}\` again.`);
+            if (now - lastUsed < utils_1.CooldownTime) {
+                const availableAt = Math.floor((lastUsed + utils_1.CooldownTime) / 1000);
+                await message.reply(`<@${userId}> ⏳ You can use this command again <t:${availableAt}:R>.`);
                 return;
             }
             cooldowns.set(userId, now);

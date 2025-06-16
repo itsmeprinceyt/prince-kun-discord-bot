@@ -1,6 +1,7 @@
-import { Message, TextChannel, AttachmentBuilder } from "discord.js";
+import { Message, TextChannel, AttachmentBuilder, EmbedBuilder } from "discord.js";
 import path from "path";
-import { BOT_ID } from "../utility/botId";
+import { BOT_ID } from "../utility/uuid/Bot-ID";
+import { AllCardsHealthyEmbed, EmptyJobBoard, NoJobBoardFound, NotTriggeredByYou, NoCardsFound, JobBoardSummary } from "../utility/embeds/karuta-work";
 const Karuta = BOT_ID[0].roleId;
 
 const jobBoardHealthyCards: { position: string; name: string }[] = [];
@@ -13,7 +14,7 @@ export default {
         if (!repliedTo) return;
         if (!repliedTo.author.bot || repliedTo.author.id !== Karuta) return;
 
-        let triggeredByUser = false;
+        let triggeredByUser: boolean = false;
 
         if (repliedTo.reference) {
             const originalMessage = await message.channel.messages.fetch(repliedTo.reference.messageId!).catch(() => null);
@@ -23,7 +24,7 @@ export default {
         }
 
         if (!triggeredByUser) {
-            await message.reply("⚠️ You can only use the command on the embed message triggered by you.");
+            await message.reply({ embeds: [NotTriggeredByYou()] });
             return;
         }
 
@@ -49,7 +50,7 @@ export default {
                 const gifPath = path.join(__dirname, "../public/GIF/silly-cat-silly-car.gif");
                 const gif = new AttachmentBuilder(gifPath);
                 await message.reply({
-                    content: "⚠️ No Job Board found. Make sure you're replying to the correct embed.",
+                    embeds: [NoJobBoardFound()],
                     files: [gif]
                 });
                 return;
@@ -57,7 +58,9 @@ export default {
             if (jobBoardHealthyCards.length === 0) {
                 const hasCards = lines.some(line => line.match(/^(🇦|🇧|🇨|🇩|🇪)\s(.+?)\s·\s\*\*(\d+)\*\*\sEffort\s·\s`(Injured)`/));
                 if (hasCards) { } else {
-                    await message.reply("⚠️ The Job Board appears to be empty or no valid cards were found.");
+                    await message.reply({
+                        embeds: [EmptyJobBoard()]
+                    });
                     return;
                 }
 
@@ -65,15 +68,13 @@ export default {
 
             const count = jobBoardHealthyCards.length;
             if (count === 5) {
-                await message.reply("✅ All cards are already healthy in the Job Board.");
+                await message.reply({ embeds: [AllCardsHealthyEmbed()] });
                 return;
             }
-            const healthyCount = jobBoardHealthyCards.length;
-            const injuredCount = lines.filter(line => line.match(/^(🇦|🇧|🇨|🇩|🇪)\s(.+?)\s·\s\*\*(\d+)\*\*\sEffort\s·\s`Injured`/)).length;
+            const healthyCount: number = jobBoardHealthyCards.length;
+            const injuredCount: number = lines.filter(line => line.match(/^(🇦|🇧|🇨|🇩|🇪)\s(.+?)\s·\s\*\*(\d+)\*\*\sEffort\s·\s`Injured`/)).length;
 
-            const cardText = `✅ I've learned that there ${healthyCount === 1 ? "is" : "are"} ${healthyCount} healthy ${healthyCount === 1 ? "card" : "cards"} and ${injuredCount} injured ${injuredCount === 1 ? "card" : "cards"} in the Job Board.\n Type \`kc o:eff\` and reply your collection with \`.?work\`\n`;
-            await message.reply(cardText + `-# This command will not run as expected if you have any card's alias setup.`);
-
+            await message.reply({embeds: [JobBoardSummary(healthyCount,injuredCount)]});
         }
 
         if (message.content.startsWith(".?work")) {
@@ -85,7 +86,7 @@ export default {
             );
 
             if (availableCards.length === 0) {
-                await message.reply("⚠️ No card codes found in kc o:eff.");
+                await message.reply({ embeds: [NoCardsFound()]});
                 return;
             }
 
@@ -118,7 +119,8 @@ export default {
 
 
             if (labelIndex === 0) {
-                await message.reply("✅ All cards are already healthy in the Job Board.");
+
+                await message.reply({ embeds: [AllCardsHealthyEmbed()] });
             }
         }
     },

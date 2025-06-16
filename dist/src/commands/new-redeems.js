@@ -2,9 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleRedeemModalSubmit = handleRedeemModalSubmit;
 const discord_js_1 = require("discord.js");
-const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
-const logger_command_sent_1 = require("../utility/logger-command-sent");
-const logger_custom_1 = require("../utility/logger-custom");
+const logger_NoDM_NoAdmin_1 = require("../utility/loggers/logger-NoDM-NoAdmin");
+const logger_command_sent_1 = require("../utility/loggers/logger-command-sent");
+const logger_custom_1 = require("../utility/loggers/logger-custom");
+const Colors_1 = require("../utility/uuid/Colors");
+const utils_1 = require("../utility/utils");
 const userCache = new Map();
 const botUpdatesCommand = {
     data: new discord_js_1.SlashCommandBuilder()
@@ -53,10 +55,20 @@ async function handleRedeemModalSubmit(interaction) {
     const messageContent = interaction.fields.getTextInputValue("newRedeemsMessage");
     const userInfo = userCache.get(interaction.user.id);
     const username = userInfo?.username || "Unknown User";
-    const avatarURL = userInfo?.avatarURL || interaction.user.displayAvatarURL();
     const embed = new discord_js_1.EmbedBuilder()
-        .setColor(0xffffff)
-        .setDescription(messageContent);
+        .setColor(Colors_1.COLOR_WHITE)
+        .setAuthor({
+        name: `Prince-kun • New Redeems`,
+        iconURL: utils_1.ProfileAuthorPicture,
+    })
+        .setThumbnail(utils_1.DiscordBotProfilePicture)
+        .setDescription(messageContent)
+        .setTimestamp();
+    const button = new discord_js_1.ButtonBuilder()
+        .setLabel("My YouTube")
+        .setStyle(discord_js_1.ButtonStyle.Link)
+        .setURL(utils_1.YouTubeChannelLink);
+    const row = new discord_js_1.ActionRowBuilder().addComponents(button);
     await interaction.reply({
         content: "✅ New redeems sent!",
         flags: 64,
@@ -64,6 +76,9 @@ async function handleRedeemModalSubmit(interaction) {
     (0, logger_custom_1.logger_custom)(username, "new-redeems modal submit", "New redeems sent successfully!");
     const channel = interaction.channel;
     if (channel) {
-        await channel.send({ embeds: [embed] });
+        await channel.send({
+            embeds: [embed],
+            components: [row],
+        });
     }
 }

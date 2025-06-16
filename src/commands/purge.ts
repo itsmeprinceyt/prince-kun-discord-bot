@@ -7,10 +7,10 @@ import {
     Message
 } from "discord.js";
 
-import { Command } from "../types/Command";
-import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
-import { logger_custom } from "../utility/logger-custom";
-import { RolesPerms } from "../utility/rolePerms";
+import { Command } from "../types/Command.type";
+import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/loggers/logger-custom";
+import { RolesPerms } from "../utility/uuid/RolesPerms";
 const Moderator = RolesPerms[2].roleId;
 
 const PurgeCommand: Command = {
@@ -57,7 +57,6 @@ const PurgeCommand: Command = {
 
         const channel = interaction.channel as TextChannel;
         const deleteOption = interaction.options.getString("deletemessages", true);
-        let messagesDeleted = 0;
 
         const now = Date.now();
         let timeLimit = 0;

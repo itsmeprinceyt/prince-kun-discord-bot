@@ -1,10 +1,10 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
 import pool from "../db";
-import { Command } from "../types/Command";
-import { logger_custom } from "../utility/logger-custom";
-import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
-import { RolesPerms } from "../utility/rolePerms";
-import { calculateSPV } from "../utility/spvCalculator";
+import { Command } from "../types/Command.type";
+import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/loggers/logger-custom";
+import { RolesPerms } from "../utility/uuid/RolesPerms";
+import { calculateSPV } from "../utility/spv/spvCalculator";
 
 const adminId = RolesPerms[5].roleId;
 
@@ -49,8 +49,8 @@ export const UpdateData: Command = {
         }
 
         const user = interaction.options.getUser("user", true);
-        const field = interaction.options.getString("option", true);
-        const newValue = interaction.options.getInteger("amount", true);
+        const field: string = interaction.options.getString("option", true);
+        const newValue: number = interaction.options.getInteger("amount", true);
 
         if (!Number.isInteger(newValue) || newValue < 0) {
             await interaction.reply({ content: "❌ Amount must be an integer and 0 or above!", flags: 64 });

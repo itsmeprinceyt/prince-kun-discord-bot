@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const mathjs_1 = require("mathjs");
+const Colors_1 = require("../utility/uuid/Colors");
+const utils_1 = require("../utility/utils");
 exports.default = {
     triggers: [".?math"],
     async execute(message) {
@@ -32,10 +34,10 @@ exports.default = {
                 formattedAnswer = parseFloat(answer).toExponential(10);
             }
             const embed = new discord_js_1.EmbedBuilder()
-                .setColor(0xc200ff)
+                .setColor(Colors_1.COLOR_PRIMARY)
                 .setAuthor({
                 name: "Prince-Kun • Math",
-                iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                iconURL: utils_1.ProfileAuthorPicture,
             })
                 .setTitle(`Result: ${formattedAnswer}`)
                 .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })

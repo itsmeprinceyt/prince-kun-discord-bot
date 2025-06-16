@@ -1,19 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
-const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
-const logger_custom_1 = require("../utility/logger-custom");
-const roles_1 = require("../utility/roles");
-const rolePerms_1 = require("../utility/rolePerms");
-const GenshinPing = roles_1.Roles[1].roleId;
-const HSRPing = roles_1.Roles[2].roleId;
-const WuwaPing = roles_1.Roles[3].roleId;
-const ZZZPing = roles_1.Roles[6].roleId;
-const CodePoster = rolePerms_1.RolesPerms[0].roleId;
-const DefaultImageGenshin = "https://media.discordapp.net/attachments/1336322293437038602/1337338720189284352/Primogems.png";
-const DefaultImageHSR = "https://media.discordapp.net/attachments/1336322293437038602/1337338704288677949/Jade.png";
-const DefaultImageWuwa = "https://media.discordapp.net/attachments/1336322293437038602/1337338722097692682/Astrite.png";
-const DefaultImageZZZ = "https://media.discordapp.net/attachments/1336322293437038602/1341860023063810068/Polychrome.png";
+const logger_NoDM_NoAdmin_1 = require("../utility/loggers/logger-NoDM-NoAdmin");
+const logger_custom_1 = require("../utility/loggers/logger-custom");
+const PingRoles_1 = require("../utility/uuid/PingRoles");
+const RolesPerms_1 = require("../utility/uuid/RolesPerms");
+const utils_1 = require("../utility/utils");
+const Colors_1 = require("../utility/uuid/Colors");
+const GenshinPing = PingRoles_1.PING_Roles[1].roleId;
+const HSRPing = PingRoles_1.PING_Roles[2].roleId;
+const WuwaPing = PingRoles_1.PING_Roles[3].roleId;
+const ZZZPing = PingRoles_1.PING_Roles[6].roleId;
+const CodePoster = RolesPerms_1.RolesPerms[0].roleId;
 const userCache = new Map();
 const GameCode = {
     data: new discord_js_1.SlashCommandBuilder()
@@ -37,7 +35,6 @@ const GameCode = {
         .setRequired(false)),
     async execute(interaction) {
         const isDM = !interaction.guild;
-        const location = isDM ? "DM" : `Server: ${interaction.guild?.name}`;
         if (isDM) {
             await interaction.reply({
                 content: "This is a Server-Only Command! 🖕",
@@ -73,16 +70,16 @@ const GameCode = {
         const sanitizedImageUrl = customImageUrl ? customImageUrl.replace(/\?.*$/, "") : null;
         let imageUrl = "";
         if (game === "genshin" && useDefaultImage) {
-            imageUrl = DefaultImageGenshin;
+            imageUrl = utils_1.DefaultImageGenshin;
         }
         else if (game === "hsr" && useDefaultImage) {
-            imageUrl = DefaultImageHSR;
+            imageUrl = utils_1.DefaultImageHSR;
         }
         else if (game === "wuwa" && useDefaultImage) {
-            imageUrl = DefaultImageWuwa;
+            imageUrl = utils_1.DefaultImageWuwa;
         }
         else if (game === "zzz" && useDefaultImage) {
-            imageUrl = DefaultImageZZZ;
+            imageUrl = utils_1.DefaultImageZZZ;
         }
         else if (!useDefaultImage && sanitizedImageUrl) {
             imageUrl = sanitizedImageUrl;
@@ -96,10 +93,10 @@ const GameCode = {
         }
         /*=================================================== GENSHIN IMPACT*/
         const genshinPing = new discord_js_1.EmbedBuilder()
-            .setColor(0x006eff)
+            .setColor(Colors_1.BLUE_EMBED)
             .setAuthor({
             name: "Prince-Kun • Genshin Impact",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: utils_1.ProfileAuthorPicture,
         })
             .setTitle(`${codeTitle}`)
             .setDescription(`Code: [${redemptionCode}](https://genshin.hoyoverse.com/en/gift?code=${redemptionCode})\n\n` +
@@ -109,10 +106,10 @@ const GameCode = {
             .setTimestamp();
         /*=================================================== HONKAI STAR RAIL*/
         const hsrPing = new discord_js_1.EmbedBuilder()
-            .setColor(0x006eff)
+            .setColor(Colors_1.BLUE_EMBED)
             .setAuthor({
             name: "Prince-Kun • Honkai Star Rail",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: utils_1.ProfileAuthorPicture,
         })
             .setTitle(`${codeTitle}`)
             .setDescription(`Code: [${redemptionCode}](https://hsr.hoyoverse.com/gift?code=${redemptionCode})\n\n` +
@@ -122,10 +119,10 @@ const GameCode = {
             .setTimestamp();
         /*=================================================== WUTHERING WAVES*/
         const wuwaPing = new discord_js_1.EmbedBuilder()
-            .setColor(0x006eff)
+            .setColor(Colors_1.BLUE_EMBED)
             .setAuthor({
             name: "Prince-Kun • Wuthering Waves",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: utils_1.ProfileAuthorPicture,
         })
             .setTitle(`${codeTitle}`)
             .setDescription(`Code: ${redemptionCode}\n\n` +
@@ -135,10 +132,10 @@ const GameCode = {
             .setTimestamp();
         /*=================================================== ZENLESS ZONE ZERO*/
         const zzzPing = new discord_js_1.EmbedBuilder()
-            .setColor(0xFFA500)
+            .setColor(Colors_1.ORANGE_EMBED)
             .setAuthor({
             name: "Prince-Kun • Zenless Zone Zero",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: utils_1.ProfileAuthorPicture,
         })
             .setTitle(`${codeTitle}`)
             .setDescription(`Code: [${redemptionCode}](https://zenless.hoyoverse.com/redemption?code=${redemptionCode})\n\n` +

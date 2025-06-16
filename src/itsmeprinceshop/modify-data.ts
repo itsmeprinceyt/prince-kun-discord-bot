@@ -1,10 +1,10 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
 import pool from "../db";
-import { Command } from "../types/Command";
-import { logger_custom } from "../utility/logger-custom";
-import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
-import { RolesPerms } from "../utility/rolePerms";
-import { calculateSPV } from "../utility/spvCalculator";
+import { Command } from "../types/Command.type";
+import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/loggers/logger-custom";
+import { RolesPerms } from "../utility/uuid/RolesPerms";
+import { calculateSPV } from "../utility/spv/spvCalculator";
 const adminId = RolesPerms[5].roleId;
 
 export const Modifydata: Command = {
@@ -48,8 +48,8 @@ export const Modifydata: Command = {
         }
 
         const user = interaction.options.getUser("user", true);
-        const field = interaction.options.getString("option", true);
-        const amount = interaction.options.getInteger("amount", true);
+        const field: string = interaction.options.getString("option", true);
+        const amount: number = interaction.options.getInteger("amount", true);
 
         if (!Number.isInteger(amount)) {
             await interaction.reply({ content: "❌ Amount must be an integer!", flags: 64, });
@@ -91,9 +91,9 @@ export const Modifydata: Command = {
             [pp_cash, refer_tickets, total_purchases, total_referred, parseFloat(spv.toFixed(2)), user.id]
         );
 
-        const action = amount > 0 ? "added" : "removed";
-        const formattedField = field.replace("_", " ").toUpperCase();
-        const responseMessage = `✅ Successfully ${action} **${Math.abs(amount)} ${formattedField}** ${amount > 0 ? "to" : "from"
+        const action: string = amount > 0 ? "added" : "removed";
+        const formattedField: string = field.replace("_", " ").toUpperCase();
+        const responseMessage: string = `✅ Successfully ${action} **${Math.abs(amount)} ${formattedField}** ${amount > 0 ? "to" : "from"
             } <@${user.id}>'s inventory. \`New Value: ${newValue}\``;
 
         logger_custom("ADMIN", "modify-data", `Modified ${field} for user ${user.id} by ${amount}, new value: ${newValue}, recalculated SPV: ${spv.toFixed(2)}`);

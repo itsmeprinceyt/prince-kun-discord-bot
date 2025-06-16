@@ -2,14 +2,16 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleShopModalSubmit = handleShopModalSubmit;
 const discord_js_1 = require("discord.js");
-const logger_NoDM_NoAdmin_1 = require("../utility/logger-NoDM-NoAdmin");
-const logger_command_sent_1 = require("../utility/logger-command-sent");
-const logger_custom_1 = require("../utility/logger-custom");
-const roles_1 = require("../utility/roles");
-const rolePerms_1 = require("../utility/rolePerms");
-const StockUpdate = roles_1.Roles[5].roleId;
-const MarketUpdate = roles_1.Roles[4].roleId;
-const ShopManager = rolePerms_1.RolesPerms[1].roleId;
+const logger_command_sent_1 = require("../utility/loggers/logger-command-sent");
+const logger_NoDM_NoAdmin_1 = require("../utility/loggers/logger-NoDM-NoAdmin");
+const logger_custom_1 = require("../utility/loggers/logger-custom");
+const PingRoles_1 = require("../utility/uuid/PingRoles");
+const RolesPerms_1 = require("../utility/uuid/RolesPerms");
+const StockUpdate = PingRoles_1.PING_Roles[5].roleId;
+const MarketUpdate = PingRoles_1.PING_Roles[4].roleId;
+const ShopManager = RolesPerms_1.RolesPerms[1].roleId;
+const Colors_1 = require("../utility/uuid/Colors");
+const utils_1 = require("../utility/utils");
 const userCache = new Map();
 const ShopUpdateCommand = {
     data: new discord_js_1.SlashCommandBuilder()
@@ -17,7 +19,6 @@ const ShopUpdateCommand = {
         .setDescription("Send an embed message for server updates (admin only)."),
     async execute(interaction) {
         const isDM = !interaction.guild;
-        const location = isDM ? "DM" : `Server: ${interaction.guild?.name}`;
         if (isDM) {
             await interaction.reply({
                 content: "This is a Server-Only Command! 🖕",
@@ -62,12 +63,11 @@ async function handleShopModalSubmit(interaction) {
     const messageContent = interaction.fields.getTextInputValue("shopUpdateMessage");
     const userInfo = userCache.get(interaction.user.id);
     const username = userInfo?.username || "Unknown User";
-    const avatarURL = userInfo?.avatarURL || interaction.user.displayAvatarURL();
     const embed = new discord_js_1.EmbedBuilder()
-        .setColor(0xff6767)
+        .setColor(Colors_1.PEACE_EMBED)
         .setTitle("📢 LATEST SHOP UPDATES")
+        .setThumbnail(utils_1.ItsMePrinceShopProfile)
         .setDescription(messageContent)
-        .setFooter({ text: `${username}`, iconURL: avatarURL })
         .setTimestamp();
     await interaction.reply({
         content: "✅ Shop update message sent!",

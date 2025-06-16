@@ -1,22 +1,20 @@
 import { Message, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import { COLOR_PRIMARY } from "../utility/uuid/Colors";
+import { ProfileAuthorPicture, X, XImage } from "../utility/utils";
 
 export default {
     triggers: [".?x", ".?twitter"],
     async execute(message: Message) {
-        const X = "https://x.com/itsmeprinceyt";
+        
         const embed = new EmbedBuilder()
-            .setColor(0xc200ff)
+            .setColor(COLOR_PRIMARY)
             .setAuthor({
                 name: "Prince-Kun • X",
-                iconURL:
-                    "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
-            })
+                iconURL: ProfileAuthorPicture})
             .setTitle("@itsmeprinceyt")
             .setDescription(`You can follow me on X 🌟🌻\n\n`+
                 `[Click Here To Follow !](${X})`)
-            .setImage(
-                "https://media.discordapp.net/attachments/1336322293437038602/1337027227598196778/X.png"
-            )
+            .setImage(XImage)
             .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
             .setTimestamp();
             const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
