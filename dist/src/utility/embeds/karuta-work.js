@@ -11,31 +11,35 @@ const Colors_1 = require("../uuid/Colors");
 function AllCardsHealthyEmbed() {
     return new discord_js_1.EmbedBuilder()
         .setColor(Colors_1.COLOR_TRUE)
-        .setDescription("✅ All cards are already healthy in your Job Board.");
+        .setDescription("✅ All cards on your Job Board are already healthy.");
 }
 function JobBoardSummary(healthyCount, injuredCount) {
     return new discord_js_1.EmbedBuilder()
         .setColor(Colors_1.COLOR_TRUE)
-        .setDescription(`Hey, so I've learned that you currently have ...\n\n✅ **Healthy ${healthyCount >= 2 ? 'Cards' : 'Card'}:** ${healthyCount}\n❌ **Injured ${injuredCount >= 2 ? 'Cards' : 'Card'}:** ${injuredCount}\n\nType \`kc o:eff\` and reply your collection with \`.?work\`\n-# This will not work with the cards you have alias.`)
+        .setDescription(`Here's the current status of your Job Board:\n\n` +
+        `✅ **Healthy ${healthyCount === 1 ? "Card" : "Cards"}:** ${healthyCount}\n` +
+        `❌ **Injured ${injuredCount === 1 ? "Card" : "Cards"}:** ${injuredCount}\n\n` +
+        `To begin working, type \`kc o:eff\`, then reply to your collection with \`kkwork\`.\n` +
+        `-# ⚠️ Note: This won't work on cards with aliases.`)
         .setTimestamp();
 }
 function NotTriggeredByYou() {
     return new discord_js_1.EmbedBuilder()
         .setColor(Colors_1.GOLDEN_EMBED)
-        .setDescription("⚠️ You can only use the command on the embed message triggered by you.");
+        .setDescription("⚠️ You can only use this command on an embed triggered by you.");
 }
 function NoJobBoardFound() {
     return new discord_js_1.EmbedBuilder()
         .setColor(Colors_1.GOLDEN_EMBED)
-        .setDescription("⚠️ No Job Board found. Make sure you're replying to the correct embed.");
+        .setDescription("⚠️ No Job Board found. Please make sure you're replying to the correct embed message.");
 }
 function EmptyJobBoard() {
     return new discord_js_1.EmbedBuilder()
         .setColor(Colors_1.GOLDEN_EMBED)
-        .setDescription("⚠️ The Job Board appears to be empty or no valid cards were found.");
+        .setDescription("⚠️ The Job Board appears to be empty or contains no valid cards.");
 }
 function NoCardsFound() {
     return new discord_js_1.EmbedBuilder()
         .setColor(Colors_1.GOLDEN_EMBED)
-        .setDescription("⚠️ No card codes found in kc o:eff.");
+        .setDescription("⚠️ No card codes were found in your \`kc o:eff\` message.");
 }
