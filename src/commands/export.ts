@@ -74,7 +74,7 @@ const ExportCommand = {
 
                 await interaction.reply({
                     embeds: [tableListEmbed],
-                    ephemeral: true
+                    flags: 64,
                 });
                 logger_custom(userName, "export", `${userName} fetched all database tables`);
                 return;
