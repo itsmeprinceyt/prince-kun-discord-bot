@@ -6,22 +6,16 @@ import {
     PermissionFlagsBits
 } from "discord.js";
 import pool from "../db";
-import { Command } from "../types/Command";
-import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
-import { logger_custom } from "../utility/logger-custom";
-import { TextChannels } from "../utility/text-channels";
-import { calculateSPV } from "../utility/spvCalculator";
-import { RolesPerms } from "../utility/rolePerms";
-
-const PREDEFINED_SERVER_ID = "310675536340844544";
+import { Command } from "../types/Command.type";
+import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/loggers/logger-custom";
+import { TextChannels } from "../utility/uuid/TextChannels";
+import { calculateSPV } from "../utility/spv/spvCalculator";
+import { RolesPerms } from "../utility/uuid/RolesPerms";
+import { SERVER_ID, LOGO_GENSHIN, LOGO_HSR, LOGO_Wuwa, LOGO_ZZZ } from "../utility/utils";
+import { COLOR_TRUE } from "../utility/uuid/Colors";
 const ORDER_LOG_CHANNEL_ID = TextChannels[1].roleId;
 const adminId = RolesPerms[5].roleId;
-
-const DefaultImageGenshin = "https://media.discordapp.net/attachments/1336322293437038602/1342230984464138392/gi-logo.png";
-const DefaultImageHSR = "https://media.discordapp.net/attachments/1336322293437038602/1342230984728252498/hsr-logo.png";
-const DefaultImageWuwa = "https://media.discordapp.net/attachments/1336322293437038602/1342230985034567761/www-logo.png";
-const DefaultImageZZZ = "https://media.discordapp.net/attachments/1336322293437038602/1342230985579823206/zzz-logo.png";
-
 
 const itemBoughtCommand: Command = {
     data: new SlashCommandBuilder()
@@ -102,20 +96,20 @@ const itemBoughtCommand: Command = {
         let targetUserId: string | null = mentionedUser ? mentionedUser.id : null;
         let targetUsername: string = mentionedUser ? mentionedUser.username : usernameInput || "Unknown";
         let targetAvatar: string = mentionedUser ? mentionedUser.displayAvatarURL() : "";
-        let imageUrl = ``;
-        let boughtText = ``;
+        let imageUrl: string = ``;
+        let boughtText: string = ``;
 
         if (game === "genshin") {
-            imageUrl = DefaultImageGenshin;
+            imageUrl = LOGO_GENSHIN;
             boughtText = `Genshin Impact - `;
         } else if (game === "hsr") {
-            imageUrl = DefaultImageHSR;
+            imageUrl = LOGO_HSR;
             boughtText = `Honkai Star Rail - `;
         } else if (game === "wuwa") {
-            imageUrl = DefaultImageWuwa;
+            imageUrl = LOGO_Wuwa;
             boughtText = `Wuthering Waves - `;
         } else if (game === "zzz") {
-            imageUrl = DefaultImageZZZ;
+            imageUrl = LOGO_ZZZ;
             boughtText = `Zenless Zone Zero - `;
         }
 
@@ -129,7 +123,7 @@ const itemBoughtCommand: Command = {
             : [[]];
 
         if (!rows || rows.length === 0) {
-            const botGuild = await interaction.client.guilds.fetch(PREDEFINED_SERVER_ID);
+            const botGuild = await interaction.client.guilds.fetch(SERVER_ID);
             const orderLogChannel = await botGuild.channels.fetch(ORDER_LOG_CHANNEL_ID);
 
             let embed: EmbedBuilder;
@@ -137,7 +131,7 @@ const itemBoughtCommand: Command = {
 
             if (mentionedUser) {
                 embed = new EmbedBuilder()
-                    .setColor(0x00ff00)
+                    .setColor(COLOR_TRUE)
                     .setTitle("Purchase Successful")
                     .setThumbnail(imageUrl)
                     .setDescription(`Ordered by: <@${targetUserId}>\nBought: ${boughtText} **${item}**\nPrice: **${price} INR/-**\n\nRegister today using \`/register\`\nTo know more, type \`.?shoprules\``)
@@ -146,7 +140,7 @@ const itemBoughtCommand: Command = {
                 logMessage = `User ${mentionedUser.username} (ID: ${mentionedUser.id}) bought ${item} for ${price} INR/- , but is not registered.`;
             } else {
                 embed = new EmbedBuilder()
-                    .setColor(0x00ff00)
+                    .setColor(COLOR_TRUE)
                     .setTitle("Purchase Successful")
                     .setThumbnail(imageUrl)
                     .setDescription(`Ordered by: **${targetUsername}**\nBought: ${boughtText} **${item}**\nPrice: **${price} INR/-**`)
@@ -162,14 +156,14 @@ const itemBoughtCommand: Command = {
         }
 
         const referralTickets = Math.floor(price / 300);
-        let finalEmbed = ``;
+        let finalEmbed: string = ``;
 
-let DiscordUserRegisteredBut300Below = `Ordered by: <@${targetUserId}>\nBought: ${boughtText} **${item}**\nPrice: **${price} INR/-**\n\nTo know more, type \`.?shoprules\``;
+let DiscordUserRegisteredBut300Below: string = `Ordered by: <@${targetUserId}>\nBought: ${boughtText} **${item}**\nPrice: **${price} INR/-**\n\nTo know more, type \`.?shoprules\``;
 
-let referralText = referralTickets === 1 ? "Referral Ticket 🎟️" : "Referral Tickets 🎟️";
-let DiscordUserRegisteredBut300Above = `Ordered by: <@${targetUserId}>\nBought: ${boughtText} **${item}**\nPrice: **${price} INR/-**\n\nReward: **You got \`${referralTickets}\` ${referralText} which you can convert to 💵 PP Cash by referring your friend!**\n\nCheck your profile using \`/profile\`\nTo know more, type \`.?shoprules\``;
+let referralText: string = referralTickets === 1 ? "Referral Ticket 🎟️" : "Referral Tickets 🎟️";
+let DiscordUserRegisteredBut300Above: string = `Ordered by: <@${targetUserId}>\nBought: ${boughtText} **${item}**\nPrice: **${price} INR/-**\n\nReward: **You got \`${referralTickets}\` ${referralText} which you can convert to 💵 PP Cash by referring your friend!**\n\nCheck your profile using \`/profile\`\nTo know more, type \`.?shoprules\``;
 
-let DiscordUserRegisteredBut300Above_UsingPPCASH = `Ordered by: <@${targetUserId}>\nBought: ${boughtText} **${item}**\nOriginal Price: **${price} INR/-**\nDiscounted Price: **${price - ppScale} INR/-**\n\nReward: **You used \`${ppScale} PP Cash💵\` and got \`₹${ppScale}\` discount and \`${referralTickets}\` ${referralText} ! If you want to earn more \`PP Cash💵\` then make sure to refer to your friends!**\n\nCheck your profile using \`/profile\`\nTo know more, type \`.?shoprules\``;
+let DiscordUserRegisteredBut300Above_UsingPPCASH: string = `Ordered by: <@${targetUserId}>\nBought: ${boughtText} **${item}**\nOriginal Price: **${price} INR/-**\nDiscounted Price: **${price - ppScale} INR/-**\n\nReward: **You used \`${ppScale} PP Cash💵\` and got \`₹${ppScale}\` discount and \`${referralTickets}\` ${referralText} ! If you want to earn more \`PP Cash💵\` then make sure to refer to your friends!**\n\nCheck your profile using \`/profile\`\nTo know more, type \`.?shoprules\``;
 
         finalEmbed = DiscordUserRegisteredBut300Below;
         if (usePPCash && price > 400) {
@@ -179,7 +173,7 @@ let DiscordUserRegisteredBut300Above_UsingPPCASH = `Ordered by: <@${targetUserId
         }
             let { pp_cash, refer_tickets, total_purchases, total_referred } = rows[0];
             let spv = parseFloat(rows[0].spv) || 0.00;
-            let ppToDeduct = ppScale;
+            let ppToDeduct: number = ppScale;
 
             if (pp_cash < ppToDeduct) {
                 await interaction.reply({ content: "❌ Not enough PP Cash to use this scale.", flags: 64 });
@@ -188,8 +182,8 @@ let DiscordUserRegisteredBut300Above_UsingPPCASH = `Ordered by: <@${targetUserId
 
             pp_cash -= ppToDeduct;
             price -= ppToDeduct;
-            const updatedReferTickets = refer_tickets + referralTickets;
-            const updatedTotalPurchases = total_purchases + 1;
+            const updatedReferTickets: number = refer_tickets + referralTickets;
+            const updatedTotalPurchases: number = total_purchases + 1;
             spv = calculateSPV(pp_cash, updatedReferTickets, updatedTotalPurchases, total_referred);
 
             await pool.query("UPDATE users SET pp_cash = ? , refer_tickets = ? , total_purchases = ? , spv = ? WHERE user_id = ?", [pp_cash, updatedReferTickets, updatedTotalPurchases, spv.toFixed(2), targetUserId]);
@@ -209,7 +203,7 @@ let DiscordUserRegisteredBut300Above_UsingPPCASH = `Ordered by: <@${targetUserId
             finalEmbed = DiscordUserRegisteredBut300Above;
         }
         const embed = new EmbedBuilder()
-            .setColor(0x00ff00)
+            .setColor(COLOR_TRUE)
             .setTitle("Purchase Successful")
             .setThumbnail(imageUrl)
             .setDescription(finalEmbed)
@@ -217,7 +211,7 @@ let DiscordUserRegisteredBut300Above_UsingPPCASH = `Ordered by: <@${targetUserId
             .setTimestamp();
 
         if (!interaction.guild) {
-            const botGuild = await interaction.client.guilds.fetch(PREDEFINED_SERVER_ID);
+            const botGuild = await interaction.client.guilds.fetch(SERVER_ID);
             const orderLogChannel = await botGuild.channels.fetch(ORDER_LOG_CHANNEL_ID);
             if (orderLogChannel?.isTextBased()) {
                 await orderLogChannel.send({ embeds: [embed] });

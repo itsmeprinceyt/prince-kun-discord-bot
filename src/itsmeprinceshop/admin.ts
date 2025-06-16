@@ -8,13 +8,13 @@ import {
     ComponentType,
 } from "discord.js";
 import pool from "../db";
-import { Command } from "../types/Command";
+import { Command } from "../types/Command.type";
 import { handleSelectUser } from "../modals/adminModals";
-import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
-import { logger_custom } from "../utility/logger-custom";
-import { RolesPerms } from "../utility/rolePerms";
+import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/loggers/logger-custom";
+import { RolesPerms } from "../utility/uuid/RolesPerms";
 
-const ITEMS_PER_PAGE = 15;
+import { ADMIN_USERS_PER_PAGE, ProfileAuthorPicture } from "../utility/utils";
 
 const adminCommand: Command = {
     data: new SlashCommandBuilder()
@@ -57,25 +57,25 @@ const adminCommand: Command = {
         }
 
         const generateEmbed = () => {
-            const start = page * ITEMS_PER_PAGE;
-            const end = start + ITEMS_PER_PAGE;
+            const start = page * ADMIN_USERS_PER_PAGE;
+            const end = start + ADMIN_USERS_PER_PAGE;
             const pageUsers = users.slice(start, end);
 
             return new EmbedBuilder()
                 .setColor(0xeeff00)
                 .setAuthor({
                     name: "Prince-Kun • User Database",
-                    iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                    iconURL: ProfileAuthorPicture,
                 })
                 .setTitle("Registered Users")
                 .setDescription(
-                    `\`S.N  \` \`USERS\`\n` +
+                    `\`ID  \` \`Users\`\n` +
                     pageUsers
-                        .map((user: any, index: number) => `\`${(start + index + 1).toString().padEnd(5)}\` <@${user.user_id}>`)
+                        .map((user: any, index: number) => `\`${(start + index + 1).toString().padEnd(4,' ')}\` <@${user.user_id}>`)
                         .join("\n")
 
                 )
-                .setFooter({ text: `Page ${page + 1} of ${Math.ceil(users.length / ITEMS_PER_PAGE)}` })
+                .setFooter({ text: `Page ${page + 1} of ${Math.ceil(users.length / ADMIN_USERS_PER_PAGE)}` })
                 .setColor("Blue")
                 .setTimestamp();
         };
@@ -106,7 +106,7 @@ const adminCommand: Command = {
             if (buttonInteraction.customId === "prev" && page > 0) {
                 page--;
                 logger_custom("ADMIN", "admin", "Admin clicked previous button");
-            } else if (buttonInteraction.customId === "next" && (page + 1) * ITEMS_PER_PAGE < users.length) {
+            } else if (buttonInteraction.customId === "next" && (page + 1) * ADMIN_USERS_PER_PAGE < users.length) {
                 page++;
                 logger_custom("ADMIN", "admin", "Admin clicked next button");
             } else if (buttonInteraction.customId === "select") {

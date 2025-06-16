@@ -8,10 +8,11 @@ import {
 } from "discord.js";
 import moment from "moment-timezone";
 import pool from "../db";
-import { Command } from "../types/Command";
-import { logger_custom } from "../utility/logger-custom";
-import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
-import { RolesPerms } from "../utility/rolePerms";
+import { Command } from "../types/Command.type";
+import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/loggers/logger-custom";
+import { RolesPerms } from "../utility/uuid/RolesPerms";
+import { getRegistrationSuccessEmbed } from "../utility/embeds/register-done";
 const adminId = RolesPerms[5].roleId;
 
 const registerUserCommand: Command = {
@@ -64,14 +65,7 @@ const registerUserCommand: Command = {
         const logMessage = `[ DATABASE ] User ${userName} (${selectedUser.id}) registered by Admin ${interaction.user.username}`;
         logger_custom(userName, "register", logMessage);
 
-        const embed = new EmbedBuilder()
-            .setColor(0x00ff00)
-            .setTitle("Registration Successful !")
-            .setThumbnail(selectedUser.displayAvatarURL())
-            .setDescription(`Well then, <@${selectedUser.id}>, you're registered!\n Use \`/profile\` to check your inventory!\n\n**Current Marketplace:** https://discord.com/channels/310675536340844544/1177928471951966339/1179354261365211218`)
-            .setTimestamp();
-
-        await interaction.reply({ embeds: [embed] });
+        await interaction.reply({ embeds: [getRegistrationSuccessEmbed(selectedUser)] });
     }
 };
 

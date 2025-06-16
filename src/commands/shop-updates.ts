@@ -11,16 +11,19 @@ import {
     TextChannel,
 } from "discord.js";
 
-import { Command } from "../types/Command";
-import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
-import { logger_command_sent } from "../utility/logger-command-sent";
-import { logger_custom } from "../utility/logger-custom";
+import { Command } from "../types/Command.type";
+import { logger_command_sent } from "../utility/loggers/logger-command-sent";
+import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/loggers/logger-custom";
 
-import { Roles } from "../utility/roles";
-import { RolesPerms } from "../utility/rolePerms";
-const StockUpdate = Roles[5].roleId;
-const MarketUpdate = Roles[4].roleId;
+import { PING_Roles } from "../utility/uuid/PingRoles";
+import { RolesPerms } from "../utility/uuid/RolesPerms";
+const StockUpdate = PING_Roles[5].roleId;
+const MarketUpdate = PING_Roles[4].roleId;
 const ShopManager = RolesPerms[1].roleId;
+
+import { PEACE_EMBED } from "../utility/uuid/Colors";
+import { ItsMePrinceShopProfile } from "../utility/utils";
 
 const userCache = new Map<string, { username: string; avatarURL: string }>();
 
@@ -31,7 +34,6 @@ const ShopUpdateCommand: Command = {
 
     async execute(interaction: ChatInputCommandInteraction) {
         const isDM = !interaction.guild;
-        const location = isDM ? "DM" : `Server: ${interaction.guild?.name}`;
 
         if (isDM) {
             await interaction.reply({
@@ -42,7 +44,7 @@ const ShopUpdateCommand: Command = {
             return;
         }
 
-        const ownerId = interaction.guild!.ownerId;
+        const ownerId: string = interaction.guild!.ownerId;
         const member = interaction.member as GuildMember;
         const userRoles = member.roles.cache.map((role) => role.id);
         const hasRequiredRole = userRoles.includes(ShopManager);
@@ -90,14 +92,13 @@ export async function handleShopModalSubmit(
         "shopUpdateMessage"
     );
     const userInfo = userCache.get(interaction.user.id);
-    const username = userInfo?.username || "Unknown User";
-    const avatarURL = userInfo?.avatarURL || interaction.user.displayAvatarURL();
+    const username: string = userInfo?.username || "Unknown User";
 
     const embed = new EmbedBuilder()
-    .setColor(0xff6767)
+    .setColor(PEACE_EMBED)
         .setTitle("📢 LATEST SHOP UPDATES")
+        .setThumbnail(ItsMePrinceShopProfile)
         .setDescription(messageContent)
-        .setFooter({ text: `${username}`, iconURL: avatarURL })
         .setTimestamp();
 
     await interaction.reply({

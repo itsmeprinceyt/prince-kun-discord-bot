@@ -6,10 +6,11 @@ import {
     User,
 } from "discord.js";
 import pool from "../db";
-import { Command } from "../types/Command";
-import { logger_custom } from "../utility/logger-custom";
-import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
-import { RolesPerms } from "../utility/rolePerms";
+import { Command } from "../types/Command.type";
+import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/loggers/logger-custom";
+import { RolesPerms } from "../utility/uuid/RolesPerms";
+import { COLOR_FALSE } from "../utility/uuid/Colors";
 
 const adminId = RolesPerms[5].roleId;
 
@@ -58,10 +59,10 @@ const deleteUserCommand: Command = {
         logger_custom(selectedUser.username, "delete-user", logMessage);
 
         const embed = new EmbedBuilder()
-            .setColor(0xff0000)
+            .setColor(COLOR_FALSE)
             .setTitle("User Deleted")
             .setThumbnail(selectedUser.displayAvatarURL())
-            .setDescription(`User <@${selectedUser.id}> has been removed from the database.`)
+            .setDescription(`Profile of <@${selectedUser.id}> has been deleted.`)
             .setTimestamp();
 
         await interaction.reply({ embeds: [embed] });

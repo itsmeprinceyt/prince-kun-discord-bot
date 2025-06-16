@@ -5,3 +5,8 @@
 - Admin
 - Members
 - Role restricted
+
+### Added New Command? Then update in:
+- `utils/commands/help/help-command-admin.ts`
+- `utils/commands/help/help-commands.ts`
+- `utils/commands/export-commands-utils.ts`

@@ -13,16 +13,21 @@ import {
 import moment from "moment-timezone";
 
 import pool from "../db";
-import { Command } from "../types/Command";
-import { logger_custom } from "../utility/logger-custom";
-import { ItsMePrinceRules } from "../utility/itsmeprince-rules";
-import { generateSPVImage } from "../utility/spvImage";
-import { EMOTES } from "../utility/emotes";
+import { Command } from "../types/Command.type";
+import { logger_custom } from "../utility/loggers/logger-custom";
+import { ItsMePrinceRules } from "../utility/commands/rules/itsmeprince-rules";
+import { generateSPVImage } from "../utility/spv/spvImage";
+import { EMOTES } from "../utility/uuid/Emotes";
+import { WebsiteLink } from '../utility/utils';
 const GC = EMOTES[0].roleId;
 const YC = EMOTES[1].roleId;
 const RC = EMOTES[2].roleId;
 const BC = EMOTES[3].roleId;
 const PC = EMOTES[4].roleId;
+
+import { COLOR_PRIMARY, YELLOW_EMBED } from "../utility/uuid/Colors";
+import { ProfileAuthorPicture } from "../utility/utils";
+import { getRegistrationSuccessEmbed } from '../utility/embeds/register-done';
 
 const profileCommand: Command = {
   data: new SlashCommandBuilder()
@@ -37,9 +42,9 @@ const profileCommand: Command = {
   async execute(interaction: ChatInputCommandInteraction) {
     const mentionedUser: User | null = interaction.options.getUser("user");
     const targetUser = mentionedUser || interaction.user;
-    const targetUserId = targetUser.id;
-    const targetUsername = targetUser.username;
-    const targetDisplayName = (interaction.guild?.members.cache.get(targetUserId) as GuildMember)?.displayName || targetUsername;
+    const targetUserId: string = targetUser.id;
+    const targetUsername: string = targetUser.username;
+    const targetDisplayName: string = (interaction.guild?.members.cache.get(targetUserId) as GuildMember)?.displayName || targetUsername;
     if (mentionedUser) {
       const [rows]: any = await pool.query("SELECT pp_cash FROM users WHERE user_id = ?", [mentionedUser.id]);
       if (rows.length === 0) {
@@ -53,11 +58,11 @@ const profileCommand: Command = {
     const [rows]: any = await pool.query(
       "SELECT pp_cash, refer_tickets, total_purchases, registration_date, total_referred, spv FROM users WHERE user_id = ?",
       [targetUserId]
-  );
+    );
 
     if (rows.length > 0) {
 
-      const { pp_cash, refer_tickets, total_purchases, registration_date, total_referred} = rows[0];
+      const { pp_cash, refer_tickets, total_purchases, registration_date, total_referred } = rows[0];
       const spv = parseFloat(rows[0].spv) || 0.00;
       const AA = String(pp_cash).padEnd(8, " ");
       const BB = String(refer_tickets).padEnd(8, " ");
@@ -74,10 +79,10 @@ const profileCommand: Command = {
       const attachment = new AttachmentBuilder(imageBuffer, { name: "spv.png" });
 
       const embed = new EmbedBuilder()
-        .setColor(0xeeff00)
+        .setColor(YELLOW_EMBED)
         .setAuthor({
           name: "Prince-Kun • Profile Info",
-          iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+          iconURL: ProfileAuthorPicture,
         })
         .setThumbnail("attachment://spv.png")
         .setTitle("ItsMe Prince Shop")
@@ -98,18 +103,28 @@ const profileCommand: Command = {
         .setFooter({ text: `${targetUsername}`, iconURL: avatarURL })
         .setTimestamp();
 
-      await interaction.reply({ embeds: [embed], files: [attachment] });
+      const websiteButton = new ButtonBuilder()
+        .setLabel("Visit Shop Website")
+        .setStyle(ButtonStyle.Link)
+        .setURL(WebsiteLink);
+
+      const row = new ActionRowBuilder<ButtonBuilder>().addComponents(websiteButton);
+
+      await interaction.reply({
+        embeds: [embed],
+        components: [row],
+        files: [attachment]
+      });
       const MessageString = `[ DATABASE ] User ${targetDisplayName} (${targetUserId}) fetched profile`;
       logger_custom(targetDisplayName, "profile", MessageString);
       return;
     }
 
     const embed = new EmbedBuilder()
-      .setColor(0xc200ff)
+      .setColor(COLOR_PRIMARY)
       .setAuthor({
         name: "Prince-Kun • ItsMe Prince Shop",
-        iconURL:
-          "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+        iconURL: ProfileAuthorPicture,
       })
       .setTitle("Rules & Information")
       .setThumbnail(interaction.user.displayAvatarURL())
@@ -153,13 +168,7 @@ const profileCommand: Command = {
         logger_custom(targetDisplayName, "profile", MessageString);
 
         await buttonInteraction.update({
-          embeds: [
-            new EmbedBuilder()
-              .setTitle("Registration Successful!")
-              .setThumbnail(interaction.user.displayAvatarURL())
-              .setDescription("Well, you're registered!\n Use \`/profile\` to check your inventory!\n\n**Current Marketplace:** https://discord.com/channels/310675536340844544/1177928471951966339/1179354261365211218")
-              .setColor(0x00ff00)
-          ],
+          embeds: [getRegistrationSuccessEmbed(interaction.user)],
           components: []
         });
       } else if (buttonInteraction.customId === `cancel_${targetUserId}`) {

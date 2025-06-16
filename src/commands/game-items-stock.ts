@@ -6,15 +6,18 @@ import {
     GuildMember
 } from "discord.js";
 
-import { Command } from "../types/Command";
-import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
-import { logger_custom } from "../utility/logger-custom";
+import { Command } from "../types/Command.type";
+import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/loggers/logger-custom";
 
-import { Roles } from "../utility/roles";
-import { RolesPerms } from "../utility/rolePerms";
-const StockUpdate = Roles[5].roleId;
-const MarketUpdate = Roles[4].roleId;
+import { PING_Roles } from "../utility/uuid/PingRoles";
+import { RolesPerms } from "../utility/uuid/RolesPerms";
+import { COLOR_TRUE } from "../utility/uuid/Colors";
+import { ProfileAuthorPicture, BLESSING_OF_THE_WELKIN_MOON, EXPRESS_PASS, INTER_NOT_SUBSCRIPTION, LUNITE_SUBSCRIPTION } from "../utility/utils";
+const StockUpdate = PING_Roles[5].roleId;
+const MarketUpdate = PING_Roles[4].roleId;
 const ShopManager = RolesPerms[1].roleId;
+const Admin = RolesPerms[5].roleId;
 
 const ShopItems: Command = {
     data: new SlashCommandBuilder()
@@ -49,7 +52,7 @@ const ShopItems: Command = {
         }
 
         const member = interaction.member as GuildMember;
-        const userName = member?.displayName || interaction.user.username;
+        const userName: string = member?.displayName || interaction.user.username;
         const userRoles = member.roles.cache.map(role => role.id);
         const ownerId = interaction.guild!.ownerId;
         const hasRequiredRole = userRoles.includes(ShopManager);
@@ -68,63 +71,63 @@ const ShopItems: Command = {
 
         /*=================================================== WELKIN*/
         const welkin1 = new EmbedBuilder()
-            .setColor(0x00ff00)
+            .setColor(COLOR_TRUE)
             .setAuthor({
                 name: "Prince-Kun • Genshin Impact",
-                iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                iconURL: ProfileAuthorPicture,
             })
             .setTitle("Blessing of the Welkin Moon is in Stock !")
             .setDescription(`\`\`\`GENSHIN IMPACT - BLESSING OF THE WELKIN MOON\`\`\`` +
                 `\`\`\`PRICE: ${price} INR/-\`\`\``)
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171003356221461/Blessing_of_the_Welkin.png")
+            .setImage(BLESSING_OF_THE_WELKIN_MOON)
             .setFooter({ text: `Price as of:`, iconURL: interaction.user.displayAvatarURL({ extension: "png", size: 512 }) })
             .setTimestamp();
 
         const welkin2 = new EmbedBuilder()
-            .setColor(0x00ff00)
+            .setColor(COLOR_TRUE)
             .setTitle("Read before purchasing")
             .setDescription(`Read <#1177928702114406481> before proceeding`);
 
         const welkin3 = new EmbedBuilder()
-            .setColor(0x00ff00)
+            .setColor(COLOR_TRUE)
             .setTitle("To Purchase")
-            .setDescription(`Use <#1181972522900660264> to initiate an order or Message <@310672946316181514>`);
+            .setDescription(`Use <#1181972522900660264> to initiate an order or Message <@${Admin}>`);
 
         /*=================================================== EXPRESS PASS*/
         const express_pass1 = new EmbedBuilder()
-            .setColor(0x00ff00)
+            .setColor(COLOR_TRUE)
             .setAuthor({
                 name: "Prince-Kun • Honkai Star Rail",
-                iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                iconURL: ProfileAuthorPicture,
             })
             .setTitle("Express Pass is in Stock !")
             .setDescription(`\`\`\`HONKAI STAR RAIL - EXPRESS PASS\`\`\`` +
                 `\`\`\`PRICE: ${price} INR/-\`\`\``)
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171003843018893/Express_Supply_Pass.png")
+            .setImage(EXPRESS_PASS)
             .setFooter({ text: `Price as of:`, iconURL: interaction.user.displayAvatarURL({ extension: "png", size: 512 }) })
             .setTimestamp();
 
         const express_pass2 = new EmbedBuilder()
-            .setColor(0x00ff00)
+            .setColor(COLOR_TRUE)
             .setTitle("Read before purchasing")
             .setDescription(`Read <#1179353148482146404> before proceeding`);
 
         const express_pass3 = new EmbedBuilder()
-            .setColor(0x00ff00)
+            .setColor(COLOR_TRUE)
             .setTitle("To Purchase")
-            .setDescription(`Use <#1181972522900660264> to initiate an order or Message <@310672946316181514>`);
+            .setDescription(`Use <#1181972522900660264> to initiate an order or Message <@${Admin}>`);
 
         /*=================================================== LUNITE SUBSCRIPTION*/
         const lunite_subscription1 = new EmbedBuilder()
-            .setColor(0x00ff00)
+            .setColor(COLOR_TRUE)
             .setAuthor({
                 name: "Prince-Kun • Wuthering Waves",
-                iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                iconURL: ProfileAuthorPicture,
             })
             .setTitle("Lunite Subscription is in Stock !")
             .setDescription(`\`\`\`WUTHERING WAVES - LUNITE SUBSCRIPTION\`\`\`` +
                 `\`\`\`PRICE: ${price} INR/-\`\`\``)
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171011216605297/Lunite_Subscription.png")
+            .setImage(LUNITE_SUBSCRIPTION)
             .setFooter({ text: `Price as of:`, iconURL: interaction.user.displayAvatarURL({ extension: "png", size: 512 }) })
             .setTimestamp();
 
@@ -134,37 +137,31 @@ const ShopItems: Command = {
             .setDescription(`Read <#1242938772493176973> before proceeding`);
 
         const lunite_subscription3 = new EmbedBuilder()
-            .setColor(0x00ff00)
+            .setColor(COLOR_TRUE)
             .setTitle("To Purchase")
-            .setDescription(`Use <#1181972522900660264> to initiate an order or Message <@310672946316181514>`);
+            .setDescription(`Use <#1181972522900660264> to initiate an order or Message <@${Admin}>`);
 
         /*=================================================== INTER-KNOT-SUBSCRIPTION*/
         const inter_knot_membership1 = new EmbedBuilder()
-            .setColor(0x00ff00)
+            .setColor(COLOR_TRUE)
             .setAuthor({
                 name: "Prince-Kun • Zenless Zone Zero",
-                iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                iconURL: ProfileAuthorPicture,
             })
             .setTitle("Inter-Knot Membership is in Stock !")
             .setDescription(`\`\`\`ZENLESS ZONE ZERO - INTER-KNOT-SUBSCRIPTION\`\`\`` +
                 `\`\`\`PRICE: ${price} INR/-\`\`\``)
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337171008834113546/Inter-Knot_Membership.png")
-            .setFooter({
-                text: `Price as of: ${new Date().toLocaleTimeString("en-GB", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    timeZone: "Asia/Kolkata",
-                })} ${new Date().getHours() >= 12 ? "PM" : "AM"} | Prices may fluctuate at anytime 👈`,
-                iconURL: interaction.user.displayAvatarURL({ extension: "png", size: 512 }),
-            });
+            .setImage(INTER_NOT_SUBSCRIPTION)
+            .setFooter({ text: `Price as of:`, iconURL: interaction.user.displayAvatarURL({ extension: "png", size: 512 }) })
+            .setTimestamp();
 
         const inter_knot_membership2 = new EmbedBuilder()
-            .setColor(0x00ff00)
+            .setColor(COLOR_TRUE)
             .setTitle("Read before purchasing")
             .setDescription(`Read <#1337326717169307682> before proceeding`);
 
         const inter_knot_membership3 = new EmbedBuilder()
-            .setColor(0x00ff00)
+            .setColor(COLOR_TRUE)
             .setTitle("To Purchase")
 
             .setDescription(`Use <#1181972522900660264> to initiate an order or Message <@310672946316181514>`);
@@ -175,7 +172,6 @@ const ShopItems: Command = {
             "lunite-subscription": [lunite_subscription1, lunite_subscription2, lunite_subscription3],
             "inter-knot-membership": [inter_knot_membership1, inter_knot_membership2, inter_knot_membership3],
         };
-
 
         const embedsToSend = embedsMap[item];
 

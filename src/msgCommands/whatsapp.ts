@@ -1,25 +1,22 @@
 import { Message, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import { phoneNumber, ProfileAuthorPicture, Whatsapp, WhatsappBroadcast } from "../utility/utils";
+import { COLOR_PRIMARY } from "../utility/uuid/Colors";
 
 export default {
     triggers: [".?whatsapp"],
     async execute(message: Message) {
-        const phoneNumber = "+919793798778";
-
         const embed = new EmbedBuilder()
-            .setColor(0xc200ff)
+            .setColor(COLOR_PRIMARY)
             .setAuthor({
                 name: "Prince-Kun • Whatsapp",
-                iconURL:
-                    "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                iconURL: ProfileAuthorPicture,
             })
             .setTitle("Broadcast Channel")
             .setDescription(`Find all the channel updates right from your Whatsapp App! Join my Broadcast channel from the link below or message me on my WhatsApp number and say "Hi!"\n\n` +
                 `**WhatsApp Number:** \`${phoneNumber}\`\n` +
-                `[Click here to join my WhatsApp Broadcast Channel!](https://www.whatsapp.com/channel/0029Va5MEeX2UPBIHUMyQY2z)`
+                `[Click here to join my WhatsApp Broadcast Channel!](${WhatsappBroadcast})`
             )
-            .setImage(
-                "https://media.discordapp.net/attachments/1336322293437038602/1337051063504867398/Whatsapp.png"
-            )
+            .setImage(Whatsapp)
             .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
             .setTimestamp();
 

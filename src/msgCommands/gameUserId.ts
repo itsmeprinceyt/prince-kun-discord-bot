@@ -1,4 +1,6 @@
 import { Message, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import { ProfileAuthorPicture, GameUUID, HSR_UUID, WUWA_UUID, BGMI_UUID, ZZZ_UUID, GENSHIN_UUID } from "../utility/utils";
+import { COLOR_PRIMARY } from "../utility/uuid/Colors";
 
 export default {
     triggers: [
@@ -14,18 +16,18 @@ export default {
         ".?genshin"],
     async execute(message: Message) {
         const UIDs = {
-            hsr: "802581646",
-            wuwa: "900584281",
-            bgmi: "5651014966",
-            zzz: "1302186027",
-            genshin: "889406482",
+            hsr: HSR_UUID,
+            wuwa: WUWA_UUID,
+            bgmi: BGMI_UUID,
+            zzz: ZZZ_UUID,
+            genshin: GENSHIN_UUID,
         };
 
         const embed = new EmbedBuilder()
-            .setColor(0xc200ff)
+            .setColor(COLOR_PRIMARY)
             .setAuthor({
                 name: "Prince-Kun • Game UIDs",
-                iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                iconURL: ProfileAuthorPicture,
             })
             .setTitle("Here you can all my UIDs")
             .setDescription(
@@ -34,7 +36,7 @@ export default {
                 `\`Wuwa UID:     \` - ${UIDs.wuwa} [Server: SEA]\n` +
                 `\`BGMI UID:     \` - ${UIDs.bgmi}\n` +
                 `\`ZZZ UID:      \` - ${UIDs.zzz} [Server: ASIA]`)
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337083370819162184/Game_User_Id.png")
+            .setImage(GameUUID)
             .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
             .setTimestamp();
 

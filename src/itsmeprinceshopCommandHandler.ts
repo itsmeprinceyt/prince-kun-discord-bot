@@ -1,7 +1,7 @@
 import { Collection } from "discord.js";
 import { readdirSync } from "fs";
 import { join } from "path";
-import { Command } from "./types/Command";
+import { Command } from "./types/Command.type";
 
 const itsmeprinceshopCommands = new Collection<string, Command>();
 const isDev = process.env.NODE_ENV !== 'production';

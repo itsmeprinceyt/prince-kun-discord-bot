@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import { BOT_ID } from "../utility/botId";
+import { BOT_ID } from "../utility/uuid/Bot-ID";
 const allowedBotIds = [BOT_ID[0].roleId, BOT_ID[1].roleId, BOT_ID[2].roleId, BOT_ID[3].roleId];
 const Mazoku = BOT_ID[2].roleId;
 const Lumina = BOT_ID[3].roleId;
@@ -13,17 +13,17 @@ export default {
         if (!repliedTo.author.bot || !allowedBotIds.includes(repliedTo.author.id)) return;
 
         const embed = repliedTo.embeds[0];
-        const embedTitle = embed.title || "";
-        const embedAuthor = embed.author?.name || "";
-        const embedDescription = embed.description || "";
-        const embedFooter = embed.footer?.text || "";
+        const embedTitle: string = embed.title || "";
+        const embedAuthor: string = embed.author?.name || "";
+        const embedDescription: string = embed.description || "";
+        const embedFooter: string = embed.footer?.text || "";
 
-        const userDisplayName = message.member?.displayName || message.author.username;
-        const globalName = message.author.globalName ?? message.author.username;
-        const userUsername = message.author.username;
-        const userCapitalizedUsername = userUsername.charAt(0).toUpperCase() + userUsername.slice(1);
-        const userId = message.author.id;
-        const contentToCheck = `${embedTitle} ${embedAuthor} ${embedDescription} ${embedFooter}`;
+        const userDisplayName: string = message.member?.displayName || message.author.username;
+        const globalName: string = message.author.globalName ?? message.author.username;
+        const userUsername: string = message.author.username;
+        const userCapitalizedUsername: string = userUsername.charAt(0).toUpperCase() + userUsername.slice(1);
+        const userId: string = message.author.id;
+        const contentToCheck: string = `${embedTitle} ${embedAuthor} ${embedDescription} ${embedFooter}`;
         if (
             contentToCheck.includes(userDisplayName) ||
             contentToCheck.includes(userUsername) ||

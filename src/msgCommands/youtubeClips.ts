@@ -1,23 +1,21 @@
 import { Message, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import { ProfileAuthorPicture, YouTubeClips, YouTubeClipsImage } from "../utility/utils";
+import { COLOR_PRIMARY } from "../utility/uuid/Colors";
 
 export default {
     triggers: [".?youtubeclips", ".?ytclips",".?clips"],
     async execute(message: Message) {
-        const YouTubeClips = "https://www.youtube.com/watch?v=U9CD1tFw1mg&list=PLiFooJ43_R5R2usnfqq4D1JkG2Bz1A8VB&index=1";
         const embed = new EmbedBuilder()
-            .setColor(0xc200ff)
+            .setColor(COLOR_PRIMARY)
             .setAuthor({
                 name: "Prince-Kun • YouTube Clips/Highlights",
-                iconURL:
-                    "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                iconURL: ProfileAuthorPicture,
             })
             .setTitle("ItsMe Prince • Clips/Highlights")
             .setDescription(`Find all the amazing community-made clips or stream highlights right here!🌟🌻\n\n`+
                 `[Check out my Clips/Highlights !](${YouTubeClips})`
             )
-            .setImage(
-                "https://media.discordapp.net/attachments/1336322293437038602/1337031725762482278/YouTubeClips.png"
-            )
+            .setImage(YouTubeClipsImage)
             .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
             .setTimestamp();
                     const row = new ActionRowBuilder<ButtonBuilder>().addComponents(

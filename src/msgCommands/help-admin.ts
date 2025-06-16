@@ -1,19 +1,21 @@
 import { Message, EmbedBuilder } from "discord.js";
-import { HelpDescriptionAdmin } from "../utility/help-command-admin";
-import { RolesPerms } from "../utility/rolePerms";
+import { HelpDescriptionAdmin } from "../utility/commands/help/help-command-admin";
+import { RolesPerms } from "../utility/uuid/RolesPerms";
+import { ProfileAuthorPicture, Help } from "../utility/utils";
+import { COLOR_PRIMARY } from "../utility/uuid/Colors";
 
 export default {
     triggers: [".?help-admin", ".?admin"],
     async execute(message: Message) {
         const embed = new EmbedBuilder()
-            .setColor(0xc200ff)
+            .setColor(COLOR_PRIMARY)
             .setAuthor({
                 name: "Prince-Kun • Commands",
-                iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                iconURL: ProfileAuthorPicture,
             })
             .setTitle("All Admin Commands!")
             .setDescription(HelpDescriptionAdmin)
-            .setImage("https://media.discordapp.net/attachments/1336322293437038602/1336708310904340572/Help.png")
+            .setImage(Help)
             .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
             .setTimestamp();
 

@@ -6,9 +6,9 @@ import {
 } from "discord.js";
 import path from "path";
 
-import { Command } from "../types/Command";
-import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
-import { logger_custom } from "../utility/logger-custom";
+import { Command } from "../types/Command.type";
+import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/loggers/logger-custom";
 
 const pingCommand: Command = {
   data: new SlashCommandBuilder()
@@ -27,9 +27,9 @@ const pingCommand: Command = {
     }
 
     const member = interaction.member as GuildMember;
-    const userName = member.displayName || interaction.user.username;
-    const gifPath = path.join(__dirname, "../public/GIF/sonic-sonic-exe.gif");
-    const gifPath2 = path.join(__dirname, "../public/GIF/mambo.gif");
+    const userName: string = member.displayName || interaction.user.username;
+    const gifPath: string = path.join(__dirname, "../public/GIF/sonic-sonic-exe.gif");
+    const gifPath2: string = path.join(__dirname, "../public/GIF/mambo.gif");
     const NonAdmin = new AttachmentBuilder(gifPath);
     const Admin = new AttachmentBuilder(gifPath2);
 

@@ -1,5 +1,7 @@
 import { Message, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import { evaluate, sqrt } from "mathjs";
+import { COLOR_PRIMARY } from "../utility/uuid/Colors";
+import { ProfileAuthorPicture } from "../utility/utils";
 
 export default {
     triggers: [".?math"],
@@ -37,11 +39,10 @@ export default {
             }
 
             const embed = new EmbedBuilder()
-                .setColor(0xc200ff)
+                .setColor(COLOR_PRIMARY)
                 .setAuthor({
                     name: "Prince-Kun • Math",
-                    iconURL:
-                        "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                    iconURL: ProfileAuthorPicture,
                 })
                 .setTitle(`Result: ${formattedAnswer}`)
                 .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })

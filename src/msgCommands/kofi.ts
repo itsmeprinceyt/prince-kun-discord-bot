@@ -1,24 +1,22 @@
 import { Message, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import { COLOR_PRIMARY } from "../utility/uuid/Colors";
+import { KoFi, KofiImage, ProfileAuthorPicture } from "../utility/utils";
 
 export default {
     triggers: [".?kofi"],
     async execute(message: Message) {
-        const KoFiLink = "https://ko-fi.com/itsmeprinceyt";
         const embed = new EmbedBuilder()
-            .setColor(0xc200ff)
+            .setColor(COLOR_PRIMARY)
             .setAuthor({
                 name: "Prince-Kun • Ko-Fi",
-                iconURL:
-                    "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                iconURL: ProfileAuthorPicture,
             })
             .setTitle("Support Me on Ko-Fi")
             .setDescription(`As a streamer and developer, I am committed to delivering high-quality content for my audience to enjoy and creating cool projects for everyone to use. All donations will be reinvested to improve my overall quality of life, allowing me to provide better streams and coding projects.\n\n` +
                 `I sincerely appreciate anyone who chooses to support me financially. Thank you for your generosity! 😊\n\n` +
-                `[Click here to support me on Ko-Fi !](${KoFiLink})`
+                `[Click here to support me on Ko-Fi !](${KoFi})`
             )
-            .setImage(
-                "https://media.discordapp.net/attachments/1336322293437038602/1337027679886774272/KoFi.png"
-            )
+            .setImage(KofiImage)
             .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
             .setTimestamp();
             const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -44,7 +42,7 @@ export default {
                     }
     
                     await interaction.reply({
-                        content: `${KoFiLink}`,
+                        content: `${KoFi}`,
                         flags: 64,
                     });
                 }

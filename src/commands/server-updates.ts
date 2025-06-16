@@ -10,13 +10,14 @@ import {
     TextChannel
 } from "discord.js";
 
-import { Command } from "../types/Command";
-import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
-import { logger_command_sent } from "../utility/logger-command-sent";
-import { logger_custom } from "../utility/logger-custom";
-
-import { Roles } from "../utility/roles";
-const changesRoleId = Roles[0].roleId;
+import { Command } from "../types/Command.type";
+import { logger_command_sent } from "../utility/loggers/logger-command-sent";
+import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/loggers/logger-custom";
+import { PING_Roles } from "../utility/uuid/PingRoles";
+import { COLOR_PRIMARY } from "../utility/uuid/Colors";
+import { ProfileAuthorPicture, ServerUpdates } from "../utility/utils";
+const changesRoleId = PING_Roles[0].roleId;
 
 const userCache = new Map<string, { username: string; avatarURL: string }>();
 
@@ -75,15 +76,14 @@ export async function handleServerModalSubmit(interaction: ModalSubmitInteractio
     const avatarURL = userInfo?.avatarURL || interaction.user.displayAvatarURL();
 
     const embed = new EmbedBuilder()
-        .setColor(0xffffff)
+        .setColor(COLOR_PRIMARY)
         .setAuthor({
             name: "Prince-Kun • Server Update",
-            iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+            iconURL: ProfileAuthorPicture,
         })
         .setTitle("📢 Latest Server Changes & Improvements!")
         .setDescription(messageContent)
-        .setImage("https://media.discordapp.net/attachments/1336322293437038602/1337156724628525127/Server_Changes.png")
-        .setFooter({ text: `${username}`, iconURL: avatarURL })
+        .setImage(ServerUpdates)
         .setTimestamp();
 
     await interaction.reply({

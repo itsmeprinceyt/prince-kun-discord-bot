@@ -1,21 +1,20 @@
 import { Message, EmbedBuilder } from "discord.js";
-import { HelpDescription } from "../utility/help-commands";
+import { HelpDescription } from "../utility/commands/help/help-commands";
+import { ProfileAuthorPicture, Help } from "../utility/utils";
+import { COLOR_PRIMARY } from "../utility/uuid/Colors";
 
 export default {
     triggers: [".?help-force"],
     async execute(message: Message) {
         const embed = new EmbedBuilder()
-            .setColor(0xc200ff)
+            .setColor(COLOR_PRIMARY)
             .setAuthor({
                 name: "Prince-Kun • Commands",
-                iconURL:
-                    "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                iconURL: ProfileAuthorPicture,
             })
             .setTitle("Here are all the available commands which you can use!")
             .setDescription(HelpDescription)
-            .setImage(
-                "https://media.discordapp.net/attachments/1336322293437038602/1336708310904340572/Help.png"
-            )
+            .setImage(Help)
             .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
             .setTimestamp();
         if (!message.guild) {

@@ -4,13 +4,14 @@ import {
     User
 } from "discord.js";
 
-import { Command } from "../types/Command";
-import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
-import { logger_custom } from "../utility/logger-custom";
-import { RolesPerms } from "../utility/rolePerms";
+import { Command } from "../types/Command.type";
+import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/loggers/logger-custom";
+import { RolesPerms } from "../utility/uuid/RolesPerms";
+
+import { ThankYouForPurchase } from "../utility/utils";
 
 const adminId = RolesPerms[5].roleId;
-const predefinedImage = "https://media.discordapp.net/attachments/1336322293437038602/1350143776999608390/Thank_You.png";
 
 const PurchaseDone: Command = {
     data: new SlashCommandBuilder()
@@ -43,7 +44,7 @@ const PurchaseDone: Command = {
                     content: `-# Check your profile using \`/profile\` or register using \`/register\` if you haven't!`
                 }),
                 mentionedUser.send({
-                    content: `${predefinedImage}`
+                    content: `${ThankYouForPurchase}`
                 })
             ]);
 

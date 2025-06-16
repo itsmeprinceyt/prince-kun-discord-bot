@@ -1,6 +1,8 @@
+// DOT ENV
 import dotenv from "dotenv";
 dotenv.config();
 
+// PACKAGE
 import chalk from "chalk";
 import {
     Client,
@@ -9,11 +11,18 @@ import {
     ModalSubmitInteraction,
 } from "discord.js";
 
+// COMMAND HANDLER
 import commands from "./commandHandler";
 import itsmeprinceshopCommands from "./itsmeprinceshopCommandHandler";
 import msgCommands from "./msgCommandHandler";
+
+// DEPLOY COMMANDS
 import deployCommands from "./deployCommands";
-import { getFormattedIST } from "./utility/time";
+
+// LOGGER
+import { getFormattedIST } from "./utility/loggers/time";
+
+// MODALS
 import { handleModalSubmit as handleBotModalSubmit } from "./commands/bot-updates";
 import { handleServerModalSubmit } from "./commands/server-updates";
 import { handleShopModalSubmit } from "./commands/shop-updates";
@@ -29,7 +38,13 @@ import {
     handleDeleteUser
 } from "./modals/adminModals";
 import { handleRedeemModalSubmit } from "./commands/new-redeems";
+
+// DATABASE CONNECTION
 import { initDB } from "./db";
+
+// UTILITY IMPORTS
+import { RolesPerms } from './utility/uuid/RolesPerms';
+import { cooldownTime } from './utility/utils';
 
 const modalHandlers = new Map<string, (interaction: ModalSubmitInteraction) => Promise<void>>([
     ["select_user", handleSelectUserSubmit],
@@ -108,7 +123,6 @@ async function startBot() {
     });
 
     const cooldowns = new Map<string, number>();
-    const cooldownTime = 3000;
 
     client.on("interactionCreate", async (interaction) => {
         const userId = interaction.user.id;
@@ -119,16 +133,18 @@ async function startBot() {
             const lastUsed = cooldowns.get(`${userId}-${commandName}`) || 0;
 
             if (now - lastUsed < cooldownTime) {
-                const remaining = ((lastUsed + cooldownTime) - now) / 1000;
+                const availableAt = Math.floor((lastUsed + cooldownTime) / 1000);
+
                 await interaction.reply({
-                    content: `<@${userId}>, ⏳Please wait \`${remaining.toFixed(1)} seconds\` before using \`/${commandName}\` again.`
+                    content: `<@${userId}>, ⏳ You can use this command again <t:${availableAt}:R>.`,
+                    flags: 64
                 });
                 return;
             }
 
             cooldowns.set(`${userId}-${commandName}`, now);
 
-            const command = commands.get(interaction.commandName) || itsmeprinceshopCommands.get(interaction.commandName);
+            const command = commands.get(commandName) || itsmeprinceshopCommands.get(commandName);
             if (!command) return;
 
             try {
@@ -194,10 +210,11 @@ async function startBot() {
                 if (!mentionedUser) return;
 
                 const member = message.guild?.members.cache.get(mentionedUser.id);
+                const Lali = RolesPerms.find(role => role.name === "Lali");
 
                 if (member?.id === message.guild?.ownerId) {
                     message.channel.send(`## **Nah, he's a good person 😎**`);
-                } else if (member?.roles.cache.has("1039624778715250780")) {
+                } else if (member?.id === Lali?.roleId) {
                     message.channel.send(`## **Nah, she's a good person 😊**`);
                 } else {
                     message.channel.send(`## **🥸Yes, ${mentionedUser} is a bich🤡**`);
@@ -213,18 +230,20 @@ async function startBot() {
         const command = [...msgCommands.values()]
             .sort((a, b) => b.triggers[0].length - a.triggers[0].length)
             .find(cmd => cmd.triggers.some(trigger => message.content.startsWith(trigger)));
-        
+
         if (command) {
             const userId = message.author.id;
             const now = Date.now();
             const lastUsed = cooldowns.get(userId) || 0;
-            const commandName = command.triggers[0];
+
             if (now - lastUsed < cooldownTime) {
-                const remaining = ((lastUsed + cooldownTime) - now) / 1000;
-                await message.reply(`<@${userId}>,⏳Please wait \`${remaining.toFixed(1)} seconds\` before using \`${commandName}\` again.`);
+                const availableAt = Math.floor((lastUsed + cooldownTime) / 1000);
+                await message.reply(`<@${userId}> ⏳ You can use this command again <t:${availableAt}:R>.`);
                 return;
             }
+
             cooldowns.set(userId, now);
+
 
             console.log(
                 chalk.underline(`[ INFO ]`) +

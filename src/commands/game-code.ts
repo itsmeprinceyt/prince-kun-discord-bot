@@ -6,21 +6,19 @@ import {
     GuildMember
 } from "discord.js";
 
-import { Command } from "../types/Command";
-import { logger_NoDM_NoAdmin } from "../utility/logger-NoDM-NoAdmin";
-import { logger_custom } from "../utility/logger-custom";
+import { Command } from "../types/Command.type";
+import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
+import { logger_custom } from "../utility/loggers/logger-custom";
 
-import { Roles } from "../utility/roles";
-import { RolesPerms } from "../utility/rolePerms";
-const GenshinPing = Roles[1].roleId;
-const HSRPing = Roles[2].roleId;
-const WuwaPing = Roles[3].roleId;
-const ZZZPing = Roles[6].roleId;
+import { PING_Roles } from "../utility/uuid/PingRoles";
+import { RolesPerms } from "../utility/uuid/RolesPerms";
+import { ProfileAuthorPicture, DefaultImageGenshin, DefaultImageHSR, DefaultImageWuwa, DefaultImageZZZ} from '../utility/utils';
+import { BLUE_EMBED, ORANGE_EMBED } from "../utility/uuid/Colors";
+const GenshinPing = PING_Roles[1].roleId;
+const HSRPing = PING_Roles[2].roleId;
+const WuwaPing = PING_Roles[3].roleId;
+const ZZZPing = PING_Roles[6].roleId;
 const CodePoster = RolesPerms[0].roleId;
-const DefaultImageGenshin = "https://media.discordapp.net/attachments/1336322293437038602/1337338720189284352/Primogems.png";
-const DefaultImageHSR = "https://media.discordapp.net/attachments/1336322293437038602/1337338704288677949/Jade.png";
-const DefaultImageWuwa = "https://media.discordapp.net/attachments/1336322293437038602/1337338722097692682/Astrite.png";
-const DefaultImageZZZ = "https://media.discordapp.net/attachments/1336322293437038602/1341860023063810068/Polychrome.png";
 
 const userCache = new Map<string, { username: string; avatarURL: string }>();
 
@@ -62,7 +60,6 @@ const GameCode: Command = {
 
     async execute(interaction: ChatInputCommandInteraction) {
         const isDM = !interaction.guild;
-        const location = isDM ? "DM" : `Server: ${interaction.guild?.name}`;
         if (isDM) {
             await interaction.reply({
                 content: "This is a Server-Only Command! 🖕",
@@ -95,14 +92,14 @@ const GameCode: Command = {
         const avatarURL = userInfo?.avatarURL || interaction.user.displayAvatarURL();
 
 
-        const game = interaction.options.getString("game", true);
-        const redemptionCode = interaction.options.getString("redemption_code", true);
-        const codeTitle = interaction.options.getString("code_title", true);
-        const useDefaultImage = interaction.options.getBoolean("usedefaultimage", true);
-        const customImageUrl = interaction.options.getString("custom_image_url")?.trim() || null;
-        const sanitizedImageUrl = customImageUrl ? customImageUrl.replace(/\?.*$/, "") : null;
+        const game: string = interaction.options.getString("game", true);
+        const redemptionCode: string = interaction.options.getString("redemption_code", true);
+        const codeTitle: string = interaction.options.getString("code_title", true);
+        const useDefaultImage: boolean = interaction.options.getBoolean("usedefaultimage", true);
+        const customImageUrl: string | null = interaction.options.getString("custom_image_url")?.trim() || null;
+        const sanitizedImageUrl: string | null = customImageUrl ? customImageUrl.replace(/\?.*$/, "") : null;
 
-        let imageUrl = "";
+        let imageUrl: string = "";
 
         if (game === "genshin" && useDefaultImage) {
             imageUrl = DefaultImageGenshin;
@@ -124,10 +121,10 @@ const GameCode: Command = {
 
         /*=================================================== GENSHIN IMPACT*/
         const genshinPing = new EmbedBuilder()
-            .setColor(0x006eff)
+            .setColor(BLUE_EMBED)
             .setAuthor({
                 name: "Prince-Kun • Genshin Impact",
-                iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                iconURL: ProfileAuthorPicture,
             })
             .setTitle(`${codeTitle}`)
             .setDescription(
@@ -139,10 +136,10 @@ const GameCode: Command = {
             .setTimestamp();
         /*=================================================== HONKAI STAR RAIL*/
         const hsrPing = new EmbedBuilder()
-            .setColor(0x006eff)
+            .setColor(BLUE_EMBED)
             .setAuthor({
                 name: "Prince-Kun • Honkai Star Rail",
-                iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                iconURL: ProfileAuthorPicture,
             })
             .setTitle(`${codeTitle}`)
             .setDescription(
@@ -155,10 +152,10 @@ const GameCode: Command = {
 
         /*=================================================== WUTHERING WAVES*/
         const wuwaPing = new EmbedBuilder()
-            .setColor(0x006eff)
+            .setColor(BLUE_EMBED)
             .setAuthor({
                 name: "Prince-Kun • Wuthering Waves",
-                iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                iconURL: ProfileAuthorPicture,
             })
             .setTitle(`${codeTitle}`)
             .setDescription(
@@ -170,10 +167,10 @@ const GameCode: Command = {
             .setTimestamp();
         /*=================================================== ZENLESS ZONE ZERO*/
         const zzzPing = new EmbedBuilder()
-            .setColor(0xFFA500)
+            .setColor(ORANGE_EMBED)
             .setAuthor({
                 name: "Prince-Kun • Zenless Zone Zero",
-                iconURL: "https://media.discordapp.net/attachments/1336322293437038602/1336322635939975168/Profile_Pic_2.jpg",
+                iconURL: ProfileAuthorPicture,
             })
             .setTitle(`${codeTitle}`)
             .setDescription(
@@ -204,7 +201,7 @@ const GameCode: Command = {
             "zzz": ZZZPing,
         };
 
-        const roleToPing = gameRoles[game] || "";
+        const roleToPing: string = gameRoles[game] || "";
         const embedsToSend = embedsMap[game];
 
         const channel = interaction.channel as TextChannel;
