@@ -90,18 +90,24 @@ const ExportCommand = {
 
             const headers = Object.keys(rows[0]);
             const csvRows = [
-                headers.join(","),
+                headers.map(h => `"${h}"`).join(","),
                 ...rows.map(row =>
                     headers.map(key => {
-                        const value = row[key];
-                        if (typeof value === "string") {
-                            // Escape double quotes and wrap in quotes
-                            return `"${value.replace(/"/g, '""')}"`;
+                        let value = row[key];
+
+                        if (value instanceof Date) {
+                            value = value.toISOString().split("T")[0];
                         }
-                        return value;
+
+                        if (value === null || value === undefined) {
+                            return '""';
+                        }
+
+                        return `"${String(value).replace(/"/g, '""')}"`;
                     }).join(",")
                 )
             ];
+
 
             const buffer = Buffer.from(csvRows.join("\n"), "utf-8");
             const attachment = new AttachmentBuilder(buffer, {
