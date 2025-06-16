@@ -44,7 +44,7 @@ import { initDB } from "./db";
 
 // UTILITY IMPORTS
 import { RolesPerms } from './utility/uuid/RolesPerms';
-import { cooldownTime } from './utility/utils';
+import { CooldownTime } from './utility/utils';
 
 const modalHandlers = new Map<string, (interaction: ModalSubmitInteraction) => Promise<void>>([
     ["select_user", handleSelectUserSubmit],
@@ -132,8 +132,8 @@ async function startBot() {
             const commandName = interaction.commandName;
             const lastUsed = cooldowns.get(`${userId}-${commandName}`) || 0;
 
-            if (now - lastUsed < cooldownTime) {
-                const availableAt = Math.floor((lastUsed + cooldownTime) / 1000);
+            if (now - lastUsed < CooldownTime) {
+                const availableAt = Math.floor((lastUsed + CooldownTime) / 1000);
 
                 await interaction.reply({
                     content: `<@${userId}>, ⏳ You can use this command again <t:${availableAt}:R>.`,
@@ -236,8 +236,8 @@ async function startBot() {
             const now = Date.now();
             const lastUsed = cooldowns.get(userId) || 0;
 
-            if (now - lastUsed < cooldownTime) {
-                const availableAt = Math.floor((lastUsed + cooldownTime) / 1000);
+            if (now - lastUsed < CooldownTime) {
+                const availableAt = Math.floor((lastUsed + CooldownTime) / 1000);
                 await message.reply(`<@${userId}> ⏳ You can use this command again <t:${availableAt}:R>.`);
                 return;
             }
