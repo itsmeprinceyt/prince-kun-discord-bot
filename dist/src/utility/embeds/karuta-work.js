@@ -16,7 +16,7 @@ function AllCardsHealthyEmbed() {
 function JobBoardSummary(healthyCount, injuredCount) {
     return new discord_js_1.EmbedBuilder()
         .setColor(Colors_1.COLOR_TRUE)
-        .setDescription(`Hey, so I've learned that you currently have ...\n\n✅ **Healthy ${healthyCount >= 2 ? 'Cards' : 'Card'}:** ${healthyCount}\n❌ **Injured ${injuredCount >= 2 ? 'Cards' : 'Card'}:** ${injuredCount}\n\nType \`kc o:eff\` and reply your collection with \`.?work\`\n\n-# This will not work with the cards you have alias.`)
+        .setDescription(`Hey, so I've learned that you currently have ...\n\n✅ **Healthy ${healthyCount >= 2 ? 'Cards' : 'Card'}:** ${healthyCount}\n❌ **Injured ${injuredCount >= 2 ? 'Cards' : 'Card'}:** ${injuredCount}\n\nType \`kc o:eff\` and reply your collection with \`.?work\`\n-# This will not work with the cards you have alias.`)
         .setTimestamp();
 }
 function NotTriggeredByYou() {
