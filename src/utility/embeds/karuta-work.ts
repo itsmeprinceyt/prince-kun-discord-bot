@@ -14,7 +14,7 @@ export function JobBoardSummary(healthyCount: number, injuredCount: number): Emb
             `Here's the current status of your Job Board:\n\n` +
             `✅ **Healthy ${healthyCount === 1 ? "Card" : "Cards"}:** ${healthyCount}\n` +
             `❌ **Injured ${injuredCount === 1 ? "Card" : "Cards"}:** ${injuredCount}\n\n` +
-            `To begin working, type \`kc o:eff\`, then reply to your collection with \`kkwork\`.\n` +
+            `To begin working, type \`kc o:eff\`, then reply to your collection with \`.?work\`.\n` +
             `-# ⚠️ Note: This won't work on cards with aliases.`
         )
         .setTimestamp();
