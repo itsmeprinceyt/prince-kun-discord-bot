@@ -42,7 +42,7 @@ export default {
                 }
 
                 await interaction.reply({
-                    content: `${PayPalLink}`,
+                    content: `${PayPal}`,
                     flags: 64,
                 });
             }
