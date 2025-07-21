@@ -37,7 +37,7 @@ exports.default = {
                     });
                 }
                 await interaction.reply({
-                    content: `${utils_1.PayPalLink}`,
+                    content: `${utils_1.PayPal}`,
                     flags: 64,
                 });
             }
