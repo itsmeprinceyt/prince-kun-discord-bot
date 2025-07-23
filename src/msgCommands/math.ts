@@ -40,13 +40,7 @@ export default {
 
             const embed = new EmbedBuilder()
                 .setColor(COLOR_PRIMARY)
-                .setAuthor({
-                    name: "Prince-Kun • Math",
-                    iconURL: ProfileAuthorPicture,
-                })
-                .setTitle(`Result: ${formattedAnswer}`)
-                .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
-                .setTimestamp();
+                .setTitle(`Result: ${formattedAnswer}`);    
 
             const copyButton = new ButtonBuilder()
                 .setCustomId("copy_answer")

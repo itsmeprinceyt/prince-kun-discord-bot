@@ -17,6 +17,7 @@ exports.SPECS = `
 \`Microphone    \` - Fifine A6t Gaming Microphone with Broom Arm
 \`Keyboard      \` - Zook RGB Wired Keyboard
 \`Mouse         \` - Kreo Chimera Mouse Wired
+\`Keyboard      \` - Portronics Key7 Wireless
 \`Mousepad      \` - Kreo Igneous Mouse Pad
 
 😊 This is my [Amazon wishlist](https://www.amazon.in/hz/wishlist/ls/3A20LPJ85MXL9?ref_=wl_share) —feel free to surprise me! Your support means the world to me. Thank you! 🎁
