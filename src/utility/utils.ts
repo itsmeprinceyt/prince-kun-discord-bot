@@ -1,9 +1,9 @@
 // SERVER 
-export const SERVER_ID = "310675536340844544";
+export const SERVER_ID: string = "310675536340844544";
 
 // TIMER / COUNTERS / ETC
 export const CooldownTime: number = 5000;
-export const ADMIN_USERS_PER_PAGE = 15;
+export const ADMIN_USERS_PER_PAGE: number = 15;
 export const HSR_UUID: string = "802581646";
 export const WUWA_UUID: string = "900584281";
 export const BGMI_UUID: string = "5651014966";
@@ -14,8 +14,9 @@ export const upiList: string[] = [
             "itsme.prince@axl",
             "itsmeprincekotak@yespop",
         ];
-export const phoneNumber = "+919793798778";
-export const X = "https://x.com/itsmeprinceyt";
+export const phoneNumber: string = "+919793798778";
+export const X: string = "https://x.com/itsmeprinceyt";
+export const PortfolioLink: string = "https://portfolio-itsmeprince.vercel.app/";
 
 // LINKS
 export const WebsiteLink: string = "https://prince-kun-website.vercel.app/";
@@ -66,7 +67,7 @@ export const EXPRESS_PASS: string = "https://media.discordapp.net/attachments/13
 export const INTER_NOT_SUBSCRIPTION: string = "https://media.discordapp.net/attachments/1336322293437038602/1337171008834113546/Inter-Knot_Membership.png";
 export const LUNITE_SUBSCRIPTION: string = "https://media.discordapp.net/attachments/1336322293437038602/1337171011216605297/Lunite_Subscription.png";
 
-export const LOGO_GENSHIN = "https://media.discordapp.net/attachments/1336322293437038602/1342230984464138392/gi-logo.png";
-export const LOGO_HSR = "https://media.discordapp.net/attachments/1336322293437038602/1342230984728252498/hsr-logo.png";
-export const LOGO_Wuwa = "https://media.discordapp.net/attachments/1336322293437038602/1342230985034567761/www-logo.png";
-export const LOGO_ZZZ = "https://media.discordapp.net/attachments/1336322293437038602/1342230985579823206/zzz-logo.png";
+export const LOGO_GENSHIN: string = "https://media.discordapp.net/attachments/1336322293437038602/1342230984464138392/gi-logo.png";
+export const LOGO_HSR: string = "https://media.discordapp.net/attachments/1336322293437038602/1342230984728252498/hsr-logo.png";
+export const LOGO_Wuwa: string = "https://media.discordapp.net/attachments/1336322293437038602/1342230985034567761/www-logo.png";
+export const LOGO_ZZZ: string = "https://media.discordapp.net/attachments/1336322293437038602/1342230985579823206/zzz-logo.png";

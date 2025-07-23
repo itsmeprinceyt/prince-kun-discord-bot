@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const mathjs_1 = require("mathjs");
 const Colors_1 = require("../utility/uuid/Colors");
-const utils_1 = require("../utility/utils");
 exports.default = {
     triggers: [".?math"],
     async execute(message) {
@@ -35,13 +34,7 @@ exports.default = {
             }
             const embed = new discord_js_1.EmbedBuilder()
                 .setColor(Colors_1.COLOR_PRIMARY)
-                .setAuthor({
-                name: "Prince-Kun • Math",
-                iconURL: utils_1.ProfileAuthorPicture,
-            })
-                .setTitle(`Result: ${formattedAnswer}`)
-                .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
-                .setTimestamp();
+                .setTitle(`Result: ${formattedAnswer}`);
             const copyButton = new discord_js_1.ButtonBuilder()
                 .setCustomId("copy_answer")
                 .setLabel("Copy Answer")

@@ -16,6 +16,7 @@ exports.HelpDescription = `**🚀 Utility Commands!**\n` +
     `**🚀 Social & Profile Commands!**\n` +
     `> **📌 \`.?github      \`** • Sends GitHub profile\n` +
     `> **📌 \`.?instagram   \`** • Sends Instagram profile\n` +
+    `> **📌 \`.?portfolio   \`** • Sends my Portfolio link\n` +
     `> **📌 \`.?x           \`** • Sends X profile\n` +
     `> **📌 \`.?whatsapp    \`** • Sends Broadcast link & WA number\n` +
     `> **📌 \`.?discord     \`** • Sends my Discord invite Link\n` +

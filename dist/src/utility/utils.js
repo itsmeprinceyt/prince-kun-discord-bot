@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BLESSING_OF_THE_WELKIN_MOON = exports.DefaultImageZZZ = exports.DefaultImageWuwa = exports.DefaultImageHSR = exports.DefaultImageGenshin = exports.GameUUID = exports.Discord = exports.Device = exports.ServerUpdates = exports.Help = exports.BotUpdates = exports.YouTubeClipsImage = exports.YouTubeChannel = exports.XImage = exports.Whatsapp = exports.UPIImage = exports.SofiGuide = exports.PCSpecs = exports.PayPalLink = exports.KofiImage = exports.Instagram = exports.GitHubLink = exports.DiscordBotInvite = exports.ThankYouForPurchase = exports.ItsMePrinceShopProfile = exports.ProfileAuthorPicture = exports.DiscordBotProfilePictureLocalName = exports.DiscordBotProfilePictureLocal = exports.DiscordBotProfilePicture = exports.WhatsappBroadcast = exports.PayPal = exports.KoFi = exports.GitHubProfileLink = exports.DiscordBotInviteLinkShort = exports.DiscordServerLink = exports.DiscordBotInviteLink = exports.YouTubeClips = exports.YouTubeChannelLink = exports.WebsiteLink = exports.X = exports.phoneNumber = exports.upiList = exports.GENSHIN_UUID = exports.ZZZ_UUID = exports.BGMI_UUID = exports.WUWA_UUID = exports.HSR_UUID = exports.ADMIN_USERS_PER_PAGE = exports.CooldownTime = exports.SERVER_ID = void 0;
-exports.LOGO_ZZZ = exports.LOGO_Wuwa = exports.LOGO_HSR = exports.LOGO_GENSHIN = exports.LUNITE_SUBSCRIPTION = exports.INTER_NOT_SUBSCRIPTION = exports.EXPRESS_PASS = void 0;
+exports.DefaultImageZZZ = exports.DefaultImageWuwa = exports.DefaultImageHSR = exports.DefaultImageGenshin = exports.GameUUID = exports.Discord = exports.Device = exports.ServerUpdates = exports.Help = exports.BotUpdates = exports.YouTubeClipsImage = exports.YouTubeChannel = exports.XImage = exports.Whatsapp = exports.UPIImage = exports.SofiGuide = exports.PCSpecs = exports.PayPalLink = exports.KofiImage = exports.Instagram = exports.GitHubLink = exports.DiscordBotInvite = exports.ThankYouForPurchase = exports.ItsMePrinceShopProfile = exports.ProfileAuthorPicture = exports.DiscordBotProfilePictureLocalName = exports.DiscordBotProfilePictureLocal = exports.DiscordBotProfilePicture = exports.WhatsappBroadcast = exports.PayPal = exports.KoFi = exports.GitHubProfileLink = exports.DiscordBotInviteLinkShort = exports.DiscordServerLink = exports.DiscordBotInviteLink = exports.YouTubeClips = exports.YouTubeChannelLink = exports.WebsiteLink = exports.PortfolioLink = exports.X = exports.phoneNumber = exports.upiList = exports.GENSHIN_UUID = exports.ZZZ_UUID = exports.BGMI_UUID = exports.WUWA_UUID = exports.HSR_UUID = exports.ADMIN_USERS_PER_PAGE = exports.CooldownTime = exports.SERVER_ID = void 0;
+exports.LOGO_ZZZ = exports.LOGO_Wuwa = exports.LOGO_HSR = exports.LOGO_GENSHIN = exports.LUNITE_SUBSCRIPTION = exports.INTER_NOT_SUBSCRIPTION = exports.EXPRESS_PASS = exports.BLESSING_OF_THE_WELKIN_MOON = void 0;
 // SERVER 
 exports.SERVER_ID = "310675536340844544";
 // TIMER / COUNTERS / ETC
@@ -19,6 +19,7 @@ exports.upiList = [
 ];
 exports.phoneNumber = "+919793798778";
 exports.X = "https://x.com/itsmeprinceyt";
+exports.PortfolioLink = "https://portfolio-itsmeprince.vercel.app/";
 // LINKS
 exports.WebsiteLink = "https://prince-kun-website.vercel.app/";
 exports.YouTubeChannelLink = "https://www.youtube.com/@itsmeprinceyt";

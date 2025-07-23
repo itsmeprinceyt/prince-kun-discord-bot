@@ -41,6 +41,7 @@ export const commandsList: CommandInfo[] = [
     { name: "/new-redeems", access: "Admins Only", scope: "Guild Only", type: "Slash" },
     { name: "/new-highlight", access: "Admins Only", scope: "Guild & DM", type: "Slash" },
     { name: "/profile", access: "Everyone", scope: "Guild & DM", type: "Slash" },
+    { name: ".?portfolio", access: "Everyone", scope: "Guild & DM", type: "Message" },
     { name: "/register", access: "Everyone", scope: "Guild & DM", type: "Slash" },
     { name: "/ping", access: "Everyone", scope: "Guild Only", type: "Slash" },
     { name: ".?av", access: "Everyone", scope: "Guild & DM", type: "Message" },
