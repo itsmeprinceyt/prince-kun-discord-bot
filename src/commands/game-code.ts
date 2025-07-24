@@ -12,8 +12,9 @@ import { logger_custom } from "../utility/loggers/logger-custom";
 
 import { PING_Roles } from "../utility/uuid/PingRoles";
 import { RolesPerms } from "../utility/uuid/RolesPerms";
-import { ProfileAuthorPicture, DefaultImageGenshin, DefaultImageHSR, DefaultImageWuwa, DefaultImageZZZ} from '../utility/utils';
+import { ProfileAuthorPicture, DefaultImageGenshin, DefaultImageHSR, DefaultImageWuwa, DefaultImageZZZ } from '../utility/utils';
 import { BLUE_EMBED, ORANGE_EMBED } from "../utility/uuid/Colors";
+import { FallbackReaction, GameCurrencyEmotes } from "../utility/uuid/ReactionEmotes";
 const GenshinPing = PING_Roles[1].roleId;
 const HSRPing = PING_Roles[2].roleId;
 const WuwaPing = PING_Roles[3].roleId;
@@ -188,12 +189,6 @@ const GameCode: Command = {
             "zzz": [zzzPing],
         };
 
-        const gameEmojis: Record<string, string> = {
-            "genshin": "<:Primogem:977169624187695104>",
-            "hsr": "<:jade:1131210828704645175>",
-            "wuwa": "<:astrite:1337342930448551987>",
-            "zzz": "<:polychrome:1341859138766110842>",
-        };
         const gameRoles: Record<string, string> = {
             "genshin": GenshinPing,
             "hsr": HSRPing,
@@ -211,12 +206,16 @@ const GameCode: Command = {
                 embeds: embedsToSend,
             });
 
-            const emojiToReact = gameEmojis[game];
+            const emojiToReact = GameCurrencyEmotes[game];
             if (emojiToReact) {
                 const emojiMatch = emojiToReact.match(/<:\w+:(\d+)>/);
                 if (emojiMatch) {
                     const emojiId = emojiMatch[1];
-                    await sentMessage.react(emojiId);
+                    try {
+                        await sentMessage.react(emojiId);
+                    } catch {
+                        await sentMessage.react(FallbackReaction);
+                    }
                 }
             }
             await interaction.reply({
