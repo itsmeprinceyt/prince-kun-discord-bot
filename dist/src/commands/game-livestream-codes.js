@@ -7,6 +7,7 @@ const PingRoles_1 = require("../utility/uuid/PingRoles");
 const RolesPerms_1 = require("../utility/uuid/RolesPerms");
 const utils_1 = require("../utility/utils");
 const Colors_1 = require("../utility/uuid/Colors");
+const ReactionEmotes_1 = require("../utility/uuid/ReactionEmotes");
 const GenshinPing = PingRoles_1.PING_Roles[1].roleId;
 const HSRPing = PingRoles_1.PING_Roles[2].roleId;
 const WuwaPing = PingRoles_1.PING_Roles[3].roleId;
@@ -166,12 +167,6 @@ const GameLivestreamCode = {
             "wuwa": [wuwaPing],
             "zzz": [zzzPing],
         };
-        const gameEmojis = {
-            "genshin": "<:Primogem:977169624187695104>",
-            "hsr": "<:jade:1131210828704645175>",
-            "wuwa": "<:astrite:1337342930448551987>",
-            "zzz": "<:polychrome:1341859138766110842>",
-        };
         const gameRoles = {
             "genshin": GenshinPing,
             "hsr": HSRPing,
@@ -186,12 +181,17 @@ const GameLivestreamCode = {
                 content: roleToPing ? `<@&${roleToPing}>` : "",
                 embeds: embedsToSend,
             });
-            const emojiToReact = gameEmojis[game];
+            const emojiToReact = ReactionEmotes_1.GameCurrencyEmotes[game];
             if (emojiToReact) {
                 const emojiMatch = emojiToReact.match(/<:\w+:(\d+)>/);
                 if (emojiMatch) {
                     const emojiId = emojiMatch[1];
-                    await sentMessage.react(emojiId);
+                    try {
+                        await sentMessage.react(emojiId);
+                    }
+                    catch {
+                        await sentMessage.react(ReactionEmotes_1.FallbackReaction);
+                    }
                 }
             }
             await interaction.reply({
