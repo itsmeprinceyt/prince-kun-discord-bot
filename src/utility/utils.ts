@@ -10,10 +10,8 @@ export const BGMI_UUID: string = "5651014966";
 export const ZZZ_UUID: string = "1302186027";
 export const GENSHIN_UUID: string = "889406482";
 export const upiList: string[] = [
-            "itsmeprinceyt@slc",
-            "itsme.prince@axl",
-            "itsmeprincekotak@yespop",
-        ];
+    "itsmeprincekotak@yespop",
+];
 export const phoneNumber: string = "+919793798778";
 export const X: string = "https://x.com/itsmeprinceyt";
 export const PortfolioLink: string = "https://portfolio-itsmeprince.vercel.app/";
