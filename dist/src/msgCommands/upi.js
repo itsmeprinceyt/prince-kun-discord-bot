@@ -6,6 +6,9 @@ const Colors_1 = require("../utility/uuid/Colors");
 exports.default = {
     triggers: [".?upi"],
     async execute(message) {
+        const upiDescription = utils_1.upiList
+            .map((upi) => `\`${upi}\``)
+            .join("\n");
         const embed = new discord_js_1.EmbedBuilder()
             .setColor(Colors_1.COLOR_PRIMARY)
             .setAuthor({
@@ -16,16 +19,29 @@ exports.default = {
             .setDescription(`As a streamer and developer, I am committed to delivering high-quality content for my audience to enjoy 
 and creating cool projects for everyone to use. All donations will be reinvested to improve my overall quality of life, allowing me to provide better streams and coding projects.\n\n` +
             `I sincerely appreciate anyone who chooses to support me financially. Thank you for your generosity!\n\n` +
-            `💳 **UPI ID**
-1. \`${utils_1.upiList[0]}\`
-2. \`${utils_1.upiList[1]}\`
-3. \`${utils_1.upiList[2]}\`\n\n` +
+            `💳 **UPI ID**\n${upiDescription}\n\n` +
             `**Use the button below to copy the corresponding UPI address.**`)
             .setImage(utils_1.UPIImage)
-            .setFooter({ text: `${message.author.username}`, iconURL: message.author.displayAvatarURL() })
+            .setFooter({
+            text: `${message.author.username}`,
+            iconURL: message.author.displayAvatarURL(),
+        })
             .setTimestamp();
-        const row = new discord_js_1.ActionRowBuilder().addComponents(new discord_js_1.ButtonBuilder().setCustomId("upi_1").setLabel("1️⃣").setStyle(discord_js_1.ButtonStyle.Secondary), new discord_js_1.ButtonBuilder().setCustomId("upi_2").setLabel("2️⃣").setStyle(discord_js_1.ButtonStyle.Secondary), new discord_js_1.ButtonBuilder().setCustomId("upi_3").setLabel("3️⃣").setStyle(discord_js_1.ButtonStyle.Secondary));
-        const sentMessage = await message.reply({ embeds: [embed], components: [row] });
+        const rows = [];
+        let row = new discord_js_1.ActionRowBuilder();
+        utils_1.upiList.forEach((_, i) => {
+            if (row.components.length === 5) {
+                rows.push(row);
+                row = new discord_js_1.ActionRowBuilder();
+            }
+            row.addComponents(new discord_js_1.ButtonBuilder()
+                .setCustomId(`upi_${i + 1}`)
+                .setLabel(`${i + 1}️⃣`)
+                .setStyle(discord_js_1.ButtonStyle.Secondary));
+        });
+        if (row.components.length > 0)
+            rows.push(row);
+        const sentMessage = await message.reply({ embeds: [embed], components: rows });
         const collector = sentMessage.createMessageComponentCollector({
             time: 60000,
         });

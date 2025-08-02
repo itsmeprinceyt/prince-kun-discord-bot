@@ -13,8 +13,6 @@ exports.BGMI_UUID = "5651014966";
 exports.ZZZ_UUID = "1302186027";
 exports.GENSHIN_UUID = "889406482";
 exports.upiList = [
-    "itsmeprinceyt@slc",
-    "itsme.prince@axl",
     "itsmeprincekotak@yespop",
 ];
 exports.phoneNumber = "+919793798778";
