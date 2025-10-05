@@ -5,7 +5,7 @@ import {
     User,
     PermissionFlagsBits
 } from "discord.js";
-import pool from "../db";
+import getPool from "../db";
 import { Command } from "../types/Command.type";
 import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
 import { logger_custom } from "../utility/loggers/logger-custom";
@@ -80,6 +80,7 @@ const itemBoughtCommand: Command = {
             return;
         }
 
+        const pool = getPool();
         const game = interaction.options.getString("game", true);
         const mentionedUser: User | null = interaction.options.getUser("user");
         const usernameInput: string | null = interaction.options.getString("username");

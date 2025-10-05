@@ -50,6 +50,7 @@ const referring = {
             (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
             return;
         }
+        const pool = (0, db_1.default)();
         const botGuild = await interaction.client.guilds.fetch(utils_1.SERVER_ID);
         const orderLogChannel = await botGuild.channels.fetch(ORDER_LOG_CHANNEL_ID);
         const referrer = interaction.options.getUser("referrer", true);
@@ -79,7 +80,7 @@ const referring = {
             imageUrl = utils_1.LOGO_ZZZ;
             boughtText = `Zenless Zone Zero - `;
         }
-        const [referrerRows] = await db_1.default.query("SELECT * FROM users WHERE user_id = ?", [referrer.id]);
+        const [referrerRows] = await pool.query("SELECT * FROM users WHERE user_id = ?", [referrer.id]);
         if (!referrerRows || referrerRows.length === 0) {
             const embed = new discord_js_1.EmbedBuilder()
                 .setColor(Colors_1.COLOR_TRUE)
@@ -114,8 +115,8 @@ const referring = {
         total_referred += 1;
         pp_cash += 10;
         spv = (0, spvCalculator_1.calculateSPV)(pp_cash, refer_tickets, total_purchases, total_referred);
-        await db_1.default.query("UPDATE users SET refer_tickets = ?, total_referred = ?, pp_cash = ?, spv = ? WHERE user_id = ?", [refer_tickets, total_referred, pp_cash, parseFloat(spv.toFixed(2)), referrer.id]);
-        const [referredRows] = await db_1.default.query("SELECT * FROM users WHERE user_id = ?", [referred.id]);
+        await pool.query("UPDATE users SET refer_tickets = ?, total_referred = ?, pp_cash = ?, spv = ? WHERE user_id = ?", [refer_tickets, total_referred, pp_cash, parseFloat(spv.toFixed(2)), referrer.id]);
+        const [referredRows] = await pool.query("SELECT * FROM users WHERE user_id = ?", [referred.id]);
         if (!referredRows || referredRows.length === 0) {
             const embed = new discord_js_1.EmbedBuilder()
                 .setColor(Colors_1.COLOR_TRUE)
@@ -150,7 +151,7 @@ const referring = {
             refer_tickets += referralTicketsEarned;
             total_purchases += 1;
             spv = (0, spvCalculator_1.calculateSPV)(pp_cash, refer_tickets, total_purchases, total_referred);
-            await db_1.default.query("UPDATE users SET refer_tickets = ?, total_purchases = ?, spv = ? WHERE user_id = ?", [refer_tickets, total_purchases, parseFloat(spv.toFixed(2)), referred.id]);
+            await pool.query("UPDATE users SET refer_tickets = ?, total_purchases = ?, spv = ? WHERE user_id = ?", [refer_tickets, total_purchases, parseFloat(spv.toFixed(2)), referred.id]);
             rewardText = `<@${referred.id}>, you earned yourself **${referralTicketsEarned} Referral Ticket🎟️** which you can convert to 💵 PP Cash by referring your friend!**\n\n`;
         }
         else if (price > 0) {
@@ -158,7 +159,7 @@ const referring = {
             let spv = parseFloat(referrerRows[0].spv) || 0.00;
             total_purchases += 1;
             spv = (0, spvCalculator_1.calculateSPV)(pp_cash, refer_tickets, total_purchases, total_referred);
-            await db_1.default.query("UPDATE users SET total_purchases = ?, spv = ? WHERE user_id = ?", [total_purchases, parseFloat(spv.toFixed(2)), referred.id]);
+            await pool.query("UPDATE users SET total_purchases = ?, spv = ? WHERE user_id = ?", [total_purchases, parseFloat(spv.toFixed(2)), referred.id]);
         }
         const embed = new discord_js_1.EmbedBuilder()
             .setColor(Colors_1.COLOR_TRUE)

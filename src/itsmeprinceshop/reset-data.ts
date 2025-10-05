@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
-import pool from "../db";
+import getPool from "../db";
 import { Command } from "../types/Command.type";
 import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
 import { logger_custom } from "../utility/loggers/logger-custom";
@@ -31,7 +31,8 @@ export const ResetData: Command = {
         }
 
         const user = interaction.options.getUser("user", true);
-
+        const pool = getPool();
+        
         const [userData]: any = await pool.query(
             "SELECT user_id FROM users WHERE user_id = ?",
             [user.id]

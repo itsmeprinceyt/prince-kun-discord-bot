@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
-import pool from "../db";
+import getPool from "../db";
 import { Command } from "../types/Command.type";
 import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
 import { logger_custom } from "../utility/loggers/logger-custom";
@@ -48,6 +48,7 @@ export const UpdateData: Command = {
             return;
         }
 
+        const pool = getPool();
         const user = interaction.options.getUser("user", true);
         const field: string = interaction.options.getString("option", true);
         const newValue: number = interaction.options.getInteger("amount", true);

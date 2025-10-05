@@ -8,10 +8,9 @@ import {
     TextInputBuilder,
     TextInputStyle,
     ModalBuilder,
-    MessageFlags,
     AttachmentBuilder
 } from "discord.js";
-import pool from "../db";
+import getPool from "../db";
 import moment from "moment-timezone";
 import { logger_custom } from "../utility//loggers/logger-custom";
 import { calculateSPV } from "../utility/spv/spvCalculator";
@@ -37,6 +36,7 @@ export async function handleSelectUser(interaction: ButtonInteraction) {
 }
 
 export async function handleSelectUserSubmit(interaction: ModalSubmitInteraction) {
+    const pool = getPool();
     logger_custom("ADMIN", "admin", "Admin submitted select user modal");
     const [users]: any = await pool.query("SELECT user_id FROM users");
     const userIndex = parseInt(interaction.fields.getTextInputValue("user_index")) - 1;
@@ -125,6 +125,7 @@ export async function handleSelectUserSubmit(interaction: ModalSubmitInteraction
 }
 
 export async function handleRefresh(interaction: ButtonInteraction) {
+    const pool = getPool();
     logger_custom("ADMIN", "admin", "Admin clicked Refresh button");
     const userId = interaction.customId.split("_")[1];
     const [userData]: any = await pool.query(
@@ -287,6 +288,7 @@ export async function handleModifySubmit(interaction: ModalSubmitInteraction) {
         await interaction.reply({ content: "❌ Invalid value entered!", flags: 64 });
         return;
     }
+    const pool = getPool();
     const [rows]: any = await pool.query(
         "SELECT * FROM users WHERE user_id = ?",
         [userId]
@@ -321,6 +323,7 @@ export async function handleModifySubmit(interaction: ModalSubmitInteraction) {
 
 
 export async function handleDeleteUser(interaction: ButtonInteraction) {
+    const pool = getPool();
     logger_custom("ADMIN", "admin", "Admin clicked delete user button");
     const userId = interaction.customId.split("_")[1];
     await pool.query("DELETE FROM users WHERE user_id = ?", [userId]);

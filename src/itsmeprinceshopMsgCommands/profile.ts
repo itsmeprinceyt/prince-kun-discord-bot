@@ -7,7 +7,7 @@ import {
     AttachmentBuilder
 } from "discord.js";
 import moment from "moment-timezone";
-import pool from "../db";
+import getPool from "../db";
 import { generateSPVImage } from "../utility/spv/spvImage";
 import { EMOTES } from "../utility/uuid/Emotes";
 import { WebsiteLink } from '../utility/utils';
@@ -31,7 +31,8 @@ const profileCommand = {
         const targetUserId: string = targetUser.id;
         const targetUsername: string = targetUser.username;
         const avatarURL: string = targetUser.displayAvatarURL();
-
+        const pool = getPool();
+        
         const [rows]: any = await pool.query(
             "SELECT pp_cash, refer_tickets, total_purchases, registration_date, total_referred, spv FROM users WHERE user_id = ?",
             [targetUserId]

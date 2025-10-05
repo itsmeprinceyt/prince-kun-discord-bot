@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HelpDescriptionAdmin = void 0;
-exports.HelpDescriptionAdmin = `**🚀 Bot & Admin Commands!**\n` +
+exports.HelpDescriptionAdmin = `**🚀 Admin & Mods Commands!**\n` +
     `> 🔸 \`/admin                      \`\n` +
     `> 🔸 \`.?bot                       \`\n` +
     `> 🔸 \`/bot-updates                \`\n` +

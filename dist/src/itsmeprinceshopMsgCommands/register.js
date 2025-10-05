@@ -19,7 +19,8 @@ const registerCommand = {
         }
         const userId = message.author.id;
         const userName = message.member?.displayName || message.author.username;
-        const [rows] = await db_1.default.query("SELECT user_id FROM users WHERE user_id = ?", [userId]);
+        const pool = (0, db_1.default)();
+        const [rows] = await pool.query("SELECT user_id FROM users WHERE user_id = ?", [userId]);
         if (rows.length > 0) {
             return message.reply("❌ You are already registered!");
         }
@@ -56,7 +57,7 @@ const registerCommand = {
             collector.on("collect", async (msg) => {
                 if (msg.content.toLowerCase() === ".?confirm") {
                     const istTime = (0, moment_timezone_1.default)().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
-                    await db_1.default.query("INSERT INTO users (user_id, pp_cash, refer_tickets, total_purchases, registration_date, total_referred) VALUES (?, ?, ?, ?, ?, ?)", [userId, 0, 0, 0, istTime, 0]);
+                    await pool.query("INSERT INTO users (user_id, pp_cash, refer_tickets, total_purchases, registration_date, total_referred) VALUES (?, ?, ?, ?, ?, ?)", [userId, 0, 0, 0, istTime, 0]);
                     const logMessage = `[ DATABASE ] User ${userName} (${userId}) registered`;
                     (0, logger_custom_1.logger_custom)(userName, "register", logMessage);
                     await msg.channel.send({

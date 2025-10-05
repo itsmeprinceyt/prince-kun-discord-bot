@@ -31,8 +31,9 @@ const deleteUserCommand = {
             (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
             return;
         }
+        const pool = (0, db_1.default)();
         const selectedUser = interaction.options.getUser("user");
-        const [rows] = await db_1.default.query("SELECT user_id FROM users WHERE user_id = ?", [selectedUser.id]);
+        const [rows] = await pool.query("SELECT user_id FROM users WHERE user_id = ?", [selectedUser.id]);
         if (rows.length === 0) {
             await interaction.reply({
                 content: `❌ ${selectedUser.username} is not registered!`,
@@ -41,7 +42,7 @@ const deleteUserCommand = {
             (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
             return;
         }
-        await db_1.default.query("DELETE FROM users WHERE user_id = ?", [selectedUser.id]);
+        await pool.query("DELETE FROM users WHERE user_id = ?", [selectedUser.id]);
         const logMessage = `[ DATABASE ] User ${selectedUser.username} (${selectedUser.id}) deleted by Admin ${interaction.user.username}`;
         (0, logger_custom_1.logger_custom)(selectedUser.username, "delete-user", logMessage);
         const embed = new discord_js_1.EmbedBuilder()

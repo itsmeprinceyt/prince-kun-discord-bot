@@ -30,12 +30,13 @@ exports.ResetData = {
             return;
         }
         const user = interaction.options.getUser("user", true);
-        const [userData] = await db_1.default.query("SELECT user_id FROM users WHERE user_id = ?", [user.id]);
+        const pool = (0, db_1.default)();
+        const [userData] = await pool.query("SELECT user_id FROM users WHERE user_id = ?", [user.id]);
         if (!userData.length) {
             await interaction.reply({ content: "❌ User is not registered!", flags: 64 });
             return;
         }
-        await db_1.default.query("UPDATE users SET pp_cash = 0, refer_tickets = 0, total_purchases = 0, total_referred = 0, spv = 0.00 WHERE user_id = ?", [user.id]);
+        await pool.query("UPDATE users SET pp_cash = 0, refer_tickets = 0, total_purchases = 0, total_referred = 0, spv = 0.00 WHERE user_id = ?", [user.id]);
         (0, logger_custom_1.logger_custom)("ADMIN", "reset-data", `Reset all stats for user ${user.id} to 0 (SPV included)`);
         const responseMessage = `✅ Successfully reset all stats for <@${user.id}> to 0, including SPV.`;
         await interaction.reply({

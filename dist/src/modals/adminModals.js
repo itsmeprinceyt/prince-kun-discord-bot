@@ -33,8 +33,9 @@ async function handleSelectUser(interaction) {
     await interaction.showModal(modal);
 }
 async function handleSelectUserSubmit(interaction) {
+    const pool = (0, db_1.default)();
     (0, logger_custom_1.logger_custom)("ADMIN", "admin", "Admin submitted select user modal");
-    const [users] = await db_1.default.query("SELECT user_id FROM users");
+    const [users] = await pool.query("SELECT user_id FROM users");
     const userIndex = parseInt(interaction.fields.getTextInputValue("user_index")) - 1;
     if (isNaN(userIndex) || userIndex < 0 || userIndex >= users.length) {
         await interaction.reply({ content: "❌ Invalid serial number!", flags: 64 });
@@ -51,7 +52,7 @@ async function handleSelectUserSubmit(interaction) {
         selectedDisplayName = selectedDiscordUser.globalName || selectedUsername;
         selectedAvatar = selectedDiscordUser.displayAvatarURL();
     }
-    const [userData] = await db_1.default.query("SELECT * FROM users WHERE user_id = ?", [selectedUser.user_id]);
+    const [userData] = await pool.query("SELECT * FROM users WHERE user_id = ?", [selectedUser.user_id]);
     if (userData.length === 0) {
         await interaction.reply({ content: "❌ User data not found!", flags: 64 });
         return;
@@ -98,9 +99,10 @@ async function handleSelectUserSubmit(interaction) {
     await interaction.reply({ embeds: [userEmbed], files: [attachment], components: [userRow, navigationRow], flags: 64 });
 }
 async function handleRefresh(interaction) {
+    const pool = (0, db_1.default)();
     (0, logger_custom_1.logger_custom)("ADMIN", "admin", "Admin clicked Refresh button");
     const userId = interaction.customId.split("_")[1];
-    const [userData] = await db_1.default.query("SELECT * FROM users WHERE user_id = ?", [userId]);
+    const [userData] = await pool.query("SELECT * FROM users WHERE user_id = ?", [userId]);
     if (userData.length === 0) {
         await interaction.reply({ content: "❌ User data not found!", ephemeral: true });
         return;
@@ -222,7 +224,8 @@ async function handleModifySubmit(interaction) {
         await interaction.reply({ content: "❌ Invalid value entered!", flags: 64 });
         return;
     }
-    const [rows] = await db_1.default.query("SELECT * FROM users WHERE user_id = ?", [userId]);
+    const pool = (0, db_1.default)();
+    const [rows] = await pool.query("SELECT * FROM users WHERE user_id = ?", [userId]);
     if (rows.length === 0) {
         await interaction.reply({ content: "❌ User not found!", flags: 64 });
         return;
@@ -242,15 +245,16 @@ async function handleModifySubmit(interaction) {
         total_referred = newValue;
     }
     spv = (0, spvCalculator_1.calculateSPV)(pp_cash, refer_tickets, total_purchases, total_referred);
-    const [result] = await db_1.default.query(`UPDATE users SET ${updateField} = ?, spv = ? WHERE user_id = ?`, [newValue, parseFloat(spv.toFixed(2)), userId]);
+    const [result] = await pool.query(`UPDATE users SET ${updateField} = ?, spv = ? WHERE user_id = ?`, [newValue, parseFloat(spv.toFixed(2)), userId]);
     console.log("[DEBUG] Database Update Result:", result);
     (0, logger_custom_1.logger_custom)("ADMIN", "admin", `Updated ${updateField} for user ${userId} to ${newValue}`);
     await interaction.reply({ content: `✅ **${updateField.replace("_", " ").toUpperCase()}** updated to **${newValue}**!`, flags: 64 });
 }
 async function handleDeleteUser(interaction) {
+    const pool = (0, db_1.default)();
     (0, logger_custom_1.logger_custom)("ADMIN", "admin", "Admin clicked delete user button");
     const userId = interaction.customId.split("_")[1];
-    await db_1.default.query("DELETE FROM users WHERE user_id = ?", [userId]);
+    await pool.query("DELETE FROM users WHERE user_id = ?", [userId]);
     (0, logger_custom_1.logger_custom)("ADMIN", "admin", `Deleted user ${userId}`);
     await interaction.reply({ content: `🗑️ User <@${userId}> has been deleted.`, flags: 64 });
 }

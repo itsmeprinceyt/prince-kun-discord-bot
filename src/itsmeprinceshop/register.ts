@@ -9,7 +9,7 @@ import {
     GuildMember,
 } from "discord.js";
 import moment from "moment-timezone";
-import pool from "../db";
+import getPool from "../db";
 import { Command } from "../types/Command.type";
 import { logger_custom } from "../utility/loggers/logger-custom";
 import { ItsMePrinceRules } from "../utility/commands/rules/itsmeprince-rules";
@@ -25,7 +25,8 @@ const registerCommand: Command = {
         const userId: string = interaction.user.id;
         const member = interaction.member as GuildMember;
         const userName: string = member?.displayName || interaction.user.username;
-
+        const pool = getPool();
+        
         const [rows]: any = await pool.query("SELECT user_id FROM users WHERE user_id = ?", [userId]);
 
         if (rows.length > 0) {

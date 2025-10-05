@@ -15,17 +15,44 @@ const dbConfig = {
     database: useProd ? process.env.PRODUCTION_DB_NAME : process.env.LOCAL_DB_NAME,
 };
 
-const pool: Pool = mysql.createPool({
-    ...dbConfig,
+const initialConfig = {
+    host: dbConfig.host,
     port: Number(dbConfig.port),
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
-});
+    user: dbConfig.user,
+    password: dbConfig.password,
+};
+
+let pool: Pool;
 
 export async function initDB(): Promise<void> {
     try {
-        const connection = await pool.getConnection();
+        const initialConnection = await mysql.createConnection(initialConfig);
+        const [rows] = await initialConnection.execute(
+            `SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?`,
+            [dbConfig.database]
+        );
+
+        const databaseExists = Array.isArray(rows) && rows.length > 0;
+
+        if (!databaseExists) {
+            console.log(chalk.yellow(`[ DATABASE ] Database '${dbConfig.database}' not found. Creating...`));
+            await initialConnection.execute(`CREATE DATABASE \`${dbConfig.database}\``);
+            console.log(chalk.green(`[ DATABASE ] Database '${dbConfig.database}' created successfully!`));
+        } else {
+            console.log(chalk.blue(`[ DATABASE ] Database '${dbConfig.database}' already exists.`));
+        }
+
+        await initialConnection.end();
+
+        pool = mysql.createPool({
+            ...dbConfig,
+            port: Number(dbConfig.port),
+            waitForConnections: true,
+            connectionLimit: 10,
+            queueLimit: 0,
+        });
+
+        const testConnection = await pool.getConnection();
 
         console.log(
             chalk.green(
@@ -35,11 +62,19 @@ export async function initDB(): Promise<void> {
 
         await createTables(pool);
 
-        connection.release();
+        testConnection.release();
+
     } catch (error) {
         console.error('❌ Database connection failed:', error);
         process.exit(1);
     }
 }
 
-export default pool;
+export function getPool(): Pool {
+    if (!pool) {
+        throw new Error('Database pool not initialized. Call initDB() first.');
+    }
+    return pool;
+}
+
+export default getPool;

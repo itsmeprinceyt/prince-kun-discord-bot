@@ -27,13 +27,14 @@ const profileCommand = {
         .setDescription("Mention a user to check their profile.")
         .setRequired(false)),
     async execute(interaction) {
+        const pool = (0, db_1.default)();
         const mentionedUser = interaction.options.getUser("user");
         const targetUser = mentionedUser || interaction.user;
         const targetUserId = targetUser.id;
         const targetUsername = targetUser.username;
         const targetDisplayName = interaction.guild?.members.cache.get(targetUserId)?.displayName || targetUsername;
         if (mentionedUser) {
-            const [rows] = await db_1.default.query("SELECT pp_cash FROM users WHERE user_id = ?", [mentionedUser.id]);
+            const [rows] = await pool.query("SELECT pp_cash FROM users WHERE user_id = ?", [mentionedUser.id]);
             if (rows.length === 0) {
                 await interaction.reply({
                     content: `❌ **${mentionedUser.username}** is not registered in the ItsMe Prince Shop database.`,
@@ -42,7 +43,7 @@ const profileCommand = {
                 return;
             }
         }
-        const [rows] = await db_1.default.query("SELECT pp_cash, refer_tickets, total_purchases, registration_date, total_referred, spv FROM users WHERE user_id = ?", [targetUserId]);
+        const [rows] = await pool.query("SELECT pp_cash, refer_tickets, total_purchases, registration_date, total_referred, spv FROM users WHERE user_id = ?", [targetUserId]);
         if (rows.length > 0) {
             const { pp_cash, refer_tickets, total_purchases, registration_date, total_referred } = rows[0];
             const spv = parseFloat(rows[0].spv) || 0.00;
@@ -129,7 +130,7 @@ const profileCommand = {
         collector.on("collect", async (buttonInteraction) => {
             if (buttonInteraction.customId === `register_${targetUserId}`) {
                 const istTime = moment_timezone_1.default.utc().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
-                await db_1.default.query("INSERT INTO users (user_id, pp_cash, refer_tickets, total_purchases, registration_date, total_referred) VALUES (?, ?, ?, ?, ?, ?)", [targetUserId, 0, 0, 0, istTime, 0]);
+                await pool.query("INSERT INTO users (user_id, pp_cash, refer_tickets, total_purchases, registration_date, total_referred) VALUES (?, ?, ?, ?, ?, ?)", [targetUserId, 0, 0, 0, istTime, 0]);
                 const MessageString = `[ DATABASE ] User ${targetDisplayName} (${targetUserId}) registered`;
                 (0, logger_custom_1.logger_custom)(targetDisplayName, "profile", MessageString);
                 await buttonInteraction.update({

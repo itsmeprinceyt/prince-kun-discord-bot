@@ -18,7 +18,8 @@ const registerCommand = {
         const userId = interaction.user.id;
         const member = interaction.member;
         const userName = member?.displayName || interaction.user.username;
-        const [rows] = await db_1.default.query("SELECT user_id FROM users WHERE user_id = ?", [userId]);
+        const pool = (0, db_1.default)();
+        const [rows] = await pool.query("SELECT user_id FROM users WHERE user_id = ?", [userId]);
         if (rows.length > 0) {
             await interaction.reply({
                 content: "❌ You are already registered!",
@@ -59,7 +60,7 @@ const registerCommand = {
         collector.on("collect", async (buttonInteraction) => {
             if (buttonInteraction.customId === `register_${userId}`) {
                 const istTime = moment_timezone_1.default.tz("Europe/Paris").tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
-                await db_1.default.query("INSERT INTO users (user_id, pp_cash, refer_tickets, total_purchases, registration_date, total_referred) VALUES (?, ?, ?, ?, ?, ?)", [userId, 0, 0, 0, istTime, 0]);
+                await pool.query("INSERT INTO users (user_id, pp_cash, refer_tickets, total_purchases, registration_date, total_referred) VALUES (?, ?, ?, ?, ?, ?)", [userId, 0, 0, 0, istTime, 0]);
                 const MessageString = `[ DATABASE ] User ${userName} (${userId}) registered`;
                 (0, logger_custom_1.logger_custom)(userName, "register", MessageString);
                 await buttonInteraction.update({
