@@ -5,7 +5,7 @@ import {
     PermissionFlagsBits,
     User,
 } from "discord.js";
-import pool from "../db";
+import getPool from "../db";
 import { Command } from "../types/Command.type";
 import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
 import { logger_custom } from "../utility/loggers/logger-custom";
@@ -40,6 +40,7 @@ const deleteUserCommand: Command = {
             return;
         }
 
+        const pool = getPool();
         const selectedUser = interaction.options.getUser("user") as User;
 
         const [rows]: any = await pool.query("SELECT user_id FROM users WHERE user_id = ?", [selectedUser.id]);

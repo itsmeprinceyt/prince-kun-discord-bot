@@ -15,6 +15,7 @@ const adminCommand = {
         .setName("admin")
         .setDescription("Manage registered users (Admins only)."),
     async execute(interaction) {
+        const pool = (0, db_1.default)();
         const adminId = RolesPerms_1.RolesPerms[5].roleId;
         if (!interaction.guild) {
             if (interaction.user.id !== adminId) {
@@ -37,7 +38,7 @@ const adminCommand = {
             }
         }
         let page = 0;
-        const [users] = await db_1.default.query("SELECT user_id FROM users");
+        const [users] = await pool.query("SELECT user_id FROM users");
         (0, logger_custom_1.logger_custom)("ADMIN", "admin", "Fetched all registered users");
         if (users.length === 0) {
             await interaction.reply({

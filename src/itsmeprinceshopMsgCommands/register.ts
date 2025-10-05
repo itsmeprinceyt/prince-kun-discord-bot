@@ -1,6 +1,6 @@
 import { Message, EmbedBuilder, TextChannel } from "discord.js";
 import moment from "moment-timezone";
-import pool from "../db";
+import getPool from "../db";
 import { logger_custom } from "../utility/loggers/logger-custom";
 import { ItsMePrinceRules } from "../utility/commands/rules/itsmeprince-rules";
 import { getRegistrationSuccessEmbed } from '../utility/embeds/register-done';
@@ -16,7 +16,8 @@ const registerCommand = {
 
         const userId = message.author.id;
         const userName = message.member?.displayName || message.author.username;
-
+        const pool = getPool();
+        
         const [rows]: any = await pool.query("SELECT user_id FROM users WHERE user_id = ?", [userId]);
 
         if (rows.length > 0) {

@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.HelpDescription = void 0;
 exports.HelpDescription = `**🚀 Utility Commands!**\n` +
     `> **📌 \`.?av          \`** • Sends you your requested avatar\n` +
+    `> **📌 \`.?bits        \`** • Calculate total amount of Karuta bits\n` +
+    `> **📌 \`.?bits <ratio>\`** • Calculate bits based on ratio\n` +
     `> **📌 \`.?device      \`** • Sends my device information\n` +
     `> **📌 \`.?delete      \`** • Can be used to delete bot message\n` +
     `> **📌 \`.?pcspecs     \`** • Sends my setup specifications\n` +

@@ -8,13 +8,14 @@ const db_1 = __importDefault(require("./db"));
  * @brief Used for running any SQL Query
  */
 async function forRunningSQLCommands() {
+    const pool = (0, db_1.default)();
     try {
     }
     catch (error) {
         console.error("Error executing SQL command:", error);
     }
     finally {
-        db_1.default.end();
+        pool.end();
     }
 }
 forRunningSQLCommands();

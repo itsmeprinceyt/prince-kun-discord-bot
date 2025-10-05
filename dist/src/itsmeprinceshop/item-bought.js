@@ -56,6 +56,7 @@ const itemBoughtCommand = {
             (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
             return;
         }
+        const pool = (0, db_1.default)();
         const game = interaction.options.getString("game", true);
         const mentionedUser = interaction.options.getUser("user");
         const usernameInput = interaction.options.getString("username");
@@ -93,7 +94,7 @@ const itemBoughtCommand = {
             return;
         }
         const [rows] = targetUserId
-            ? await db_1.default.query("SELECT * FROM users WHERE user_id = ?", [targetUserId])
+            ? await pool.query("SELECT * FROM users WHERE user_id = ?", [targetUserId])
             : [[]];
         if (!rows || rows.length === 0) {
             const botGuild = await interaction.client.guilds.fetch(utils_1.SERVER_ID);
@@ -150,7 +151,7 @@ const itemBoughtCommand = {
             const updatedReferTickets = refer_tickets + referralTickets;
             const updatedTotalPurchases = total_purchases + 1;
             spv = (0, spvCalculator_1.calculateSPV)(pp_cash, updatedReferTickets, updatedTotalPurchases, total_referred);
-            await db_1.default.query("UPDATE users SET pp_cash = ? , refer_tickets = ? , total_purchases = ? , spv = ? WHERE user_id = ?", [pp_cash, updatedReferTickets, updatedTotalPurchases, spv.toFixed(2), targetUserId]);
+            await pool.query("UPDATE users SET pp_cash = ? , refer_tickets = ? , total_purchases = ? , spv = ? WHERE user_id = ?", [pp_cash, updatedReferTickets, updatedTotalPurchases, spv.toFixed(2), targetUserId]);
             finalEmbed = DiscordUserRegisteredBut300Above_UsingPPCASH;
         }
         else if (price >= 300) {
@@ -159,7 +160,7 @@ const itemBoughtCommand = {
             const updatedTotalPurchases = total_purchases + 1;
             const updatedReferTickets = refer_tickets + referralTickets;
             spv = (0, spvCalculator_1.calculateSPV)(pp_cash, updatedReferTickets, updatedTotalPurchases, total_referred);
-            await db_1.default.query("UPDATE users SET total_purchases = ? , refer_tickets = ?, spv = ? WHERE user_id = ?", [updatedTotalPurchases, updatedReferTickets, parseFloat(spv.toFixed(2)), targetUserId]);
+            await pool.query("UPDATE users SET total_purchases = ? , refer_tickets = ?, spv = ? WHERE user_id = ?", [updatedTotalPurchases, updatedReferTickets, parseFloat(spv.toFixed(2)), targetUserId]);
             finalEmbed = DiscordUserRegisteredBut300Above;
         }
         const embed = new discord_js_1.EmbedBuilder()

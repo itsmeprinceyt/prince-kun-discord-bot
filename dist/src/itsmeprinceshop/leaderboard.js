@@ -18,6 +18,7 @@ exports.leaderboard = {
         .setRequired(false)
         .addChoices({ name: 'PP Cash', value: 'pp_cash' }, { name: 'Referral Tickets', value: 'refer_tickets' }, { name: 'Total Purchases', value: 'total_purchases' }, { name: 'Total Referred', value: 'total_referred' })),
     execute: async function (interaction) {
+        const pool = (0, db_1.default)();
         const option = interaction.options.getString('option');
         const sortBy = option || 'spv';
         const fieldNames = {
@@ -28,7 +29,7 @@ exports.leaderboard = {
             'spv': ''
         };
         try {
-            const [rows] = await db_1.default.query(`SELECT user_id, pp_cash, refer_tickets, total_purchases, total_referred, spv 
+            const [rows] = await pool.query(`SELECT user_id, pp_cash, refer_tickets, total_purchases, total_referred, spv 
                 FROM users ORDER BY ${sortBy} DESC LIMIT 15`);
             if (!Array.isArray(rows) || rows.length === 0) {
                 await interaction.reply({ content: '❌ No data found!', flags: 64 });

@@ -12,7 +12,7 @@ import {
 } from "discord.js";
 import moment from "moment-timezone";
 
-import pool from "../db";
+import getPool from "../db";
 import { Command } from "../types/Command.type";
 import { logger_custom } from "../utility/loggers/logger-custom";
 import { ItsMePrinceRules } from "../utility/commands/rules/itsmeprince-rules";
@@ -40,6 +40,7 @@ const profileCommand: Command = {
     ) as SlashCommandBuilder,
 
   async execute(interaction: ChatInputCommandInteraction) {
+    const pool = getPool();
     const mentionedUser: User | null = interaction.options.getUser("user");
     const targetUser = mentionedUser || interaction.user;
     const targetUserId: string = targetUser.id;

@@ -26,7 +26,8 @@ const profileCommand = {
         const targetUserId = targetUser.id;
         const targetUsername = targetUser.username;
         const avatarURL = targetUser.displayAvatarURL();
-        const [rows] = await db_1.default.query("SELECT pp_cash, refer_tickets, total_purchases, registration_date, total_referred, spv FROM users WHERE user_id = ?", [targetUserId]);
+        const pool = (0, db_1.default)();
+        const [rows] = await pool.query("SELECT pp_cash, refer_tickets, total_purchases, registration_date, total_referred, spv FROM users WHERE user_id = ?", [targetUserId]);
         if (message.mentions.users.first() && rows.length === 0) {
             return message.reply(`${message.author}, that user is not registered. Ask them register using \`/register\`.`);
         }

@@ -9,6 +9,8 @@ import {
     GatewayIntentBits,
     Partials,
     ModalSubmitInteraction,
+    Message,
+    Events,
 } from "discord.js";
 
 // COMMAND HANDLER
@@ -45,6 +47,7 @@ import { initDB } from "./db";
 // UTILITY IMPORTS
 import { RolesPerms } from './utility/uuid/RolesPerms';
 import { CooldownTime } from './utility/utils';
+import { handleMessageUpdate } from "./msgCommands/bits";
 
 const modalHandlers = new Map<string, (interaction: ModalSubmitInteraction) => Promise<void>>([
     ["select_user", handleSelectUserSubmit],
@@ -266,6 +269,17 @@ async function startBot() {
                 await message.reply("⚠️ Error executing command!");
             }
         }
+    });
+
+    client.on(Events.MessageUpdate, async (oldMessage, newMessage) => {
+        if (newMessage.partial) {
+            await newMessage.fetch();
+        }
+        if (oldMessage.partial) {
+            await oldMessage.fetch();
+        }
+
+        await handleMessageUpdate(oldMessage as Message, newMessage as Message);
     });
 
     client.login(process.env.DISCORD_BOT_TOKEN);

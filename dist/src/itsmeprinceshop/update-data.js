@@ -37,6 +37,7 @@ exports.UpdateData = {
             (0, logger_NoDM_NoAdmin_1.logger_NoDM_NoAdmin)(interaction);
             return;
         }
+        const pool = (0, db_1.default)();
         const user = interaction.options.getUser("user", true);
         const field = interaction.options.getString("option", true);
         const newValue = interaction.options.getInteger("amount", true);
@@ -44,7 +45,7 @@ exports.UpdateData = {
             await interaction.reply({ content: "❌ Amount must be an integer and 0 or above!", flags: 64 });
             return;
         }
-        const [rows] = await db_1.default.query("SELECT * FROM users WHERE user_id = ?", [user.id]);
+        const [rows] = await pool.query("SELECT * FROM users WHERE user_id = ?", [user.id]);
         if (rows.length === 0) {
             await interaction.reply({ content: "❌ User is not registered!", flags: 64 });
             return;
@@ -66,7 +67,7 @@ exports.UpdateData = {
                 break;
         }
         spv = (0, spvCalculator_1.calculateSPV)(pp_cash, refer_tickets, total_purchases, total_referred);
-        await db_1.default.query("UPDATE users SET pp_cash = ?, refer_tickets = ?, total_purchases = ?, total_referred = ?, spv = ? WHERE user_id = ?", [pp_cash, refer_tickets, total_purchases, total_referred, parseFloat(spv.toFixed(2)), user.id]);
+        await pool.query("UPDATE users SET pp_cash = ?, refer_tickets = ?, total_purchases = ?, total_referred = ?, spv = ? WHERE user_id = ?", [pp_cash, refer_tickets, total_purchases, total_referred, parseFloat(spv.toFixed(2)), user.id]);
         (0, logger_custom_1.logger_custom)("ADMIN", "update-data", `Updated ${field} for user ${user.id} to ${newValue}, recalculated SPV: ${spv.toFixed(2)}`);
         const formattedField = field.replace("_", " ").toUpperCase();
         const responseMessage = `✅ Successfully set **${formattedField}** to **${newValue}** for <@${user.id}>. \`New SPV: ${spv.toFixed(2)}\``;

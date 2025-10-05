@@ -7,7 +7,7 @@ import {
     EmbedBuilder,
     ComponentType,
 } from "discord.js";
-import pool from "../db";
+import getPool from "../db";
 import { Command } from "../types/Command.type";
 import { handleSelectUser } from "../modals/adminModals";
 import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
@@ -22,6 +22,7 @@ const adminCommand: Command = {
         .setDescription("Manage registered users (Admins only)."),
 
     async execute(interaction: ChatInputCommandInteraction) {
+        const pool = getPool();
         const adminId = RolesPerms[5].roleId;
 
         if (!interaction.guild) {

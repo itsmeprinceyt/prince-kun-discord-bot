@@ -1,8 +1,9 @@
-import pool from './db';
+import getPool from './db';
 /**
  * @brief Used for running any SQL Query
  */
 async function forRunningSQLCommands() {
+    const pool = getPool();
     try {
         
     } catch (error) {

@@ -4,7 +4,7 @@ import {
     AttachmentBuilder,
     EmbedBuilder
 } from "discord.js";
-import pool from "../db";
+import getPool from "../db";
 import { RowDataPacket, FieldPacket } from "mysql2";
 import { RolesPerms } from "../utility/uuid/RolesPerms";
 import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
@@ -25,6 +25,7 @@ const ExportCommand = {
         ),
 
     async execute(interaction: ChatInputCommandInteraction) {
+        const pool = getPool();
         const isDM = !interaction.guild;
         const userName = interaction.user.username;
         const tableName = interaction.options.getString("table")?.trim();

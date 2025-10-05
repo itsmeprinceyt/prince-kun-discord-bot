@@ -1,5 +1,5 @@
 export const HelpDescriptionAdmin: string = 
-    `**🚀 Bot & Admin Commands!**\n` +
+    `**🚀 Admin & Mods Commands!**\n` +
     `> 🔸 \`/admin                      \`\n` +
     `> 🔸 \`.?bot                       \`\n` +
     `> 🔸 \`/bot-updates                \`\n` +

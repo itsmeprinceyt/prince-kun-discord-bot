@@ -19,6 +19,7 @@ const ExportCommand = {
         .setDescription("Enter the table name to export (leave empty to list tables)")
         .setRequired(false)),
     async execute(interaction) {
+        const pool = (0, db_1.default)();
         const isDM = !interaction.guild;
         const userName = interaction.user.username;
         const tableName = interaction.options.getString("table")?.trim();
@@ -46,7 +47,7 @@ const ExportCommand = {
         }
         try {
             if (!tableName) {
-                const [tables] = await db_1.default.query("SHOW TABLES");
+                const [tables] = await pool.query("SHOW TABLES");
                 if (!Array.isArray(tables) || tables.length === 0) {
                     await interaction.reply({ content: "❌ No tables found in the database!", flags: 64 });
                     return;
@@ -68,7 +69,7 @@ const ExportCommand = {
                 (0, logger_custom_1.logger_custom)(userName, "export", `${userName} fetched all database tables`);
                 return;
             }
-            const [rows, fields] = await db_1.default.query(`SELECT * FROM \`${tableName}\``);
+            const [rows, fields] = await pool.query(`SELECT * FROM \`${tableName}\``);
             if (!rows || rows.length === 0) {
                 await interaction.reply({ content: `❌ No data found in table \`${tableName}\`!`, flags: 64 });
                 return;

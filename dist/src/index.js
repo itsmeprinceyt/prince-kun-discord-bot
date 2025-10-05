@@ -28,6 +28,7 @@ const db_1 = require("./db");
 // UTILITY IMPORTS
 const RolesPerms_1 = require("./utility/uuid/RolesPerms");
 const utils_1 = require("./utility/utils");
+const bits_1 = require("./msgCommands/bits");
 const modalHandlers = new Map([
     ["select_user", adminModals_1.handleSelectUserSubmit],
     ["modify_points", adminModals_1.handleModifySubmit],
@@ -236,6 +237,15 @@ async function startBot() {
                 await message.reply("⚠️ Error executing command!");
             }
         }
+    });
+    client.on(discord_js_1.Events.MessageUpdate, async (oldMessage, newMessage) => {
+        if (newMessage.partial) {
+            await newMessage.fetch();
+        }
+        if (oldMessage.partial) {
+            await oldMessage.fetch();
+        }
+        await (0, bits_1.handleMessageUpdate)(oldMessage, newMessage);
     });
     client.login(process.env.DISCORD_BOT_TOKEN);
 }

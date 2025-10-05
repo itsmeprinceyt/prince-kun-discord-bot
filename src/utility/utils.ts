@@ -1,6 +1,9 @@
 // SERVER 
 export const SERVER_ID: string = "310675536340844544";
 
+// BOTS
+export const Karuta_Bot: string = "646937666251915264";
+
 // TIMER / COUNTERS / ETC
 export const CooldownTime: number = 5000;
 export const ADMIN_USERS_PER_PAGE: number = 15;

@@ -3,10 +3,9 @@ import {
     ChatInputCommandInteraction,
     EmbedBuilder,
     User,
-    PermissionFlagsBits,
-    TextChannel
+    PermissionFlagsBits
 } from "discord.js";
-import pool from "../db";
+import getPool from "../db";
 import { Command } from "../types/Command.type";
 import { logger_NoDM_NoAdmin } from "../utility/loggers/logger-NoDM-NoAdmin";
 import { logger_custom } from "../utility/loggers/logger-custom";
@@ -71,6 +70,7 @@ const referring: Command = {
             return;
         }
 
+        const pool = getPool();
         const botGuild = await interaction.client.guilds.fetch(SERVER_ID);
         const orderLogChannel = await botGuild.channels.fetch(ORDER_LOG_CHANNEL_ID);
 

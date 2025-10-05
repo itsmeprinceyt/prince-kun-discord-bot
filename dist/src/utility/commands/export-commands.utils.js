@@ -46,6 +46,7 @@ exports.commandsList = [
     { name: "/register", access: "Everyone", scope: "Guild & DM", type: "Slash" },
     { name: "/ping", access: "Everyone", scope: "Guild Only", type: "Slash" },
     { name: ".?av", access: "Everyone", scope: "Guild & DM", type: "Message" },
+    { name: ".?bits", access: "Everyone", scope: "Guild", type: "Message" },
     { name: ".?device", access: "Everyone", scope: "Guild & DM", type: "Message" },
     { name: ".?delete", access: "Everyone", scope: "Guild & DM", type: "Message" },
     { name: ".?pcspecs", access: "Everyone", scope: "Guild & DM", type: "Message" },

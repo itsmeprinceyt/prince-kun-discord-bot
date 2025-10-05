@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, GuildMember } from 'discord.js';
-import pool from '../db';
+import getPool from '../db';
 import { Command } from "../types/Command.type";
 import { logger_custom } from "../utility/loggers/logger-custom";
 import { COLOR_TRUE } from '../utility/uuid/Colors';
@@ -22,6 +22,7 @@ export const leaderboard: Command = {
         ) as SlashCommandBuilder,
 
     execute: async function (interaction: ChatInputCommandInteraction) {
+        const pool = getPool();
         const option: string | null = interaction.options.getString('option');
         const sortBy: string = option || 'spv';
 
