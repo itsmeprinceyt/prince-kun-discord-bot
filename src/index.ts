@@ -11,6 +11,7 @@ import {
   ModalSubmitInteraction,
   Message,
   Events,
+  ActivityType,
 } from "discord.js";
 
 // COMMAND HANDLER
@@ -72,65 +73,87 @@ const client = new Client({
   partials: [Partials.Channel],
 });
 
+let memberPool: string[] = [];
+let poolRefreshInFlight: Promise<void> | null = null;
+
+async function refreshMemberPool(): Promise<void> {
+  if (poolRefreshInFlight) return poolRefreshInFlight;
+
+  poolRefreshInFlight = (async () => {
+    try {
+      const guilds = [...client.guilds.cache.values()];
+
+      const results = await Promise.allSettled(
+        guilds.map(async (guild) => {
+          try {
+            const fetched = await guild.members.fetch();
+            return [...fetched.values()]
+              .filter((m) => !m.user.bot)
+              .map((m) => m.displayName);
+          } catch {
+            // Per-guild fallback to whatever is already cached locally
+            return [...guild.members.cache.values()]
+              .filter((m) => !m.user.bot)
+              .map((m) => m.displayName);
+          }
+        }),
+      );
+
+      const names = results.flatMap((r) =>
+        r.status === "fulfilled" ? r.value : [],
+      );
+
+      // Only swap in the new pool if we actually got something.
+      // A transient failure will never wipe an existing good pool.
+      if (names.length > 0) memberPool = names;
+    } finally {
+      poolRefreshInFlight = null;
+    }
+  })();
+
+  return poolRefreshInFlight;
+}
+
 async function startBot() {
   console.log("[ DATABASE ] Checking database connection...");
   await initDB();
 
-  client.on("ready", async (c) => {
+  client.once(Events.ClientReady, async (c) => {
     await deployCommands();
-    async function updatePresence() {
-      try {
-        let allMembers: string[] = [];
-        for (const [guildId, guild] of client.guilds.cache) {
-          try {
-            await guild.members.fetch();
-            const members = guild.members.cache
-              .filter((member) => !member.user.bot)
-              .map((member) => member.displayName);
-            allMembers = allMembers.concat(members);
-          } catch (error) {
-            console.log(
-              chalk.cyan(
-                `[ INFO ] Setting 'over y'all souls' as default activity as Member's information didn't arrive on time from the Guild.\n`,
-              ),
-            );
-          }
-        }
+    await refreshMemberPool();
 
-        let presenceText = "y'all souls";
-        if (allMembers.length > 0) {
-          presenceText = `${allMembers[Math.floor(Math.random() * allMembers.length)]}'s soul`;
-        }
+    const updatePresence = () => {
+      const name =
+        memberPool.length > 0
+          ? memberPool[Math.floor(Math.random() * memberPool.length)]
+          : null;
 
-        c.user.setPresence({
-          status: "dnd",
-          activities: [
-            {
-              name: `over ${presenceText}. 🥸`,
-              type: 3,
-            },
-          ],
-        });
-      } catch (error) {
-        console.log(
-          chalk.cyan(
-            `[ INFO ] Setting 'over y'all souls' as default activity as Member's information didn't arrive on time from the Guild.\n`,
-          ),
-        );
-        c.user.setPresence({
-          status: "dnd",
-          activities: [
-            {
-              name: `over y'all souls. 🥸`,
-              type: 3,
-            },
-          ],
-        });
-      }
-    }
+      if (!name) return;
+
+      c.user.setPresence({
+        status: "dnd",
+        activities: [
+          {
+            name: `over ${name}'s soul. 🥸`,
+            type: ActivityType.Watching,
+          },
+        ],
+      });
+    };
 
     updatePresence();
-    setInterval(updatePresence, 15000);
+    setInterval(updatePresence, 15_000);
+    setInterval(refreshMemberPool, 30 * 60 * 1000);
+
+    // Keep the pool in sync cheaply between full refreshes.
+    client.on(Events.GuildMemberAdd, (m) => {
+      if (!m.user.bot) memberPool.push(m.displayName);
+    });
+    client.on(Events.GuildMemberRemove, (m) => {
+      if (m.user.bot) return;
+      const i = memberPool.indexOf(m.displayName);
+      if (i !== -1) memberPool.splice(i, 1);
+    });
 
     console.log(
       chalk.green(`[ ${c.user.username} ] 💚 IS ONLINE (DND Mode) !`),
