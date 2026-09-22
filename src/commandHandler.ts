@@ -4,7 +4,7 @@ import { join } from "path";
 import { Command } from "./types/Command.type";
 const commands = new Collection<string, Command>();
 const commandFiles = readdirSync(join(__dirname, "commands")).filter(
-  (file) => file.endsWith(".ts") || file.endsWith(".js")
+  (file) => file.endsWith(".ts") || file.endsWith(".js"),
 );
 
 for (const file of commandFiles) {
@@ -13,7 +13,9 @@ for (const file of commandFiles) {
   if (command && command.data) {
     commands.set(command.data.name, command);
   } else {
-    console.warn(`[ ERROR ] Command at ${file} is missing "data" or "execute"!`);
+    console.warn(
+      `[ ERROR ] Command at ${file} is missing "data" or "execute"!`,
+    );
   }
 }
 
